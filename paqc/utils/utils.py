@@ -1,6 +1,7 @@
 """
 Various general helper functions for the QC package.
 """
+from itertools import islice
 
 
 def generate_hash(df):
@@ -14,4 +15,20 @@ def generate_hash(df):
     """
 
     return hash(df.values.tobytes())
+
+def generate_short_string(ls_items, n_items_printed = 20):
+    """
+    Generate short string of a list of items (column names, indices etc),
+    typically for the ReportItem.text field.
+    :param ls_items: list of values that needs to be turned into printable string.
+    :param n_items_printed: First n numbers of the list that are put into the
+    string format.
+    :return: Comma delimited string
+    """
+
+    string_list =  ", ".join(str(item) for item in islice(ls_items,
+                                                          n_items_printed))
+    string_list = string_list + ", ..."
+    return string_list
+
 
