@@ -30,15 +30,15 @@ def test_config_open(path_to_file, expected):
     ("paqc/tests/data/config_test_check7.yml", False),
     # missing column definitions #1
     ("paqc/tests/data/config_test_check8.yml", False),
-    # no tests section
+    # no qcs section
     ("paqc/tests/data/config_test_check9.yml", False),
-    # not all of the mandatory tests fields (input, level, order) are present
+    # not all of the mandatory qcs fields (input, level, order) are present
     ("paqc/tests/data/config_test_check10.yml", False),
-    # misformatted level field in test
+    # misformatted level field in qc
     ("paqc/tests/data/config_test_check11.yml", False),
-    # bad input file referenced for test
+    # bad input file referenced for qc
     ("paqc/tests/data/config_test_check12.yml", False),
-    # non-integer order specified for test
+    # non-integer order specified for qc
     ("paqc/tests/data/config_test_check13.yml", False),
     # none unique order for test (each should have a different)
     ("paqc/tests/data/config_test_check14.yml", False),
@@ -47,3 +47,5 @@ def test_config_open(path_to_file, expected):
 ])
 def test_config_checker(path_to_file, expected):
     assert config_checker(config_open(path_to_file)[1]) == expected
+
+

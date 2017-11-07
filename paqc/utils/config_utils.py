@@ -45,7 +45,7 @@ def config_open(path):
 def config_checker(yml):
     """
     Parses the YAML config file and checks that the minimum required fields for
-    the general setup of the test suite and for each test are present. If the
+    the general setup of the QC suite and for each QC are present. If the
     config checking fails at any point, the user is informed about it.
 
     :param yml: Output of :func:`~utils.config_utils.config_open`.
@@ -98,53 +98,53 @@ def config_checker(yml):
             return False
 
     # --------------------------------------------------------------------------
-    # go through test params
-    if 'tests' not in yml:
-        print("ConfigError: You need to specify a 'tests' section.")
+    # go through qc params
+    if 'qcs' not in yml:
+        print("ConfigError: You need to specify a 'qcs' section.")
         return False
     else:
-        tests = yml['tests']
+        qcs = yml['qcs']
 
-        # check if we have at least one test and if they are well spec-ed
+        # check if we have at least one QC and if they are well spec-ed
         counter = 0
-        non_tests = []
+        non_qcs = []
         order_nums = []
-        mandatory_test_fields = {'order', 'input', 'level'}
+        mandatory_qc_fields = {'order', 'input', 'level'}
         severitity_levels = ['error', 'warning', 'info']
-        for k, v in tests.items():
-            if bool(re.match(r"^test\d{1,3}$", k)):
+        for k, v in qcs.items():
+            if bool(re.match(r"^qc\d{1,3}$", k)):
                 counter += 1
-                # check if the test has all necessary fields
-                if not mandatory_test_fields <= set(tests[k].keys()):
-                    print("ConfigError: Each test must have these fields: "
-                          "%s." % ', '.join(list(mandatory_test_fields)))
+                # check if the qc has all necessary fields
+                if not mandatory_qc_fields <= set(qcs[k].keys()):
+                    print("ConfigError: Each QC must have these fields: "
+                          "%s." % ', '.join(list(mandatory_qc_fields)))
                     return False
-                # check if the severity level is specified as supoosed to
-                elif tests[k]['level'] not in severitity_levels:
-                    print("ConfigError: Test severity level has to be one "
+                # check if the severity level is specified as supposed to
+                elif qcs[k]['level'] not in severitity_levels:
+                    print("ConfigError: QC severity level has to be one "
                           "of %s." % ', '.join(severitity_levels))
                     return False
                 # check if the input is one of ones listed in general
-                elif tests[k]['input'] not in inputs:
+                elif qcs[k]['input'] not in inputs:
                     print("ConfigError: %s has an input that is not "
                           "listed in the general section." % k)
                     return False
                 # check order is an int and add it to the list of order
-                elif not isinstance(tests[k]['order'], int):
+                elif not isinstance(qcs[k]['order'], int):
                     print("ConfigError: %s has a non-integer order." % k)
                     return False
                 else:
-                    order_nums.append(tests[k]['order'])
+                    order_nums.append(qcs[k]['order'])
             else:
                 # we'll warn the user about mis-formatted tags later
-                non_tests.append(k)
+                non_qcs.append(k)
         if counter == 0:
-            print("ConfigError: You need to specify at least one test.")
+            print("ConfigError: You need to specify at least one qc.")
             return False
-        elif len(non_tests) > 0:
-            print("ConfigWarning: The following tags within the tests "
-                  "section will be ignored %s." % ', '.join(non_tests))
+        elif len(non_qcs) > 0:
+            print("ConfigWarning: The following tags within the QCs "
+                  "section will be ignored %s." % ', '.join(non_qcs))
         if len(np.unique(order_nums)) != len(order_nums):
-            print("ConfigError: No two tests should have the same order.")
+            print("ConfigError: No two qcs should have the same order.")
             return False
     return True

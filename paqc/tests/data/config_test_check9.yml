@@ -1,7 +1,7 @@
 general:
   source: csv
-  input1: "patest/data/training_data.csv"
-  output_dir: "patest/report/output"
+  input1: "paqc/data/training_data.csv"
+  output_dir: "paqc/report/output"
   date_cols: "_DATE"
   count_cols: "_CNT"
   freq_cols: "_FREQ"

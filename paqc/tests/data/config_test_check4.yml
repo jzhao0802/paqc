@@ -1,13 +1,13 @@
 general:
-  input1: "patest/data/training_data.csv"
-  output_dir: "patest/report/output"
+  input1: "paqc/data/training_data.csv"
+  output_dir: "paqc/report/output"
 
-tests:
-  test1:
+qcs:
+  qc1:
     input: input1
     level: error
     order: 1
-  test2:
+  qc2:
     input: input1
     level: warning
     order: 2
