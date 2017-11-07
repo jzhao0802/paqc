@@ -1,0 +1,4 @@
+.cache/
+.idea/
+paqc/.cache/
+*__pycache__/

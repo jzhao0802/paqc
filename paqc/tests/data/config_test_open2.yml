@@ -1,0 +1,3 @@
+general
+  source: bdf
+    list: ['one', 'two', 'you know', 'what to do']

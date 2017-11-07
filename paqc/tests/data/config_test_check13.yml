@@ -1,0 +1,18 @@
+general:
+  source: csv
+  input1: "patest/data/training_data.csv"
+  output_dir: "patest/report/output"
+  date_cols: "_DATE"
+  count_cols: "_CNT"
+  freq_cols: "_FREQ"
+  first_exp_date_cols: "_FIRST_EXP_DT"
+  last_exp_date_cols: "_LAST_EXP_DT"
+  target_col: "LABEL"
+  patient_id: "PATIENT_ID"
+  matched_patient_id: "MATCHED_PATIENT_ID"
+
+tests:
+  test1:
+    input: input1
+    level: error
+    order: '1'

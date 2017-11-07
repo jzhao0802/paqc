@@ -1,0 +1,4 @@
+general:
+  source: csv_
+  input1: "patest/data/training_data.csv"
+  output_dir: "patest/report/output"
