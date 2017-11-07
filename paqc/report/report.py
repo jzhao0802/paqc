@@ -14,7 +14,8 @@ class ReportItem:
     message.
     """
 
-    def __init__(self, level, passed, order, input_file, text, exec_time=0):
+    def __init__(self, passed, level, order, input_file,
+                 text="PASSED", exec_time=0):
         self.level = level
         self.passed = passed
         self.order = order
@@ -34,8 +35,11 @@ class ReportItem:
     def update_level(self, level):
         self.level = level
 
-    def update_level(self, text):
+    def update_text(self, text):
         self.text = text
+
+    def update_exec_time(self, exec_time):
+        self.exec_time = exec_time
 
 
 class Report:

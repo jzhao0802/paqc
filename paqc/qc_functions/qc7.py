@@ -1,12 +1,16 @@
 import pandas as pd
+import paqc.report.report as rp
 
-def qc7(df, ):
+def qc7(df, dict_config):
     """
 
     :param df:
     :return:
     """
 
-    output = (df.dropna(axis=0, how='all').shape[1] == df.shape[1])
+    idx_empty_rows = df.index[df.isnull().all(1)].tolist()
+
+    if not idx_empty_rows:
+        return rp.ReportItem(passed=True, dict_config['qc'])
 
     return output
