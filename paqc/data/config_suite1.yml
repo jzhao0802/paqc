@@ -1,6 +1,7 @@
 general:
   source: csv
-  input1: "paqc/data/training_data*.csv"
+  input1: "paqc/data/qc_data1.csv"
+  input2: "paqc/data/test*.csv"
   output_dir: "paqc/report/output"
   date_cols: "_DATE"
   count_cols: "_CNT"
@@ -8,12 +9,30 @@ general:
   first_exp_date_cols: "_FIRST_EXP_DT"
   last_exp_date_cols: "_LAST_EXP_DT"
   gender_col: "GENDER"
+  age_col: "AGE"
   target_col: "LABEL"
   patient_id: "PATIENT_ID"
   matched_patient_id: "MATCHED_PATIENT_ID"
+  special_cols: "special1, special2"
 
 qcs:
   qc1:
-    input_file: input1
+    input_file:
+      - input1
+      - input2
     level: error
     order: 1
+  qc2:
+    input_file: input1
+    level: error
+    order: 2
+  qc3:
+    input_file:
+      - input1
+      - input2
+    level: warning
+    order: 3
+  qc4:
+    input_file: input2
+    level: info
+    order: 4
