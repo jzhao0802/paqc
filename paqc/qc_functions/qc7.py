@@ -12,7 +12,7 @@ def qc7(df, dict_config):
     """
 
     # List with index of all empty rows
-    idx_empty_rows = df.index[df.isnull().all(1)].tolist()
+    idx_empty_rows = df.index[df.isnull().all(axis=1)].tolist()
 
     if not idx_empty_rows:
         return rp.ReportItem(passed=True, **dict_config['qc'])

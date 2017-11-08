@@ -11,6 +11,7 @@ general:
   patient_id: "PATIENT_ID"
   matched_patient_id: "MATCHED_PATIENT_ID"
 
+
 qc:
   input_file: input1
   level: error

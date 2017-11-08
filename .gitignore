@@ -2,3 +2,4 @@
 .idea/
 paqc/.cache/
 *__pycache__/
+paqc/report/output/

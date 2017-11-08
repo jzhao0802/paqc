@@ -2,6 +2,7 @@
 Various general helper functions for the QC package.
 """
 from itertools import islice
+import pandas as pd
 
 
 def generate_hash(df):
@@ -30,5 +31,15 @@ def generate_short_string(ls_items, n_items_printed = 20):
                                                           n_items_printed))
     string_list = string_list + ", ..."
     return string_list
+
+def write_list_to_csv(ls_items, path_csv):
+    """
+
+    :param ls_items:
+    :return: None
+    """
+    df_tocsv = pd.DataFrame(ls_items)
+    df_tocsv.to_csv(path_csv, index=False, header=False)
+
 
 
