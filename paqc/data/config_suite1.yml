@@ -1,6 +1,7 @@
 general:
   source: csv
-  input1: "paqc/data/training_data*.csv"
+  input1: "paqc/data/qc_data1.csv"
+  input2: "paqc/data/test*.csv"
   output_dir: "paqc/report/output"
   date_cols: "_DATE"
   count_cols: "_CNT"
@@ -14,6 +15,22 @@ general:
 
 qcs:
   qc1:
-    input_file: input1
+    input_file:
+      - input1
+      - input2
     level: error
     order: 1
+  qc2:
+    input_file: input1
+    level: error
+    order: 2
+  qc3:
+    input_file:
+      - input1
+      - input2
+    level: warning
+    order: 3
+  qc4:
+    input_file: input2
+    level: info
+    order: 4
