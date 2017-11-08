@@ -5,6 +5,7 @@ general:
   date_cols: _DATE
   count_cols: _CNT
   freq_cols: _FREQ
+  flag_cols: _FLAG
   first_exp_date_cols: _FIRST_EXP_DT
   last_exp_date_cols: _LAST_EXP_DT
   gender_col: GENDER

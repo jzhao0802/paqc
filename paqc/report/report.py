@@ -14,13 +14,14 @@ class ReportItem:
     message.
     """
 
-    def __init__(self, passed, level, order, input_file,
-                 text="PASSED", exec_time=0):
+    def __init__(self, passed, level, order, input_file, extra = None,
+                 text=None, exec_time=0):
         self.level = level
         self.passed = passed
         self.order = order
         self.input_file = input_file
         self.text = text
+        self.extra = extra
         self.exec_time = exec_time
 
     def summarise_report_item(self):
@@ -40,6 +41,13 @@ class ReportItem:
 
     def update_exec_time(self, exec_time):
         self.exec_time = exec_time
+
+    @staticmethod
+    def init_conditional(list_failures, dict_config):
+        if not list_failures:
+            return ReportItem(passed=True, **dict_config)
+        else:
+            return ReportItem(passed=False, extra=list_failures,**dict_config)
 
 
 class Report:
