@@ -1,4 +1,5 @@
 import pandas as pd
+from os.path import join
 from paqc.report import report as rp
 from paqc.utils import utils
 
@@ -17,6 +18,8 @@ def qc7(df, dict_config):
     if not idx_empty_rows:
         return rp.ReportItem(passed=True, **dict_config['qc'])
     else:
+        path_csv = join(dict_config['general']['output_dir'], "qc7.csv")
+        utils.write_list_to_csv(ls_items=idx_empty_rows, path_csv=path_csv)
         return rp.ReportItem(passed=False, **dict_config['qc'],
                 text=utils.generate_short_string(idx_empty_rows))
 

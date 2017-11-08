@@ -9,10 +9,10 @@ from paqc.utils.config_utils import config_open
 @pytest.mark.parametrize("df, expected", [
     # Subset from data/qc_data.csv
     (pd.read_csv("paqc/tests/data/qc8_check1.csv"), True),
-    # Row 4 is empty
-    #(pd.read_csv("paqc/tests/data/qc7_check2.csv"), False),
-    # Sparse dataframe, but no empty rows
-    #(pd.read_csv("paqc/tests/data/qc7_check3.csv"), True),
+    # Column name G has trailing s
+    (pd.read_csv("paqc/tests/data/qc8_check2.csv"), False),
+    # Added some special columns
+    (pd.read_csv("paqc/tests/data/qc8_check3.csv"), True),
 ])
 def test_qc8(df, expected, dict_config):
     assert qc8(df, dict_config).passed == expected

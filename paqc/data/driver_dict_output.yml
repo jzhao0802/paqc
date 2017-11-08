@@ -1,20 +1,21 @@
 general:
   source: csv
-  input1: "paqc/data/training_data.csv"
-  output_dir: "paqc/report/output"
-  date_cols: "_DATE"
-  count_cols: "_CNT"
-  freq_cols: "_FREQ"
-  first_exp_date_cols: "_FIRST_EXP_DT"
-  last_exp_date_cols: "_LAST_EXP_DT"
-  gender_col: "GENDER"
-  target_col: "LABEL"
-  age_col: "AGE"
-  patient_id: "PATIENT_ID"
-  matched_patient_id: "MATCHED_PATIENT_ID"
-  special_col: "special1"
-
-
+  input1: paqc/data/training_data.csv
+  output_dir: paqc/report/output
+  date_cols: _DATE
+  count_cols: _CNT
+  freq_cols: _FREQ
+  first_exp_date_cols: _FIRST_EXP_DT
+  last_exp_date_cols: _LAST_EXP_DT
+  gender_col: GENDER
+  target_col: LABEL
+  age_col: AGE
+  patient_id: PATIENT_ID
+  matched_patient_id: MATCHED_PATIENT_ID
+  special_cols:
+    - special1
+    - special2
+    - special3
 
 qc:
   input_file: input1
