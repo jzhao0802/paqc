@@ -1,4 +1,4 @@
 general:
   source: csv_
-  input1: "paqc/data/training_data.csv"
-  output_dir: "paqc/report/output"
+  input1: paqc/data/training_data.csv
+  output_dir: paqc/report/output
