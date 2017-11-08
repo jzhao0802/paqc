@@ -26,9 +26,9 @@ def test_config_open(path_to_file, expected):
     ("paqc/tests/data/config_test_check5.yml", False),
     # missing column definitions #1
     ("paqc/tests/data/config_test_check6.yml", False),
-    # missing column definitions #1
+    # missing column definitions #2
     ("paqc/tests/data/config_test_check7.yml", False),
-    # missing column definitions #1
+    # missing column definitions #3
     ("paqc/tests/data/config_test_check8.yml", False),
     # no qcs section
     ("paqc/tests/data/config_test_check9.yml", False),
