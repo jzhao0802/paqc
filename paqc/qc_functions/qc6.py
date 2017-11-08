@@ -1,7 +1,8 @@
 import pandas as pd
+from os.path import join
 from paqc.report import report as rp
 from paqc.utils import utils
-from os.path import join
+
 
 
 def qc6(df, dict_config):
