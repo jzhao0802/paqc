@@ -191,9 +191,6 @@ def config_parser(yml):
         # update original yml object
         general[k] = input_paths[k]
 
-    # parse special cols
-    general['special_cols'] = general['special_cols'].split(',')
-
     # refactor structure of yml, so that we can load each input file separately
     # do all tests on it then proceed with the next data file
     qcs = yml['qcs']

@@ -1,6 +1,6 @@
 general:
-  input1: "paqc/data/training_data.csv"
-  output_dir: "paqc/report/output"
+  input1: paqc/data/training_data.csv
+  output_dir: paqc/report/output
 
 qcs:
   qc1:
