@@ -153,7 +153,8 @@ def config_checker(yml):
             return False
     return True
 
-def config_extractor(yml):
+
+def config_parser(yml):
     """
     Once the :func:`~utils.config_utils.config_checker` checked the config file
     this function extracts some important bits from it for the driver and also
@@ -161,30 +162,73 @@ def config_extractor(yml):
     input_files.
 
     :param yml: Output of :func:`~utils.config_utils.config_open`.
-    :return: reformatted YML as a dict of dict.
+    :return: Reformatted YAML config object (dict of dicts), where the files
+             with multiple inputs (* in their name) are converted to lists and
+             the qcs section is replaced and reformatted to be indexed by input
+             files.
     """
 
-    general = yml['general']
-
     # extract inputs, and multi inputs
-    inputs = []
-    multi_inputs = []
+    general = yml['general']
+    input_paths = {}
     for k, v in general.items():
-        if bool(re.match(r"^input\d{1,2}$", k)):
-            inputs.append(k)
-            # input files that have a * in their name are read in piece by
-            # piece and treated as separate data files.
-            if bool(re.search(r"\*", v)):
-                # get files in dict
-                dir_name = os.path.dirname(v)
-                files = os.listdir(dir_name)
-                # search for the files we need, make regex pattern
-                pattern = os.path.basename(v).replace('*', '\d{1,3}')
-                for file in files:
-                    if bool(re.match(pattern, file)):
-                        multi_inputs.append('/'.join([dir_name, file]))
+        # input files that have a * in their name are read in piece by piece
+        # and treated as separate data files.
+        if bool(re.match(r"^input\d{1,2}$", k)) and bool(re.search(r"\*", v)):
+            if k not in input_paths:
+                input_paths[k] = []
+            # get files in dict
+            dir_name = os.path.dirname(v)
+            files = os.listdir(dir_name)
+            # search for the files we need, make regex pattern for it
+            pattern = os.path.basename(v).replace('*', '\d{1,3}')
+            for file in files:
+                if bool(re.match(pattern, file)):
+                    input_paths[k].append('/'.join([dir_name, file]))
+        else:
+            input_paths[k] = v
+        # update original yml object
+        general[k] = input_paths[k]
+
+    # refactor structure of yml, so that we can load each input file separately
+    # do all tests on it then proceed with the next data file
+    qcs = yml['qcs']
+    input_qc = dict()
+    for input_file in input_paths.keys():
+        for qc in qcs:
+            # does this qc have to be applied to multiple input_files?
+            multiple_inputs = not isinstance(qcs[qc]['input_file'], str)
+            if multiple_inputs and input_file in qcs[qc]['input_file']:
+                add_qc_to_input_qc_dict(input_qc, input_file, qc)
+            elif not multiple_inputs and input_file == qcs[qc]['input_file']:
+                add_qc_to_input_qc_dict(input_qc, input_file, qc)
+
+    # replace qc part of yml with new structure
+    for k, v in input_qc.items():
+        # add a new node to the config object for the input file
+        yml[k] = dict()
+        # fill up the new node with qcs that we need to carry out on this input
+        for qc in v:
+            yml[k][qc] = yml['qcs'][qc]
+            # update the input_file param to ensure it points to a single file
+            yml[k][qc]['input_file'] = k
+
+    # delete old qcs section
+    yml.pop('qcs', None)
+
+    return yml
 
 
-
-
-
+def add_qc_to_input_qc_dict(input_qc, input_file, qc):
+    """
+    Helper function that adds qc functions to the input_qc dictionary, mapping
+    each qc to one (or multiple) input files.
+    :param input_qc: Dictionary to be updated with input1,...,input_n as keys
+    :param input_file: Name of the key to update or create: input1,...,input_n
+    :param qc: name of the qc function: qc1,...,qc_n
+    :return: updated input_qc dictionary
+    """
+    if input_file not in input_qc:
+        input_qc[input_file] = [qc]
+    else:
+        input_qc[input_file].append(qc)
