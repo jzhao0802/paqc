@@ -1,6 +1,6 @@
 general:
   source: csv
-  input1: paqc/data/qc_data1.csv
+  input1: paqc/data/qc_data.csv
   input2: paqc/data/test*.csv
   output_dir: paqc/report/output
   date_cols: _DATE
