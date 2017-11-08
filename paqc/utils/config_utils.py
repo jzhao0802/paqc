@@ -90,7 +90,8 @@ def config_checker(yml):
         # test mandatory column name fields
         mandatory_general_fields = {'date_cols', 'count_cols', 'freq_cols',
                                     'first_exp_date_cols', 'last_exp_date_cols',
-                                    'target_col', 'patient_id',
+                                    'target_col', 'patient_id', 'gender_col',
+                                    'age_col', 'special_cols',
                                     'matched_patient_id'}
         if not mandatory_general_fields.issubset(general.keys()):
             print("ConfigError: The general section must have these fields: "
@@ -168,7 +169,7 @@ def config_parser(yml):
              files.
     """
 
-    # extract inputs, and multi inputs
+    # extract multi inputs and put all their files into a list
     general = yml['general']
     input_paths = {}
     for k, v in general.items():
@@ -189,6 +190,9 @@ def config_parser(yml):
             input_paths[k] = v
         # update original yml object
         general[k] = input_paths[k]
+
+    # parse special cols
+    general['special_cols'] = general['special_cols'].split(',')
 
     # refactor structure of yml, so that we can load each input file separately
     # do all tests on it then proceed with the next data file
