@@ -13,6 +13,8 @@ general:
 
 qcs:
   qc1:
-    input: input1
+    input_file:
+      - input1
+      - input2
     level: error
-    order: '1'
+    order: 1

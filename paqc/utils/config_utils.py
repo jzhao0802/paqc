@@ -3,7 +3,7 @@ Functions for reading, parsing and sanity checking the YAML config files of the
 QC pipelines.
 """
 
-
+import os
 import yaml
 import re
 import numpy as np
@@ -92,7 +92,7 @@ def config_checker(yml):
                                     'first_exp_date_cols', 'last_exp_date_cols',
                                     'target_col', 'patient_id',
                                     'matched_patient_id'}
-        if not mandatory_general_fields <= set(general.keys()):
+        if not mandatory_general_fields.issubset(general.keys()):
             print("ConfigError: The general section must have these fields: "
                   "%s." % ', '.join(list(mandatory_general_fields)))
             return False
@@ -109,25 +109,20 @@ def config_checker(yml):
         counter = 0
         non_qcs = []
         order_nums = []
-        mandatory_qc_fields = {'order', 'input', 'level'}
-        severitity_levels = ['error', 'warning', 'info']
+        mandatory_qc_fields = {'order', 'input_file', 'level'}
+        severity_levels = ['error', 'warning', 'info']
         for k, v in qcs.items():
             if bool(re.match(r"^qc\d{1,3}$", k)):
                 counter += 1
                 # check if the qc has all necessary fields
-                if not mandatory_qc_fields <= set(qcs[k].keys()):
+                if not mandatory_qc_fields.issubset(qcs[k].keys()):
                     print("ConfigError: Each QC must have these fields: "
                           "%s." % ', '.join(list(mandatory_qc_fields)))
                     return False
                 # check if the severity level is specified as supposed to
-                elif qcs[k]['level'] not in severitity_levels:
+                elif qcs[k]['level'] not in severity_levels:
                     print("ConfigError: QC severity level has to be one "
-                          "of %s." % ', '.join(severitity_levels))
-                    return False
-                # check if the input is one of ones listed in general
-                elif qcs[k]['input'] not in inputs:
-                    print("ConfigError: %s has an input that is not "
-                          "listed in the general section." % k)
+                          "of %s." % ', '.join(severity_levels))
                     return False
                 # check order is an int and add it to the list of order
                 elif not isinstance(qcs[k]['order'], int):
@@ -135,6 +130,15 @@ def config_checker(yml):
                     return False
                 else:
                     order_nums.append(qcs[k]['order'])
+                # check if the input_file is one of ones listed in general
+                input_file = qcs[k]['input_file']
+                multiple_inputs = not isinstance(input_file, str)
+                cond1 = not multiple_inputs and input_file not in inputs
+                cond2 = multiple_inputs and not set(input_file).issubset(inputs)
+                if cond1 or cond2:
+                    print("ConfigError: %s has an input_file that is not "
+                          "listed in the general section as an input." % k)
+                    return False
             else:
                 # we'll warn the user about mis-formatted tags later
                 non_qcs.append(k)
@@ -148,3 +152,39 @@ def config_checker(yml):
             print("ConfigError: No two qcs should have the same order.")
             return False
     return True
+
+def config_extractor(yml):
+    """
+    Once the :func:`~utils.config_utils.config_checker` checked the config file
+    this function extracts some important bits from it for the driver and also
+    reformats the structure of the QCs dict part to make it indexed by the
+    input_files.
+
+    :param yml: Output of :func:`~utils.config_utils.config_open`.
+    :return: reformatted YML as a dict of dict.
+    """
+
+    general = yml['general']
+
+    # extract inputs, and multi inputs
+    inputs = []
+    multi_inputs = []
+    for k, v in general.items():
+        if bool(re.match(r"^input\d{1,2}$", k)):
+            inputs.append(k)
+            # input files that have a * in their name are read in piece by
+            # piece and treated as separate data files.
+            if bool(re.search(r"\*", v)):
+                # get files in dict
+                dir_name = os.path.dirname(v)
+                files = os.listdir(dir_name)
+                # search for the files we need, make regex pattern
+                pattern = os.path.basename(v).replace('*', '\d{1,3}')
+                for file in files:
+                    if bool(re.match(pattern, file)):
+                        multi_inputs.append('/'.join([dir_name, file]))
+
+
+
+
+

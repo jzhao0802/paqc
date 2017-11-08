@@ -38,12 +38,14 @@ def test_config_open(path_to_file, expected):
     ("paqc/tests/data/config_test_check11.yml", False),
     # bad input file referenced for qc
     ("paqc/tests/data/config_test_check12.yml", False),
-    # non-integer order specified for qc
+    # bad input file referenced for qc
     ("paqc/tests/data/config_test_check13.yml", False),
-    # none unique order for test (each should have a different)
+    # non-integer order specified for qc
     ("paqc/tests/data/config_test_check14.yml", False),
+    # none unique order for test (each should have a different)
+    ("paqc/tests/data/config_test_check15.yml", False),
     # properly formatted config YAML
-    ("paqc/tests/data/config_test_check15.yml", True)
+    ("paqc/tests/data/config_test_check16.yml", True)
 ])
 def test_config_checker(path_to_file, expected):
     assert config_checker(config_open(path_to_file)[1]) == expected

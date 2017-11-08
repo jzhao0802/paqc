@@ -6,6 +6,8 @@ Subpackages
 
 .. toctree::
 
+    paqc.qc_functions
+    paqc.report
     paqc.tests
     paqc.utils
 
