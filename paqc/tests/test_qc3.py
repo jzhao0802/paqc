@@ -12,9 +12,13 @@ from paqc.utils.config_utils import config_open
     (pd.read_csv("paqc/tests/data/qc3_check1.csv"), True, None),
     # column test_FLAG has negative float
     (pd.read_csv("paqc/tests/data/qc3_check2.csv"), False, ["test_FLAG"]),
-    # Added some special columns
-    (pd.read_csv("paqc/tests/data/qc8_check3.csv"), False,
-     ["D_7245_AVG_CLAIM_FREQ", "D_V048_AVG_CLAIM_CNT"])
+    # One empty cell, one cell with special character (;)
+    (pd.read_csv("paqc/tests/data/qc3_check3.csv"), False,
+     ["D_7245_AVG_CLAIM_FREQ", "D_V048_AVG_CLAIM_CNT"]),
+    # empty cell and special character (.). Also one non-relevant column
+    # with negative integers, should not be picked up.
+    (pd.read_csv("paqc/tests/data/qc3_check4.csv"), False,
+     ["test_FLAG", "D_7245_AVG_CLAIM_FREQ", "D_V048_AVG_CLAIM_CNT"])
 ])
 def test_qc3(df, expected, ls_faults, dict_config):
     rpi = qc3(df, dict_config)

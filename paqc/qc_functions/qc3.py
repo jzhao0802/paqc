@@ -19,8 +19,18 @@ def qc3(df, dict_config):
     ls_colnames = utils.generate_list_columns(df, dict_config,
                                                 ['flag_cols', 'freq_cols',
                                                  'count_cols'])
-    ss_col_is_faulty = (~(df[ls_colnames] >= 0)).any()
-    ls_faulty_columns = ss_col_is_faulty[ss_col_is_faulty].index.tolist()
+    ls_faulty_columns = []
+    for colname in ls_colnames:
+        if pd.api.types.is_numeric_dtype(df[colname]):
+            if (~(df[colname] >= 0)).any():
+                ls_faulty_columns.append(colname)
+            else:
+                pass
+        else:
+            ls_faulty_columns.append(colname)
+
+    # ss_col_is_faulty = (~(df[ls_colnames] >= 0)).any()
+    # ls_faulty_columns = ss_col_is_faulty[ss_col_is_faulty].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_faulty_columns, dict_config['qc'])
 
