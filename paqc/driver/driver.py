@@ -75,7 +75,7 @@ class Driver:
                     self.do_qc(k, self.general[k], v)
 
         # print report
-        # self.report_generator()
+        self.report_generator()
 
     def do_qc(self, input_file, input_file_path, qcs):
         """
