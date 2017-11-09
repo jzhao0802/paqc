@@ -1,10 +1,11 @@
 general:
   source: csv
   input1: paqc/data/qc_data.csv
-  input2: paqc/data/test*.csv
+  input2: paqc/data/qc_data_multi*.csv
   output_dir: paqc/report/output
   date_cols: _DATE
   count_cols: _CNT
+  flag_cols: _FLAG
   freq_cols: _FREQ
   first_exp_date_cols: _FIRST_EXP_DT
   last_exp_date_cols: _LAST_EXP_DT

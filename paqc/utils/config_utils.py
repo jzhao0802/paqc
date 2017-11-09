@@ -91,7 +91,7 @@ def config_checker(yml):
         mandatory_general_fields = {'date_cols', 'count_cols', 'freq_cols',
                                     'first_exp_date_cols', 'last_exp_date_cols',
                                     'target_col', 'patient_id', 'gender_col',
-                                    'age_col', 'special_cols',
+                                    'age_col', 'special_cols', 'flag_cols',
                                     'matched_patient_id'}
         if not mandatory_general_fields.issubset(general.keys()):
             print("ConfigError: The general section must have these fields: "

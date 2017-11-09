@@ -4,6 +4,7 @@ executes the QC scripts in the requested order and collates their findings in a
 report.
 """
 
+import time
 import pandas as pd
 from paqc.utils import config_utils
 from paqc.utils import utils
@@ -93,12 +94,18 @@ class Driver:
         for qc in qcs:
             # generate mini config object for the QC function
             qc_config = {'general': self.general, 'qc': qcs[qc]}
+            qc_config['qc']['input_file_path'] = input_file_path
             # extract the specific QC object from the qc_functions module
             qc_function_python_script = getattr(qc_functions, qc)
             qc_function = getattr(qc_function_python_script, qc)
-            # execute it on the data file
-            self.printer("Executing test %s on data file %s" % (qc, input_file))
-            self.report.add_item(qc_function(df, qc_config))
+            # execute and time it on the data file
+            self.printer("Executing test %s on %s: %s" %
+                         (qc, input_file, input_file_path))
+            ts = time.time()
+            rpi = qc_function(df, qc_config)
+            te = time.time()
+            rpi.exec_time = int((te - ts) * 1000)
+            self.report.add_item(rpi)
 
     def report_generator(self):
         """

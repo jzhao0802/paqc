@@ -5,3 +5,4 @@ general:
   output_dir: paqc/report/output
   date_cols: _DATE
   count_cols: _CNT
+  flag_cols: _FLAG

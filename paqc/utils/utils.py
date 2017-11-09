@@ -18,6 +18,7 @@ def generate_hash(df):
 
     return hash(df.values.tobytes())
 
+
 def generate_short_string(ls_items, n_items_printed = 20):
     """
     Generate short string of a list of items (column names, indices etc),
@@ -28,10 +29,11 @@ def generate_short_string(ls_items, n_items_printed = 20):
     :return: Comma delimited string
     """
 
-    string_list =  ", ".join(str(item) for item in islice(ls_items,
+    string_list = ", ".join(str(item) for item in islice(ls_items,
                                                           n_items_printed))
-    string_list = string_list + ", ..."
+    string_list += ", ..."
     return string_list
+
 
 def write_list_to_csv(ls_items, path_csv):
     """
@@ -44,6 +46,7 @@ def write_list_to_csv(ls_items, path_csv):
 
     df_tocsv = pd.DataFrame(ls_items)
     df_tocsv.to_csv(path_csv, index=False, header=False)
+
 
 def generate_list_columns(df, dict_config, list_keys):
     """
@@ -59,5 +62,3 @@ def generate_list_columns(df, dict_config, list_keys):
     list_regex = ["%s$" % dict_config['general'][key] for key in list_keys]
     prog = re.compile("(" + ")|(".join(list_regex) + ")")
     return [colname for colname in df.columns if prog.search(colname)]
-
-
