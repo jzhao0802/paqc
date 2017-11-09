@@ -29,9 +29,6 @@ def qc3(df, dict_config):
         else:
             ls_faulty_columns.append(colname)
 
-    # ss_col_is_faulty = (~(df[ls_colnames] >= 0)).any()
-    # ls_faulty_columns = ss_col_is_faulty[ss_col_is_faulty].index.tolist()
-
     return rp.ReportItem.init_conditional(ls_faulty_columns, dict_config['qc'])
 
 
