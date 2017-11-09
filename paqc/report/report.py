@@ -25,6 +25,13 @@ class ReportItem:
         self.extra = extra
         self.exec_time = exec_time
 
+    @classmethod
+    def init_conditional(cls, list_failures, dict_config):
+        if not list_failures:
+            return cls(passed=True, **dict_config)
+        else:
+            return cls(passed=False, extra=list_failures,**dict_config)
+
     def summarise_report_item(self):
         return ("Test item #%d (level: %s) was carried out on %s: %s. \nIt has "
                 "passed: %s, in %d seconds, with the following message:\n%s" %
@@ -42,14 +49,6 @@ class ReportItem:
 
     def update_exec_time(self, exec_time):
         self.exec_time = exec_time
-
-    @staticmethod
-    def init_conditional(list_failures, dict_config):
-        if not list_failures:
-            return ReportItem(passed=True, **dict_config)
-        else:
-            return ReportItem(passed=False, extra=list_failures, **dict_config)
-
 
 class Report:
     """
