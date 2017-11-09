@@ -12,7 +12,7 @@ This Python package was designed to perform and automate all the QC
 steps we take when we receive a new or updated data file. This package was
 designed to ensure consistent data quality across projects and minimise the
 effort spent on manual data QC, by automating most of our standard data checking
- procedures in the form of pre-compiled list of tests.
+procedures in the form of pre-compiled list of tests.
 
 
 .. toctree::

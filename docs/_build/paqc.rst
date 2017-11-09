@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    paqc.driver
     paqc.qc_functions
     paqc.report
     paqc.tests

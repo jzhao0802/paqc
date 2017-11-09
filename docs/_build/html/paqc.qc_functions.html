@@ -55,21 +55,16 @@
 <span id="paqc-qc-functions-qc1-module"></span><h2>paqc.qc_functions.qc1 module<a class="headerlink" href="#module-paqc.qc_functions.qc1" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="paqc.qc_functions.qc1.qc1">
-<code class="descclassname">paqc.qc_functions.qc1.</code><code class="descname">qc1</code><span class="sig-paren">(</span><em>df</em>, <em>level='error'</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc1.qc1" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">paqc.qc_functions.qc1.</code><code class="descname">qc1</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc1.qc1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Testing if all column names of dataframe have no special characters and no
 spaces. They should only contain letters, numbers and underscores.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> &#8211; The qc-ed dataframe</li>
-<li><strong>level</strong> &#8211; </li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> &#8211; The qc-ed dataframe</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True/Fasle</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True/False</td>
 </tr>
 </tbody>
 </table>
@@ -80,18 +75,20 @@ spaces. They should only contain letters, numbers and underscores.</p>
 <span id="paqc-qc-functions-qc3-module"></span><h2>paqc.qc_functions.qc3 module<a class="headerlink" href="#module-paqc.qc_functions.qc3" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="paqc.qc_functions.qc3.qc3">
-<code class="descclassname">paqc.qc_functions.qc3.</code><code class="descname">qc3</code><span class="sig-paren">(</span><em>df</em>, <em>level='error'</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc3.qc3" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<code class="descclassname">paqc.qc_functions.qc3.</code><code class="descname">qc3</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc3.qc3" title="Permalink to this definition">¶</a></dt>
+<dd><p>All columns ending in FLAG, COUNT or FREQ should be 0 or positive, and
+never missing.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> &#8211; </li>
-<li><strong>level</strong> &#8211; </li>
+<li><strong>df</strong> &#8211; The qc-ed dataframe</li>
+<li><strong>dict_config</strong> &#8211; Meta-data in dictionary</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem</p>
 </td>
 </tr>
 </tbody>
@@ -99,11 +96,67 @@ spaces. They should only contain letters, numbers and underscores.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="paqc-qc-functions-qc7-module">
-<h2>paqc.qc_functions.qc7 module<a class="headerlink" href="#paqc-qc-functions-qc7-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-paqc.qc_functions.qc6">
+<span id="paqc-qc-functions-qc6-module"></span><h2>paqc.qc_functions.qc6 module<a class="headerlink" href="#module-paqc.qc_functions.qc6" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.qc_functions.qc6.qc6">
+<code class="descclassname">paqc.qc_functions.qc6.</code><code class="descname">qc6</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc6.qc6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that no columns are a 100% empty.
+:param df: The qc-ed dataframe
+:param dict_config: Meta-data in dictionary
+:return: ReportItem</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.qc_functions.qc7">
+<span id="paqc-qc-functions-qc7-module"></span><h2>paqc.qc_functions.qc7 module<a class="headerlink" href="#module-paqc.qc_functions.qc7" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.qc_functions.qc7.qc7">
+<code class="descclassname">paqc.qc_functions.qc7.</code><code class="descname">qc7</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc7.qc7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that no rows are a 100% empty.
+:param df: The qc-ed dataframe
+:param dict_config: Meta-data in dictionary
+:return: ReportItem</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.qc_functions.qc8">
+<span id="paqc-qc-functions-qc8-module"></span><h2>paqc.qc_functions.qc8 module<a class="headerlink" href="#module-paqc.qc_functions.qc8" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.qc_functions.qc8.qc8">
+<code class="descclassname">paqc.qc_functions.qc8.</code><code class="descname">qc8</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc8.qc8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all columns end with one of the official suffixes in the config,
+or be equal to the gender, target, patient_id, matched_patient_id cols, or
+one of the special columns.
+:param df: The qc-ed dataframe
+:param dict_config: Meta-data in dictionary
+:return: ReportItem</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-paqc.qc_functions">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-paqc.qc_functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.qc_functions.import_submodules">
+<code class="descclassname">paqc.qc_functions.</code><code class="descname">import_submodules</code><span class="sig-paren">(</span><em>package</em>, <em>recursive=True</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.import_submodules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import all submodules of a module, recursively, including subpackages</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>package</strong> &#8211; package (name or actual module)</li>
+<li><strong>recursive</strong> &#8211; Boolean</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict[str, types.ModuleType]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 </div>
 
@@ -119,7 +172,9 @@ spaces. They should only contain letters, numbers and underscores.</p>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-paqc.qc_functions.qc1">paqc.qc_functions.qc1 module</a></li>
 <li><a class="reference internal" href="#module-paqc.qc_functions.qc3">paqc.qc_functions.qc3 module</a></li>
-<li><a class="reference internal" href="#paqc-qc-functions-qc7-module">paqc.qc_functions.qc7 module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qc6">paqc.qc_functions.qc6 module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qc7">paqc.qc_functions.qc7 module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qc8">paqc.qc_functions.qc8 module</a></li>
 <li><a class="reference internal" href="#module-paqc.qc_functions">Module contents</a></li>
 </ul>
 </li>

@@ -56,6 +56,17 @@
 <p>Functions for reading, parsing and sanity checking the YAML config files of the
 QC pipelines.</p>
 <dl class="function">
+<dt id="paqc.utils.config_utils.add_qc_to_input_qc_dict">
+<code class="descclassname">paqc.utils.config_utils.</code><code class="descname">add_qc_to_input_qc_dict</code><span class="sig-paren">(</span><em>input_qc</em>, <em>input_file</em>, <em>qc</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.config_utils.add_qc_to_input_qc_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function that adds qc functions to the input_qc dictionary, mapping
+each qc to one (or multiple) input files.
+:param input_qc: Dictionary to be updated with input1,...,input_n as keys
+:param input_file: Name of the key to update or create: input1,...,input_n
+:param qc: name of the qc function: qc1,...,qc_n
+:return: updated input_qc dictionary</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="paqc.utils.config_utils.config_checker">
 <code class="descclassname">paqc.utils.config_utils.</code><code class="descname">config_checker</code><span class="sig-paren">(</span><em>yml</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.config_utils.config_checker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses the YAML config file and checks that the minimum required fields for
@@ -93,6 +104,28 @@ and the YAML config object is a dict of dicts and lists.</td>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="paqc.utils.config_utils.config_parser">
+<code class="descclassname">paqc.utils.config_utils.</code><code class="descname">config_parser</code><span class="sig-paren">(</span><em>yml</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.config_utils.config_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Once the <code class="xref py py-func docutils literal"><span class="pre">config_checker()</span></code> checked the config file
+this function extracts some important bits from it for the driver and also
+reformats the structure of the QCs dict part to make it indexed by the
+input_files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>yml</strong> &#8211; Output of <code class="xref py py-func docutils literal"><span class="pre">config_open()</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Reformatted YAML config object (dict of dicts), where the files
+with multiple inputs (* in their name) are converted to lists and
+the qcs section is replaced and reformatted to be indexed by input
+files.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-paqc.utils.utils">
 <span id="paqc-utils-utils-module"></span><h2>paqc.utils.utils module<a class="headerlink" href="#module-paqc.utils.utils" title="Permalink to this headline">¶</a></h2>
@@ -110,6 +143,50 @@ the test was carried out on.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> &#8211; Pandas DataFrame object.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Hash integer that uniquely maps to a certain DataFrame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_list_columns">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_list_columns</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em>, <em>list_keys</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_list_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates list of all column names needed, based on the list of keys for
+the dict_config.
+:param df:
+:param dict_config:
+:param list_keys:
+:return: List of all column names that match the values of the key-value
+pairs from list_keys</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_short_string">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_short_string</code><span class="sig-paren">(</span><em>ls_items</em>, <em>n_items_printed=20</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_short_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate short string of a list of items (column names, indices etc),
+typically for the ReportItem.text field.
+:param ls_items: list of values that needs to be turned into printable string.
+:param n_items_printed: First n numbers of the list that are put into the
+string format.
+:return: Comma delimited string</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.write_list_to_csv">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">write_list_to_csv</code><span class="sig-paren">(</span><em>ls_items</em>, <em>path_csv</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.write_list_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a csv file with the list items in a single column</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ls_items</strong> &#8211; input list</li>
+<li><strong>path_csv</strong> &#8211; path of the csv file to be written to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
 </tr>
 </tbody>
 </table>

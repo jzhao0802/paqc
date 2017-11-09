@@ -9,7 +9,7 @@ import pandas as pd
 from paqc.utils import config_utils
 from paqc.utils import utils
 from paqc.report import report
-import paqc.qc_functions as qc_functions
+import paqc.qc_functions as qcs_main
 
 
 class Driver:
@@ -24,6 +24,8 @@ class Driver:
         self.general = None
         self.report = report.Report(self.config)
         self.verbose = verbose
+        # load the QC functions into a single dict
+        self.qc_functions = qcs_main.import_submodules(qcs_main)
         self.config_loader()
 
     def config_loader(self):
@@ -96,8 +98,7 @@ class Driver:
             qc_config = {'general': self.general, 'qc': qcs[qc]}
             qc_config['qc']['input_file_path'] = input_file_path
             # extract the specific QC object from the qc_functions module
-            qc_function_python_script = getattr(qc_functions, qc)
-            qc_function = getattr(qc_function_python_script, qc)
+            qc_function = self.qc_functions[qc]
             # execute and time it on the data file
             self.printer("Executing test %s on %s: %s" %
                          (qc, input_file, input_file_path))

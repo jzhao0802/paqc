@@ -88,11 +88,16 @@ in the generated report.
 
 <dl class="class">
 <dt id="paqc.report.report.ReportItem">
-<em class="property">class </em><code class="descclassname">paqc.report.report.</code><code class="descname">ReportItem</code><span class="sig-paren">(</span><em>passed</em>, <em>level</em>, <em>order</em>, <em>input_file</em>, <em>text='PASSED'</em>, <em>exec_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">paqc.report.report.</code><code class="descname">ReportItem</code><span class="sig-paren">(</span><em>passed</em>, <em>level</em>, <em>order</em>, <em>input_file</em>, <em>input_file_path</em>, <em>extra=None</em>, <em>text=None</em>, <em>exec_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Simple lass for the output of an individual test. Each item has to have a
 level, and input file, and a text the holds the info, warning or error
 message.</p>
+<dl class="staticmethod">
+<dt id="paqc.report.report.ReportItem.init_conditional">
+<em class="property">static </em><code class="descname">init_conditional</code><span class="sig-paren">(</span><em>list_failures</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.init_conditional" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="paqc.report.report.ReportItem.print_report_item">
 <code class="descname">print_report_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.print_report_item" title="Permalink to this definition">¶</a></dt>
