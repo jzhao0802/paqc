@@ -24,17 +24,17 @@ qcs:
       - input2
     level: error
     order: 1
-  qc2:
+  qc3:
     input_file: input1
     level: error
     order: 2
-  qc3:
+  qc6:
     input_file:
       - input1
       - input2
     level: warning
     order: 3
-  qc4:
+  qc7:
     input_file: input2
     level: info
     order: 4

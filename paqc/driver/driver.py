@@ -4,12 +4,11 @@ executes the QC scripts in the requested order and collates their findings in a
 report.
 """
 
-import os
 import pandas as pd
 from paqc.utils import config_utils
 from paqc.utils import utils
 from paqc.report import report
-import paqc.qc_functions as qc
+import paqc.qc_functions as qc_functions
 
 
 class Driver:
@@ -29,6 +28,7 @@ class Driver:
     def config_loader(self):
         """
         This will load, check and parse the config file for the driver.
+
         :return: Nothing. Updates the internal config object of the driver.
         """
         self.printer("Loading config file...")
@@ -39,7 +39,7 @@ class Driver:
                 self.config = config_utils.config_parser(self.config)
                 self.general = self.config['general']
                 self.printer("Config file checked and parsed. "
-                             "Starting QC pipeline...", True)
+                             "Starting QC pipeline...")
             else:
                 self.printer("Check the config file, some mandatory fields "
                              "are either missing or misformatted.")
@@ -73,10 +73,14 @@ class Driver:
                                  (k, self.general[k]), True)
                     self.do_qc(k, self.general[k], v)
 
+        # print report
+        # self.report_generator()
+
     def do_qc(self, input_file, input_file_path, qcs):
         """
         This is the function that actually takes an input data file with a
         path, loads it, then calls all required qc functions on it.
+
         :param input_file: input1,...,input_n
         :param input_file_path: actual file path to the data
         :param qcs: dictionary of qcs to execute on a given data file.
@@ -87,23 +91,31 @@ class Driver:
         df_hash = utils.generate_hash(df)
         print("Unique generated hash: %d" % df_hash)
         for qc in qcs:
-
-            print(qc)
+            # generate mini config object for the QC function
+            qc_config = {'general': self.general, 'qc': qcs[qc]}
+            # extract the specific QC object from the qc_functions module
+            qc_function_python_script = getattr(qc_functions, qc)
+            qc_function = getattr(qc_function_python_script, qc)
+            # execute it on the data file
+            self.printer("Executing test %s on data file %s" % (qc, input_file))
+            self.report.add_item(qc_function(df, qc_config))
 
     def report_generator(self):
         """
         Generates an HTML and .txt report from the Driver's
         :obj:`~report.report.Report`
+
         :return: Nothing, generates report to the output folder instead.
         """
 
-        print(self.report)
+        self.report.print_items()
         return True
 
     def data_loader(self, input_file_path):
         """
         Loads an input data file using its path and the source argument of
         the config file.
+
         :param input_file_path: path to the data.
         :return: pandas DataFrame object of the fully loaded datafile.
         """
@@ -115,16 +127,21 @@ class Driver:
         if source == 'csv':
             return pd.read_csv(input_file_path)
 
-    def printer(self, to_print, hline_after=False):
+    def printer(self, to_print, hline_before=False, hline_after=False):
         """
         Simple wrapper function, that prints messages to users if the driver
         object was instantiated with verbose=True.
+
         :param to_print: Message to print.
+        :param hline_before: Boolean, should a horizontal like be printed
+               before the to_print string?
         :param hline_after: Boolean, should a horizontal like be printed
                after the to_print string?
         :return: Nothing, prints to standard out.
         """
         if self.verbose:
+            if hline_before:
+                print("-------------------------------------------------------")
             print(to_print)
             if hline_after:
                 print("-------------------------------------------------------")
