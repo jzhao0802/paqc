@@ -13,6 +13,6 @@ def qc16(df, dict_config):
     :return:
     """
 
-    
+
 
     return rp.ReportItem.init_conditional(ls_nomatch, dict_config['qc'])
