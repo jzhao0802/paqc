@@ -29,6 +29,10 @@ qcs:
     input_file: input1
     level: error
     order: 2
+  qc4:
+    input_file: input1
+    level: error
+    order: 2
   qc6:
     input_file:
       - input1
@@ -39,3 +43,12 @@ qcs:
     input_file: input2
     level: info
     order: 4
+  qc8:
+    input_file: input2
+    level: info
+    order: 4
+  qc16:
+    input_file: input2
+    level: info
+    order: 5
+    max_fraction_missing: 0.3
