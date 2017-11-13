@@ -1,13 +1,3 @@
 general:
   input1: paqc/data/training_data.csv
   output_dir: paqc/report/output
-
-qcs:
-  qc1:
-    input_file: input1
-    level: error
-    order: 1
-  qc2:
-    input_file: input1
-    level: warning
-    order: 2

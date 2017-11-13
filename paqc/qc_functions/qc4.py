@@ -16,7 +16,7 @@ def qc4(df, dict_config):
     :return: ReportItem
     """
 
-    patient_id = dict_config['general']['patient_id']
+    patient_id = dict_config['general']['patient_id_col']
     ls_idx_duplicateID = df[patient_id][df[patient_id].duplicated(
         keep=False) & ~df[patient_id].isnull()].index.tolist()
 

@@ -11,7 +11,7 @@ def qc52(df, dict_config):
     :return:
     """
 
-    colname_patientid = dict_config['general']['patient_id']
+    colname_patientid = dict_config['general']['patient_id_col']
     ls_missing_ids = df[df[colname_patientid].isnull()].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_missing_ids, dict_config['qc'])

@@ -5,7 +5,7 @@ from paqc.utils.config_utils import config_open
 
 
 @pytest.mark.parametrize("dict_config", [
-    config_open("paqc/data/driver_dict_output.yml")[1]
+    config_open("paqc/tests/data/driver_dict_output.yml")[1]
 ])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Original column names from data/qc_data.csv

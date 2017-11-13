@@ -15,7 +15,7 @@ def qc8(df, dict_config):
     :return: ReportItem
     """
 
-    keys_colnames = ['target_col', 'patient_id', 'matched_patient_id',
+    keys_colnames = ['target_col', 'patient_id_col', 'matched_patient_id_col',
                      'gender_col', 'date_cols', 'count_cols', 'freq_cols',
                      'first_exp_date_cols', 'last_exp_date_cols', 'age_col']
     ls_allowed = dict_config['general']['special_cols']

@@ -1,7 +1,7 @@
 general:
   source: csv
-  input1: paqc/data/qc_data1.csv
-  input2: paqc/data/test*.csv
+  input1: paqc/data/qc_data.csv
+  input2: paqc/data/qc_data_multi*.csv
   output_dir: paqc/report/output
   date_cols: _DATE
   count_cols: _CNT
@@ -9,9 +9,12 @@ general:
   freq_cols: _FREQ
   first_exp_date_cols: _FIRST_EXP_DT
   last_exp_date_cols: _LAST_EXP_DT
+  index_date_col: INDEX_DATE
+  lookback_date_col: LOOKBACK_DATE
   gender_col: GENDER
   age_col: AGE
   target_col: LABEL
-  patient_id: PATIENT_ID
+  patient_id_col: PATIENT_ID
+
 
 

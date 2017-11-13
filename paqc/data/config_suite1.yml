@@ -32,10 +32,6 @@ qcs:
     input_file: input1
     level: error
     order: 2
-  qc4:
-    input_file: input1
-    level: error
-    order: 3
   qc6:
     input_file:
       - input1
@@ -54,4 +50,5 @@ qcs:
     input_file: input2
     level: info
     order: 7
-    max_fraction_diff: 0.3
+    qc_params:
+      max_fraction_diff: 0.3
