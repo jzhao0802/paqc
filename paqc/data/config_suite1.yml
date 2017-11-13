@@ -9,14 +9,17 @@ general:
   freq_cols: _FREQ
   first_exp_date_cols: _FIRST_EXP_DT
   last_exp_date_cols: _LAST_EXP_DT
+  index_date_col: INDEX_DATE
+  lookback_date_col: LOOKBACK_DATE
   gender_col: GENDER
   age_col: AGE
   target_col: LABEL
-  patient_id: PATIENT_ID
-  matched_patient_id: MATCHED_PATIENT_ID
+  patient_id_col: PATIENT_ID
+  matched_patient_id_col: MATCHED_PATIENT_ID
   special_cols:
-   - special1
-   - special2
+    - special1
+    - special2
+  date_format: "%Y-%m-%d %H:%M:%S"
 
 qcs:
   qc1:
@@ -32,23 +35,23 @@ qcs:
   qc4:
     input_file: input1
     level: error
-    order: 2
+    order: 3
   qc6:
     input_file:
       - input1
       - input2
     level: warning
-    order: 3
+    order: 4
   qc7:
     input_file: input2
     level: info
-    order: 4
+    order: 5
   qc8:
     input_file: input2
     level: info
-    order: 4
+    order: 6
   qc16:
     input_file: input2
     level: info
-    order: 5
+    order: 7
     max_fraction_diff: 0.3

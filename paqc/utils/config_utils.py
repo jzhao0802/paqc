@@ -88,11 +88,12 @@ def config_checker(yml):
                 return False
 
         # test mandatory column name fields
-        mandatory_general_fields = {'date_cols', 'count_cols', 'freq_cols',
+        mandatory_general_fields = {'flag_cols', 'count_cols', 'freq_cols',
                                     'first_exp_date_cols', 'last_exp_date_cols',
-                                    'target_col', 'patient_id', 'gender_col',
-                                    'age_col', 'special_cols', 'flag_cols',
-                                    'matched_patient_id'}
+                                    'index_date_col', 'lookback_date_col',
+                                    'date_format', 'date_cols', 'target_col',
+                                    'patient_id', 'gender_col', 'age_col',
+                                    'special_cols', 'matched_patient_id'}
         if not mandatory_general_fields.issubset(general.keys()):
             print("ConfigError: The general section must have these fields: "
                   "%s." % ', '.join(list(mandatory_general_fields)))

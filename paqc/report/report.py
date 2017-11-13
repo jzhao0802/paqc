@@ -16,11 +16,13 @@ class ReportItem:
     message.
     """
 
-    def __init__(self, passed, level, order, input_file, input_file_path,
-                 extra=None, text=None, exec_time=0, qc_params={}):
+    def __init__(self, passed, level, order, qc_num, input_file,
+                 input_file_path, extra=None, text=None, exec_time=0,
+                 qc_params=None):
         self.level = level
         self.passed = passed
         self.order = order
+        self.qc_num = qc_num
         self.input_file = input_file
         self.input_file_path = input_file_path
         self.text = text
@@ -37,10 +39,9 @@ class ReportItem:
 
     def summarise_report_item(self):
         return ("Test item #%d (level: %s) was carried out on %s: %s. \nIt "
-                "has "
-                "passed: %s, in %d seconds, with the following message:\n%s" %
-                (self.order, self.level, self.input_file, self.input_file_path,
-                 self.passed, self.exec_time, self.text))
+                "has passed: %s, in %s seconds, with the following message:\n%s"
+                %(self.qc_num, self.level, self.input_file, self.input_file_path,
+                  self.passed, "{0:.4f}".format(self.exec_time), self.text))
 
     def print_report_item(self):
         print(self.summarise_report_item())

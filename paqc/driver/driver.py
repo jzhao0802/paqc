@@ -5,7 +5,7 @@ report.
 """
 
 import time
-import pandas as pd
+from paqc.connectors import csv
 from paqc.utils import config_utils
 from paqc.utils import utils
 from paqc.report import report
@@ -46,8 +46,10 @@ class Driver:
             else:
                 self.printer("Check the config file, some mandatory fields "
                              "are either missing or misformatted.")
+                return
         else:
-            raise ValueError("Couldn't load config file. It's badly formatted.")
+            self.printer("Couldn't load config file. It's badly formatted.")
+            return
 
         # parsed config successfully, let's execute qc functions
         self.main()
@@ -76,9 +78,6 @@ class Driver:
                                  (k, self.general[k]), True)
                     self.do_qc(k, self.general[k], v)
 
-        # print report
-        self.report_generator()
-
     def do_qc(self, input_file, input_file_path, qcs):
         """
         This is the function that actually takes an input data file with a
@@ -97,6 +96,7 @@ class Driver:
             # generate mini config object for the QC function
             qc_config = {'general': self.general, 'qc': qcs[qc]}
             qc_config['qc']['input_file_path'] = input_file_path
+            qc_config['qc']['qc_num'] = qc
             # extract the specific QC object from the qc_functions module
             qc_function = self.qc_functions[qc]
             # execute and time it on the data file
@@ -105,7 +105,7 @@ class Driver:
             ts = time.time()
             rpi = qc_function(df, qc_config)
             te = time.time()
-            rpi.exec_time = int((te - ts) * 1000)
+            rpi.exec_time = te - ts
             self.report.add_item(rpi)
 
     def report_generator(self):
@@ -133,7 +133,15 @@ class Driver:
             raise ValueError("We only support .csv input files currently.")
 
         if source == 'csv':
-            return pd.read_csv(input_file_path)
+            loaded, df = csv.read_csv(self.config, input_file_path)
+            if loaded:
+                return df
+            else:
+                raise ValueError("We couldn't load the following file: %s. "
+                                 "It's most likely, that your dates are "
+                                 "formatted inconsistently. Make sure to visit "
+                                 "http://strftime.org/ for the correct date "
+                                 "format specs." % input_file_path)
 
     def printer(self, to_print, hline_before=False, hline_after=False):
         """
