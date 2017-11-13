@@ -15,7 +15,7 @@ class ReportItem:
     """
 
     def __init__(self, passed, level, order, input_file, input_file_path,
-                 extra=None, text=None, exec_time=0):
+                 extra=None, text=None, exec_time=0, qc_params={}):
         self.level = level
         self.passed = passed
         self.order = order
@@ -24,16 +24,18 @@ class ReportItem:
         self.text = text
         self.extra = extra
         self.exec_time = exec_time
+        self.qc_params = qc_params
 
     @classmethod
     def init_conditional(cls, list_failures, dict_config):
         if not list_failures:
             return cls(passed=True, **dict_config)
         else:
-            return cls(passed=False, extra=list_failures,**dict_config)
+            return cls(passed=False, extra=list_failures, **dict_config)
 
     def summarise_report_item(self):
-        return ("Test item #%d (level: %s) was carried out on %s: %s. \nIt has "
+        return ("Test item #%d (level: %s) was carried out on %s: %s. \nIt "
+                "has "
                 "passed: %s, in %d seconds, with the following message:\n%s" %
                 (self.order, self.level, self.input_file, self.input_file_path,
                  self.passed, self.exec_time, self.text))
@@ -49,6 +51,7 @@ class ReportItem:
 
     def update_exec_time(self, exec_time):
         self.exec_time = exec_time
+
 
 class Report:
     """

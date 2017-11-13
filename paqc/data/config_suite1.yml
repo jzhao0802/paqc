@@ -51,4 +51,4 @@ qcs:
     input_file: input2
     level: info
     order: 5
-    max_fraction_missing: 0.3
+    max_fraction_diff: 0.3

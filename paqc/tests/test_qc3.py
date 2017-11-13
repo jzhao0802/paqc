@@ -4,6 +4,7 @@ import pandas as pd
 from paqc.qc_functions.qc3 import qc3
 from paqc.utils.config_utils import config_open
 
+
 @pytest.mark.parametrize("dict_config", [
     config_open("paqc/data/driver_dict_output.yml")[1]
 ])

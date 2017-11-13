@@ -1,7 +1,6 @@
 import pandas as pd
-from os.path import join
+
 from paqc.report import report as rp
-from paqc.utils import utils
 
 
 def qc4(df, dict_config):
@@ -21,5 +20,4 @@ def qc4(df, dict_config):
     ls_idx_duplicateID = df[patient_id][df[patient_id].duplicated(
         keep=False) & ~df[patient_id].isnull()].index.tolist()
 
-    return rp.ReportItem.init_conditional(ls_idx_duplicateID, dict_config[
-        'qc'])
+    return rp.ReportItem.init_conditional(ls_idx_duplicateID, dict_config['qc'])

@@ -1,12 +1,12 @@
 import pandas as pd
-from os.path import join
+
 from paqc.report import report as rp
-from paqc.utils import utils
 
 
 def qc6(df, dict_config):
     """
-    No duplicate patient IDs within the same cohort file.
+    Checks for columns that are a 100% empty.
+
     :param df: The qc-ed dataframe
     :param dict_config: Meta-data in dictionary
     :return: ReportItem

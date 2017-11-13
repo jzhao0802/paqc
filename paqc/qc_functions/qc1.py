@@ -2,7 +2,7 @@ import pandas as pd
 import re
 
 from paqc.report import report as rp
-from paqc.utils import utils
+
 
 def qc1(df, dict_config):
     """

@@ -1,7 +1,4 @@
 import pandas as pd
-import re
-
-from os.path import join
 
 from paqc.report import report as rp
 from paqc.utils import utils
