@@ -138,20 +138,16 @@ one of the special columns.
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-paqc.qc_functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="paqc.qc_functions.import_submodules">
-<code class="descclassname">paqc.qc_functions.</code><code class="descname">import_submodules</code><span class="sig-paren">(</span><em>package</em>, <em>recursive=True</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.import_submodules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import all submodules of a module, recursively, including subpackages</p>
+<code class="descclassname">paqc.qc_functions.</code><code class="descname">import_submodules</code><span class="sig-paren">(</span><em>package</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.import_submodules" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will help us load all QC functions from the QC collections
+and put all the QC functions within a single dictionary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>package</strong> &#8211; package (name or actual module)</li>
-<li><strong>recursive</strong> &#8211; Boolean</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> &#8211; package (name or actual module)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict[str, types.ModuleType]</p>
-</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict[str, types.ModuleType]</td>
 </tr>
 </tbody>
 </table>

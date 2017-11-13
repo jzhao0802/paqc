@@ -64,25 +64,86 @@ individual tests.</p>
 <dl class="method">
 <dt id="paqc.report.report.Report.add_item">
 <code class="descname">add_item</code><span class="sig-paren">(</span><em>report_item</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.add_item" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a new ReportItem to the Report.
-:param report_item: <code class="xref py py-obj docutils literal"><span class="pre">ReportItem</span></code>
-:return: None.</p>
+<dd><p>Adds a new ReportItem to the Report.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>report_item</strong> &#8211; <code class="xref py py-obj docutils literal"><span class="pre">ReportItem</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.Report.generate_report">
+<code class="descname">generate_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.generate_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function simply generates the final report HTML and the JSON
+that feeds the JavaScript tables. It also saves the tables as csv
+:return: Nothing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.Report.get_report_table">
+<code class="descname">get_report_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.get_report_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns the internal list of ReportItem obj representation of the
+Report object into a pandas DataFrame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame where each row is a ReportItem.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.Report.get_total_exec_time">
+<code class="descname">get_total_exec_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.get_total_exec_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return total execution time of the QC suite.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of seconds it took to execute all QC functions.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="paqc.report.report.Report.order_items">
 <code class="descname">order_items</code><span class="sig-paren">(</span><em>most_severe_first=True</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.order_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method will order the report items based on their severity,
-where error &gt; warning &gt; info.
-:param most_severe_first: If set to False, info items are the first
-in the generated report.
+where error &gt; warning &gt; info.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>most_severe_first</strong> &#8211; If set to False, info items are the first</td>
+</tr>
+</tbody>
+</table>
+<p>in the generated report.
 :return: None. This simply reorders the internal state of the Report.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="paqc.report.report.Report.print_items">
 <code class="descname">print_items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.print_items" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Simply prints the Report object&#8217;s ReportItems to the terminal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing, prints to terminal.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -93,9 +154,9 @@ in the generated report.
 <p>Simple lass for the output of an individual test. Each item has to have a
 level, and input file, and a text the holds the info, warning or error
 message.</p>
-<dl class="staticmethod">
+<dl class="classmethod">
 <dt id="paqc.report.report.ReportItem.init_conditional">
-<em class="property">static </em><code class="descname">init_conditional</code><span class="sig-paren">(</span><em>list_failures</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.init_conditional" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">init_conditional</code><span class="sig-paren">(</span><em>list_failures</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.init_conditional" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
