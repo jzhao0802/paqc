@@ -19,9 +19,11 @@ general:
     - special1
     - special2
     - special3
+  date_format: "%d/%m/%Y %H:%M"
 
 qc:
   input_file: input1
   input_file_path: paqc/data/training_data.csv
   level: error
   order: 1
+  qc_num: 'qc9'
