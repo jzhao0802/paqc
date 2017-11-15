@@ -8,8 +8,10 @@ general:
   flag_cols: _FLAG
   first_exp_date_cols: _FIRST_EXP_DT
   last_exp_date_cols: _LAST_EXP_DT
+  index_date_col: index_dt
+  lookback_date_col: lookback_dt
   gender_col: GENDER
-  target_col: LABEL
+  target_col: label
   age_col: AGE
   patient_id_col: PATIENT_ID
   matched_patient_id_col: MATCHED_PATIENT_ID

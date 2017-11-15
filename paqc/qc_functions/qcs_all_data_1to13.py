@@ -193,48 +193,37 @@ def qc10(df, dict_config):
         'qc'])
 
 
-def qc16(df, dict_config):
+def qc11(df, dict_config):
     """
-    Finds the columns for which the fraction of values that is missing or 0
-    differs less over the two classes than the provided threshold, provided
-    as max_fraction_diff.
-
-    :param df:
-    :param dict_config:
-                - max_fraction_diff: the parameter that decides how
-                different the fraction of missing/zero values for the two
-                different classes is allowed to be.
-    :return: ReportItem:
-                - self.extra=ls_cols_high_dif, the list of names of all
-                columns that pass the previously explained threshold.
-                - self.qc_params={max_fraction_diff:value}
-    """
-
-    colname_target = dict_config['general']['target_col']
-    threshold = dict_config['qc']['qc_params']['max_fraction_diff']
-
-    df_grouped = df.groupby(colname_target)
-    df_size = df_grouped.size()
-    df_sum = df_grouped.agg(lambda x: np.sum((x == 0) | pd.isnull(x)))
-    df_fract = df_sum.div(np.array(df_size), axis='index')
-    df_dif_high = abs(df_fract.iloc[0] - df_fract.iloc[1]) > threshold
-    ls_cols_high_dif = df_dif_high[df_dif_high].index.tolist()
-
-    return rp.ReportItem.init_conditional(ls_cols_high_dif, dict_config['qc'])
-
-
-def qc52(df, dict_config):
-    """
-    Checks for missing patient IDs.
+    All first exposure dates are before their last exposure date, unless
+    corresponding count=1 in which case they are equal.
 
     :param df:
     :param dict_config:
     :return: ReportItem:
-                - self.extra=ls_idx_missing_id, the list of indices of rows
-                that miss a patient ID.
+                - self.extra=ls_features_faulty, the list of all features
+                that have at least one row where last_exp_date is after
+                first_exp_date or where first_exp_date == last_exp_date and
+                count bigger than 1.
     """
 
-    patient_id_col = dict_config['general']['patient_id_col']
-    ls_idx_missing_id = df[df[patient_id_col].isnull()].index.tolist()
+    dict_grouped_cols = utils.generate_dict_grouped_columns(df, dict_config,
+                                                    ['first_exp_date_cols',
+                                                    'last_exp_date_cols',
+                                                     'count_cols'])
+    # Only run the test on predictors that have all those three columns
+    dict_grouped_cols = {predictor: dict_grouped for
+                         predictor, dict_grouped in dict_grouped_cols.items()
+                         if (len(dict_grouped) == 3)}
 
-    return rp.ReportItem.init_conditional(ls_idx_missing_id, dict_config['qc'])
+    ls_features_faulty = []
+    for feat, dict_feat in dict_grouped_cols.items():
+        # Column contains at least one row where first_exp is after last_exp
+        if (df[dict_feat['first_exp_date']] > df[dict_feat['last_exp_date']]).any():
+            ls_features_faulty.append(feat)
+        # Or at least one row where first_exp is at last_exp and count is not 1
+        elif ((df[dict_feat['first_exp_date']] == df[dict_feat[
+                'last_exp_date']]) & ~(df[dict_feat['count']] == 1)).any():
+            ls_features_faulty.append(feat)
+
+    return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])

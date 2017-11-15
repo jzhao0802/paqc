@@ -2,6 +2,7 @@
 Various general helper functions for the QC package.
 """
 from itertools import islice
+from collections import defaultdict
 import pandas as pd
 import re
 
@@ -56,9 +57,30 @@ def generate_list_columns(df, dict_config, list_keys):
     :param dict_config:
     :param list_keys:
     :return: List of all column names that match the values of the key-value
-    pairs from list_keys
+    pairs from list_keys.
     """
 
     list_regex = ["%s$" % dict_config['general'][key] for key in list_keys]
     prog = re.compile("(" + ")|(".join(list_regex) + ")")
     return [colname for colname in df.columns if prog.search(colname)]
+
+
+def generate_dict_grouped_columns(df, dict_config, list_keys):
+    """
+
+    :param df:
+    :param dict_config:
+    :param list_keys:
+    :return:
+    """
+
+    dict_regex = {re.sub(r'_cols$', '', key): "%s$" % dict_config['general'][
+        key] for key in list_keys}
+
+    dict_grouped_cols = defaultdict(dict)
+    for key, value in dict_regex.items():
+        for colname in df.columns:
+            if re.search(value, colname):
+                dict_grouped_cols[re.sub(value, '', colname)][key] = colname
+
+    return dict(dict_grouped_cols)
