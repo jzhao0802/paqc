@@ -208,9 +208,9 @@ def qc11(df, dict_config):
     """
 
     dict_grouped_cols = utils.generate_dict_grouped_columns(df, dict_config,
-                                                    ['first_exp_date_cols',
-                                                    'last_exp_date_cols',
-                                                     'count_cols'])
+                                                        ['first_exp_date_cols',
+                                                        'last_exp_date_cols',
+                                                        'count_cols'])
     # Only run the test on predictors that have all those three columns
     dict_grouped_cols = {predictor: dict_grouped for
                          predictor, dict_grouped in dict_grouped_cols.items()
@@ -221,9 +221,52 @@ def qc11(df, dict_config):
         # Column contains at least one row where first_exp is after last_exp
         if (df[dict_feat['first_exp_date']] > df[dict_feat['last_exp_date']]).any():
             ls_features_faulty.append(feat)
-        # Or at least one row where first_exp is at last_exp and count is not 1
+        # Or at least one row where first_exp == last_exp but not count == 1
         elif ((df[dict_feat['first_exp_date']] == df[dict_feat[
                 'last_exp_date']]) & ~(df[dict_feat['count']] == 1)).any():
             ls_features_faulty.append(feat)
+        # Or at least one row where count == 1 but not first_exp == last_exp
+        elif (~(df[dict_feat['first_exp_date']] == df[dict_feat[
+                'last_exp_date']]) & (df[dict_feat['count']] == 1)).any():
+            ls_features_faulty.append(feat)
+        # Otherwise, feature is fine
+        else:
+            pass
 
     return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])
+
+
+def qc12(df, dict_config):
+    """
+    Checks that if a row has a non missing value for one of the variable types
+    (flag, counts, freq, dates) for a feature/predictor, then all corresponding
+    columns of that feature/predictor should have non-missing entries for that
+    row.
+
+    :param df:
+    :param dict_config:
+    :return:
+        - self.extra=ls_feature_faulty, list of all the features that have
+        at least one row where some variables are missing/0 and other not.
+    """
+
+    dict_grouped_cols = utils.generate_dict_grouped_columns(df, dict_config,
+                                                        ['first_exp_date_cols',
+                                                         'last_exp_date_cols',
+                                                         'count_cols',
+                                                         'freq_cols',
+                                                         'flag_cols'])
+    ls_features_faulty = []
+    for feat, dict_feat in dict_grouped_cols.items():
+        df_feat = df[list(dict_feat.values())].copy()
+        ls_numeric_cols = [pd.api.types.is_numeric_dtype(df[colname]) for
+                           colname in df_feat]
+        df_feat.loc[:, ls_numeric_cols] = (df_feat.iloc[:, ls_numeric_cols]
+                                           == 0)
+        df_feat.loc[:, ~np.array(ls_numeric_cols)] = df_feat.loc[:,
+                                        ~np.array(ls_numeric_cols)].isnull()
+        if df_feat.sum(axis=1).between(0, len(dict_feat), inclusive=False).any():
+            ls_features_faulty.append(feat)
+
+    return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])
+

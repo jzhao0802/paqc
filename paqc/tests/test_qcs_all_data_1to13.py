@@ -162,3 +162,44 @@ def test_qc9(df, expected, ls_faults, dict_config):
 def test_qc10(df, expected, ls_faults, dict_config):
     rpi = qc10(df, dict_config)
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 11
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Modified subset from paqc/data/initial_pos.csv
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check1.csv")[1],
+     True, None),
+    # predictorA has first_exp_date after last_exp_date, predictorB has
+    # first_exp_date == last_exp_date, but with count > 1
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check2.csv")[1],
+     False, ['predictorA', 'predictorB']),
+    # predictorA has a first_exp_date missing for row with count 5, THIS IS
+    # NOT PICKED UP BY THIS QC, QC12 responsible for this.
+    # predictorB has row with count == 1, but first_exp_date before
+    # last_exp_date.
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check3.csv")[1],
+     False, ['predictorB'])
+])
+def test_qc11(df, expected, ls_faults, dict_config):
+    rpi = qc11(df, dict_config)
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 12
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Modified subset from paqc/data/initial_pos.csv
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check1.csv")[1],
+     True, None),
+    # predictorA has first_exp_date and last_exp_date, but no _count or _flag,
+    # predictorB lacks first_exp_date on rows with counts and flags
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check2.csv")[1],
+     False, ['predictorA', 'predictorB']),
+    # predictorB lacks first_exp_date and last_exp_date for row with counts
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check3.csv")[1],
+     False, ['predictorB'])
+])
+def test_qc12(df, expected, ls_faults, dict_config):
+    rpi = qc12(df, dict_config)
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
