@@ -24,6 +24,7 @@ def generate_short_string(ls_items, n_items_printed = 20):
     """
     Generate short string of a list of items (column names, indices etc),
     typically for the ReportItem.text field.
+
     :param ls_items: list of values that needs to be turned into printable string.
     :param n_items_printed: First n numbers of the list that are put into the
     string format.
@@ -53,6 +54,7 @@ def generate_list_columns(df, dict_config, list_keys):
     """
     Generates list of all column names needed, based on the list of keys for
     the dict_config.
+
     :param df:
     :param dict_config:
     :param list_keys:

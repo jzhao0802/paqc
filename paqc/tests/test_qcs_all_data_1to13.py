@@ -190,7 +190,7 @@ def test_qc11(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check1.csv")[1],
      True, None),
     # predictorA has first_exp_date and last_exp_date, but no _count or _flag,
     # predictorB lacks first_exp_date on rows with counts and flags
@@ -202,4 +202,23 @@ def test_qc11(df, expected, ls_faults, dict_config):
 ])
 def test_qc12(df, expected, ls_faults, dict_config):
     rpi = qc12(df, dict_config)
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 13
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Modified subset from paqc/data/initial_pos.csv
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check1.csv")[1],
+     True, None),
+    # predictorA and B have row with first_exp != last_exp, but count 1
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check2.csv")[1],
+     False, ['predictorA', 'predictorB']),
+    # predictorA has row that misses _first_exp_date, not flagged here!
+    # predictorB has row with first_exp != last_exp, but count 1
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check3.csv")[1],
+     False, ['predictorB'])
+])
+def test_qc13(df, expected, ls_faults, dict_config):
+    rpi = qc13(df, dict_config)
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)

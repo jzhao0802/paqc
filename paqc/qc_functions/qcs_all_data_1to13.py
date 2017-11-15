@@ -218,7 +218,7 @@ def qc11(df, dict_config):
 
     ls_features_faulty = []
     for feat, dict_feat in dict_grouped_cols.items():
-        # Column contains at least one row where first_exp is after last_exp
+        # Columns contains at least one row where first_exp is after last_exp
         if (df[dict_feat['first_exp_date']] > df[dict_feat['last_exp_date']]).any():
             ls_features_faulty.append(feat)
         # Or at least one row where first_exp == last_exp but not count == 1
@@ -245,9 +245,10 @@ def qc12(df, dict_config):
 
     :param df:
     :param dict_config:
-    :return:
-        - self.extra=ls_feature_faulty, list of all the features that have
-        at least one row where some variables are missing/0 and other not.
+    :return: ReportItem:
+                - self.extra=ls_feature_faulty, list of all the features that
+                have at least one row where some variables are missing/0 and
+                other not.
     """
 
     dict_grouped_cols = utils.generate_dict_grouped_columns(df, dict_config,
@@ -270,3 +271,35 @@ def qc12(df, dict_config):
 
     return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])
 
+
+def qc13(df, dict_config):
+    """
+    When first exposure date is before last exposure date, the count for
+    that feature has to be bigger than 1.
+
+    :param df:
+    :param dict_config:
+    :return: ReportItem:
+                - self.extra=ls_feature_faulty, list of all the features that
+                have at least one row where first_exp_date is before
+                last_exp_date but count is not bigger than 1.
+    """
+
+    dict_grouped_cols = utils.generate_dict_grouped_columns(df, dict_config,
+                                                        ['first_exp_date_cols',
+                                                         'last_exp_date_cols',
+                                                         'count_cols'])
+    # Only run the test on predictors that have all those three columns
+    dict_grouped_cols = {predictor: dict_grouped for
+                         predictor, dict_grouped in dict_grouped_cols.items()
+                         if (len(dict_grouped) == 3)}
+
+    ls_features_faulty = []
+    for feat, dict_feat in dict_grouped_cols.items():
+        # Columns contains at least one row where first_exp is before last_exp
+        # and count is not bigger than 1.
+        if ((df[dict_feat['first_exp_date']] < df[dict_feat[
+                'last_exp_date']]) & ~(df[dict_feat['count']] > 1)).any():
+            ls_features_faulty.append(feat)
+
+    return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])

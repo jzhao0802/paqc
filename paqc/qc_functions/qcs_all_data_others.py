@@ -6,6 +6,43 @@ from paqc.report import report as rp
 from paqc.utils import utils
 
 
+def qc14(df, dict_config):
+    """
+    Checks for missing patient IDs.
+
+    :param df:
+    :param dict_config:
+    :return: ReportItem:
+                - self.extra=ls_idx_missing_id, the list of indices of rows
+                that miss a patient ID.
+    """
+
+    patient_id_col = dict_config['general']['patient_id_col']
+    ls_idx_missing_id = df[df[patient_id_col].isnull()].index.tolist()
+
+    return rp.ReportItem.init_conditional(ls_idx_missing_id, dict_config['qc'])
+
+
+def qc15(df, dict_config):
+    """
+    Tests if all columns expected to be numeric are actually numeric (
+    according to the pd.read_csv function of pandas).
+
+    :param df:
+    :param dict_config:
+    :return:
+    """
+
+    # yaml keys for all columns that are supposed to be numeric
+    ls_keys = ['count_cols', 'freq_cols', 'flag_cols', 'age_col']
+
+    ls_colnames = utils.generate_list_columns(df, dict_config, ls_keys)
+    ls_cols_not_numeric = [colname for colname in ls_colnames if
+                           not pd.api.types.is_numeric_dtype(df[colname])]
+
+    return rp.ReportItem.init_conditional(ls_cols_not_numeric, dict_config['qc'])
+
+
 def qc16(df, dict_config):
     """
     Finds the columns for which the fraction of values that is missing or 0
@@ -34,20 +71,3 @@ def qc16(df, dict_config):
     ls_cols_high_dif = df_dif_high[df_dif_high].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_cols_high_dif, dict_config['qc'])
-
-
-def qc52(df, dict_config):
-    """
-    Checks for missing patient IDs.
-
-    :param df:
-    :param dict_config:
-    :return: ReportItem:
-                - self.extra=ls_idx_missing_id, the list of indices of rows
-                that miss a patient ID.
-    """
-
-    patient_id_col = dict_config['general']['patient_id_col']
-    ls_idx_missing_id = df[df[patient_id_col].isnull()].index.tolist()
-
-    return rp.ReportItem.init_conditional(ls_idx_missing_id, dict_config['qc'])
