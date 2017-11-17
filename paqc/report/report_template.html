@@ -1,0 +1,330 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>QC report</title>
+    <meta name="description" content="Data QC Report">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- S T Y L E S H E E T S -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+    html,
+        body {
+            margin: 10px;
+            width: 99%;
+            min-height: 100%;
+        }
+        .active {
+          color: #a5a5a5 !important;
+        }
+        td.highlight {
+            background-color: whitesmoke !important;
+        }
+    </style>
+    
+    <!-- J A V A S C R I P T S -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/natural.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+</head>
+
+<body id="body">
+    <!-- D E A L I N G   W I T H   I D I O T S  -->
+    <noscript>
+        <style type="text/css">
+            .container {display:none;}
+        </style>
+        <div class="noscriptmsg col-md-8" style="text-align: justify;">
+        <h1>You don't have JavaScript enabled.</h1>
+          We understand, that you represent a very "special" 1% of all users, but<br>
+          please enable JavaScript to use  {{ config['APP_NAME'] }} (and 99.99% of the net).<br><br>
+          Cheers!
+        </div>
+    </noscript>
+
+    <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em>
+        <a href="http://browsehappy.com/">Upgrade to a different browser</a> or
+        <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a>
+        to experience this site.</p><![endif]-->
+
+<link href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
+
+<!-- M A I N   S T U F F -->
+
+<div class="row">
+    <!--  TABLE  -->
+    <div id="table_wrapper" class="col-md-9">
+        <h3>Summary </h3>
+        <table id="table" class="table table-striped table-bordered"
+               cellspacing="0" style="width:100%; height:550px;"></table>
+    </div>
+    <!--  EXTRA  -->
+    <div id="extra_wrapper" class="col-md-3">
+        <h3>Extra info</h3>
+        <textarea id="extra_text" class="form-control" style="height:630px;"></textarea>
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div id="overview" class="col-md-9">
+        <h3>Help</h3>
+        <p>
+            <ul>
+                <li><b>Order</b> each table column (or by multiple by pressing Shift) by clicking on the arrows next to the header.</li>
+                <li>If the table is visually too cluttered, <b>hide columns</b> with the 'Toggle column' menu.</li>
+                <li>Use the <b>search bar</b> to filter the table to errors, or whatever you want.</li>
+                <li>Reset all orderings and search by clicking the '<b>Reset table</b>'.</li>
+                <li>Access <b>extra information</b> by clicking on QCs with items in their 'extra' column. </li>
+            </ul>
+        </p>
+    </div>
+    <div id="help" class="col-md-3">
+        <h3>Overview</h3>
+        <p>
+            <ul>
+                <li>16 QC scripts were performed on</li>
+                <li>3 data files in </li>
+                <li>4 minutes.</li>
+                <li>13 qc scripts have passed,</li>
+                <li>3 have failed.</li>
+            </ul>
+        </p>
+    </div>
+</div>
+    
+<script type="text/javascript">
+    var table_data = {
+    "data":
+        [{"qc_num":"qc1",
+        "passed":true,"level":"error",
+        "level_int":1,"order":1,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data.csv",
+        "exec_time":"0.0020s",
+        "text":""},
+        {"qc_num":"qc3",
+        "passed":true,"level":"error",
+        "level_int":1,"order":2,"extra":"",
+        "input_file":"input1",
+        "input_file_path":"paqc\/data\/qc_data.csv",
+        "exec_time":"0.0910s",
+        "text":""},
+        {"qc_num":"qc1",
+        "passed":true,"level":"error",
+        "level_int":1,"order":1,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi1.csv",
+        "exec_time":"0.0010s",
+        "text":""},
+        {"qc_num":"qc16",
+        "passed":false,"level":"error",
+        "level_int":1,"order":1,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi1.csv",
+        "exec_time":"0.0000s",
+        "text":"QC failed due to internal bug, report it to admins!"},
+        {"qc_num":"qc1",
+        "passed":true,"level":"error",
+        "level_int":1,"order":1,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi2.csv",
+        "exec_time":"0.0020s",
+        "text":""},
+        {"qc_num":"qc16",
+        "passed":false,"level":"error",
+        "level_int":1,"order":1,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi2.csv",
+        "exec_time":"0.0000s",
+        "text":"QC failed due to internal bug, report it to admins!"},
+        {"qc_num":"qc1",
+        "passed":true,"level":"error",
+        "level_int":1,"order":1,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi3.csv",
+        "exec_time":"0.0010s",
+        "text":""},
+        {"qc_num":"qc16",
+        "passed":false,"level":"error",
+        "level_int":1,"order":1,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi3.csv",
+        "exec_time":"0.0000s",
+        "text":"QC failed due to internal bug, report it to admins!"},
+        {"qc_num":"qc6",
+        "passed":true,"level":"warning",
+        "level_int":2,"order":4,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data.csv",
+        "exec_time":"0.0240s",
+        "text":""},
+        {"qc_num":"qc6",
+        "passed":false,"level":"warning",
+        "level_int":2,"order":4,"extra":"extra_1",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi1.csv",
+        "exec_time":"0.0020s",
+        "text":""},
+        {"qc_num":"qc6",
+        "passed":false,"level":"warning",
+        "level_int":2,"order":4,"extra":"extra_2",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi2.csv",
+        "exec_time":"0.0020s",
+        "text":""},
+        {"qc_num":"qc6",
+        "passed":false,"level":"warning",
+        "level_int":2,"order":4,"extra":"extra_3",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi3.csv",
+        "exec_time":"0.0020s",
+        "text":""},
+        {"qc_num":"qc7",
+        "passed":true,"level":"info",
+        "level_int":3,"order":5,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi1.csv",
+        "exec_time":"0.0020s",
+        "text":""},
+        {"qc_num":"qc7",
+        "passed":true,"level":"info",
+        "level_int":3,"order":5,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi2.csv",
+        "exec_time":"0.0010s",
+        "text":""},
+        {"qc_num":"qc7",
+        "passed":true,"level":"info",
+        "level_int":3,"order":5,"extra":"",
+        "input_file":"input2",
+        "input_file_path":"paqc\/data\/qc_data_multi3.csv",
+        "exec_time":"0.0020s",
+        "text":""}]
+};
+    var extra_1 ="D_5856_FIRST_EXP_DT\nD_V037_FIRST_EXP_DT\nD_V039_FIRST_EXP_DT\nD_V040_FIRST_EXP_DT\nD_V045_FIRST_EXP_DT\nD_V050_FIRST_EXP_DT\nD_V051_FIRST_EXP_DT\nD_V058_FIRST_EXP_DT\nD_V059_FIRST_EXP_DT\nD_V060_FIRST_EXP_DT\nD_V063_FIRST_EXP_DT\nD_V064_FIRST_EXP_DT\nD_V066_FIRST_EXP_DT\nD_V068_FIRST_EXP_DT\nD_V270_FIRST_EXP_DT\nD_3332_FIRST_EXP_DT\nD_3591_FIRST_EXP_DT\nD_3590_FIRST_EXP_DT\nD_5856_LAST_EXP_DT\nD_V037_LAST_EXP_DT\nD_V039_LAST_EXP_DT\nD_V040_LAST_EXP_DT\nD_V045_LAST_EXP_DT\nD_V050_LAST_EXP_DT\nD_V051_LAST_EXP_DT\nD_V058_LAST_EXP_DT\nD_V059_LAST_EXP_DT\nD_V060_LAST_EXP_DT\nD_V063_LAST_EXP_DT\nD_V064_LAST_EXP_DT\nD_V066_LAST_EXP_DT\nD_V068_LAST_EXP_DT\nD_V270_LAST_EXP_DT\nD_3332_LAST_EXP_DT\nD_3591_LAST_EXP_DT\nD_3590_LAST_EXP_DT\nG_568510_FIRST_EXP_DT\nG_722000_FIRST_EXP_DT\nG_423000_FIRST_EXP_DT\nG_352000_FIRST_EXP_DT\nG_568510_LAST_EXP_DT\nG_722000_LAST_EXP_DT\nG_423000_LAST_EXP_DT\nG_352000_LAST_EXP_DT\nP_95913_FIRST_EXP_DT\nP_96110_FIRST_EXP_DT\nP_L2275_FIRST_EXP_DT\nP_95913_LAST_EXP_DT\nP_96110_LAST_EXP_DT\nP_L2275_LAST_EXP_DT";
+    var extra_2 = "D_V032_FIRST_EXP_DT\nD_V040_FIRST_EXP_DT\nD_V045_FIRST_EXP_DT\nD_V050_FIRST_EXP_DT\nD_V051_FIRST_EXP_DT\nD_V059_FIRST_EXP_DT\nD_V060_FIRST_EXP_DT\nD_V062_FIRST_EXP_DT\nD_V063_FIRST_EXP_DT\nD_V065_FIRST_EXP_DT\nD_V069_FIRST_EXP_DT\nD_4359_FIRST_EXP_DT\nD_4371_FIRST_EXP_DT\nD_3579_FIRST_EXP_DT\nD_3592_FIRST_EXP_DT\nD_V032_LAST_EXP_DT\nD_V040_LAST_EXP_DT\nD_V045_LAST_EXP_DT\nD_V050_LAST_EXP_DT\nD_V051_LAST_EXP_DT\nD_V059_LAST_EXP_DT\nD_V060_LAST_EXP_DT\nD_V062_LAST_EXP_DT\nD_V063_LAST_EXP_DT\nD_V065_LAST_EXP_DT\nD_V069_LAST_EXP_DT\nD_4359_LAST_EXP_DT\nD_4371_LAST_EXP_DT\nD_3579_LAST_EXP_DT\nD_3592_LAST_EXP_DT\nG_352000_FIRST_EXP_DT\nG_352000_LAST_EXP_DT\nP_74230_FIRST_EXP_DT\nP_E0973_FIRST_EXP_DT\nP_62270_FIRST_EXP_DT\nP_95908_FIRST_EXP_DT\nP_L2275_FIRST_EXP_DT\nP_74230_LAST_EXP_DT\nP_E0973_LAST_EXP_DT\nP_62270_LAST_EXP_DT\nP_95908_LAST_EXP_DT\nP_L2275_LAST_EXP_DT";
+    var extra_3 = "D_2420_FIRST_EXP_DT\nD_4932_FIRST_EXP_DT\nD_V037_FIRST_EXP_DT\nD_V039_FIRST_EXP_DT\nD_V045_FIRST_EXP_DT\nD_V050_FIRST_EXP_DT\nD_V051_FIRST_EXP_DT\nD_V060_FIRST_EXP_DT\nD_V062_FIRST_EXP_DT\nD_V065_FIRST_EXP_DT\nD_V741_FIRST_EXP_DT\nD_6927_FIRST_EXP_DT\nD_3275_FIRST_EXP_DT\nD_3098_FIRST_EXP_DT\nD_3591_FIRST_EXP_DT\nD_3592_FIRST_EXP_DT\nD_3590_FIRST_EXP_DT\nD_2420_LAST_EXP_DT\nD_4932_LAST_EXP_DT\nD_V037_LAST_EXP_DT\nD_V039_LAST_EXP_DT\nD_V045_LAST_EXP_DT\nD_V050_LAST_EXP_DT\nD_V051_LAST_EXP_DT\nD_V060_LAST_EXP_DT\nD_V062_LAST_EXP_DT\nD_V065_LAST_EXP_DT\nD_V741_LAST_EXP_DT\nD_6927_LAST_EXP_DT\nD_3275_LAST_EXP_DT\nD_3098_LAST_EXP_DT\nD_3591_LAST_EXP_DT\nD_3592_LAST_EXP_DT\nD_3590_LAST_EXP_DT\nG_568510_FIRST_EXP_DT\nG_352000_FIRST_EXP_DT\nG_568510_LAST_EXP_DT\nG_352000_LAST_EXP_DT\nP_G8978_FIRST_EXP_DT\nP_G8979_FIRST_EXP_DT\nP_1101F_FIRST_EXP_DT\nP_83891_FIRST_EXP_DT\nP_83912_FIRST_EXP_DT\nP_93272_FIRST_EXP_DT\nP_99354_FIRST_EXP_DT\nP_83909_FIRST_EXP_DT\nP_83519_FIRST_EXP_DT\nP_L2275_FIRST_EXP_DT\nP_G8978_LAST_EXP_DT\nP_G8979_LAST_EXP_DT\nP_1101F_LAST_EXP_DT\nP_83891_LAST_EXP_DT\nP_83912_LAST_EXP_DT\nP_93272_LAST_EXP_DT\nP_99354_LAST_EXP_DT\nP_83909_LAST_EXP_DT\nP_83519_LAST_EXP_DT\nP_L2275_LAST_EXP_DT\nS_S59_FIRST_EXP\nS_S59_LAST_EXP_";
+    
+    // populate table dynamically with cols we got from user
+    var table_cols = ['qc_num', 'passed', 'level', 'level_int', 'order', 'extra','input_file', 'input_file_path', 'exec_time', 'text'];
+    var colsBase = [];
+    var cols = colsBase.slice();
+    for (var i = 0; i < table_cols.length; i++) {
+        cols.push({title: table_cols[i], "data": table_cols[i], "type": "natural"})
+    }
+    var table = $('#table').DataTable({
+        data: table_data.data,
+        columns: cols,
+        // order by chromosome number, feature start and end
+        "order": [[3, "asc"], [0, "asc"], [6, "asc"], [7, "asc"]],
+        scrollY: 550,
+        scrollCollapse: true,
+        paging: false,
+        info: false,
+        'autoWidth': true
+    });
+
+    // ----------------------------------------------------------------------------
+    // MOUSE OVER AND OUT
+    // ----------------------------------------------------------------------------
+    $('#table tbody').on('mouseover', 'td', tableMouseOverCell);
+    $('#table tbody').on('mouseout', 'td', tableMouseOutCell);
+    $('#table tbody').on('click', 'td', tableClickedCell);
+
+    function tableMouseOverCell(event) {
+        var colIdx = table.cell(this).index().column;
+        $( table.column( colIdx ).nodes() ).addClass( 'info' );
+        var tr = $(this).closest('tr');
+        tr.addClass('info');
+    }
+
+    function tableMouseOutCell(event) {
+        var colIdx = table.cell(this).index().column;
+        $( table.column( colIdx ).nodes() ).removeClass( 'info' );
+        var tr = $(this).closest('tr');
+        tr.removeClass('info');
+    }
+
+    // pull out extra variables and display then
+    function tableClickedCell(event){
+        var tr = $(this).closest('tr');
+        var extra_cell = table.row($(tr)).data().extra;
+        if (extra_cell  !== ''){
+            $('#extra_text').val(window[extra_cell]);
+        } else{
+            $('#extra_text').val('');
+        }
+    }
+
+    // ----------------------------------------------------------------------------
+    // ADD DYNAMIC COLUMN TOGGLE AND RESET BUTTON TO SEARCH BAR
+    // ----------------------------------------------------------------------------
+    // readjust col widths of search bar
+
+    function addToggleBar(tableName) {
+        $('#' + tableName + '_wrapper .col-sm-6:nth-child(1)')
+            .removeClass('col-sm-6')
+            .addClass('col-sm-9')
+            .addClass('togglebar');
+        $('#' + tableName + '_wrapper .col-sm-6:nth-child(2)')
+            .removeClass('col-sm-6')
+            .addClass('col-sm-3');
+
+        // add reset button and build toogle menu from table_cols array
+        var toggleMenu = '<p><a href="#" id="reset">Reset table</a> | Toggle column: ';
+        for (var i = 0; i < table_cols.length; i++) {
+            var d;
+            if (table_cols[i] !== '# links') {
+                d = table_cols[i];
+            } else {
+                d = "# links";
+            }
+            toggleMenu += '<a class="toggle-vis" data-column="' + (i) + '">' + d + '</a>'
+            if (i < table_cols.length - 1) {
+                toggleMenu += '&nbsp;<span style="color: #aaaaaa">|</span>&nbsp;';
+            } else {
+                toggleMenu += '</p>';
+            }
+        }
+
+        // add menu next to search bar and force hand cursor
+        $(toggleMenu).appendTo('#' + tableName +'_wrapper .col-sm-9').css("cursor", "pointer");
+
+
+        // register click events for toggle menu items
+        $('a.toggle-vis').on('click', function (e) {
+            if($(this).hasClass("active")) {
+                $(this).removeClass("active");
+            } else {
+                $(this).addClass("active");
+            }
+            e.preventDefault();
+            var column = table.column($(this).attr('data-column'));
+            column.visible(!column.visible());
+        });
+    }
+
+    // add toggle bar and reset button for both tables
+    addToggleBar('table');
+    $('#reset').click(resetTables);
+
+    function resetTables(){
+        // reset tables
+        table.search('').columns().search('').draw();
+        table.order([[3, "asc"], [0, "asc"], [6, "asc"], [7, "asc"]]).draw()
+        $('#extra_text').val('');
+    }
+</script>
+</body>
+</html>
+

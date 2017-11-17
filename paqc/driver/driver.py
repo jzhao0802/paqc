@@ -20,9 +20,9 @@ class Driver:
     """
 
     def __init__(self, config_path, verbose=True, debug=True):
-        self.config = config_utils.config_open(config_path)
+        self.config = config_path
         self.general = None
-        self.report = report.Report(self.config)
+        self.report = None
         self.verbose = verbose
         self.debug = debug
         # load the QC functions into a single dict
@@ -36,12 +36,14 @@ class Driver:
         :return: Nothing. Updates the internal config object of the driver.
         """
         self.printer("Loading config file...")
+        self.config = config_utils.config_open(self.config)
         if self.config[0]:
             self.printer("Checking and parsing config file...")
             self.config = self.config[1]
             if config_utils.config_checker(self.config):
                 self.config = config_utils.config_parser(self.config)
                 self.general = self.config['general']
+                self.report = report.Report(self.config)
                 self.printer("Config file checked and parsed. "
                              "Starting QC pipeline...")
             else:
@@ -62,7 +64,8 @@ class Driver:
         even if those have multiple chunked data files within them.
 
         :return: Nothing, calls the :func:`~driver.driver.do_qc` on each
-                 data_file and executes the required qc functions.
+                 data_file and executes the required qc functions, then
+                 generates the .csv and HTML report
         """
 
         # loop through the data files
@@ -78,6 +81,10 @@ class Driver:
                     self.printer("Starting QCs on %s, file path: %s" %
                                  (k, self.general[k]), True)
                     self.do_qc(k, self.general[k], v)
+
+        # generate final report
+        self.printer("Generating HTML and CSV report...", True, True)
+        self.report.generate_report()
 
     def do_qc(self, input_file, input_file_path, qcs):
         """

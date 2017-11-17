@@ -108,16 +108,33 @@ class Report:
         for i, item in enumerate(self.items):
             print("%d.   %s" % (i, item.summarise_report_item()))
 
-    def get_total_exec_time(self):
+    def get_summary_stats(self):
         """
-        Return total execution time of the QC suite.
+        This gathers a few simple summary stats about the Report object. The
+        keys of the returned dict are self-explanatory, so see those.
 
-        :return: Number of seconds it took to execute all QC functions.
+        :return: Dict, with the following keys: qc_sum, data_file_sum,
+                 passed_sum, failed_sum, total_exec_time.
         """
-        total_exec_time = 0
+
+        to_return = dict()
+        to_return['qc_sum'] = len(self.items)
+        file_counter = {}
+        to_return['data_file_sum'] = 0
+        to_return['total_exec_time'] = 0
+        to_return['passed_sum'] = 0
+        to_return['failed_sum'] = 0
         for item in self.items:
-            total_exec_time += item.exec_time
-        return total_exec_time
+            to_return['total_exec_time'] += item.exec_time
+            if item.passed:
+                to_return['passed_sum'] += 1
+            else:
+                to_return['failed_sum'] += 1
+            if item.input_file_path not in file_counter:
+                file_counter[item.input_file_path] = 1
+        to_return['data_file_sum'] = len(list(file_counter.keys()))
+
+        return to_return
 
     def get_report_table(self):
         """
@@ -136,16 +153,18 @@ class Report:
             item_attrs = list(self.items[0].__dict__.keys())
             report_d = {i: [] for i in item_attrs if i[:1] != '_'}
 
+        # add new key so we can sort by level in the HTML table
+        report_d['level_int'] = []
         for item in self.items:
             for item_attr in item_attrs:
                 value = getattr(item, item_attr)
                 # add severity level numerically, so ordering in HTML is easier
                 if item_attr == 'level' and value == 'error':
-                    value = "1_error"
+                    report_d['level_int'].append(1)
                 elif item_attr == 'level' and value == 'warning':
-                    value = "2_warning"
+                    report_d['level_int'].append(2)
                 elif item_attr == 'level' and value == 'info':
-                    value = "3_info"
+                    report_d['level_int'].append(3)
                 report_d[item_attr].append(value)
 
         return pd.DataFrame.from_dict(report_d)
@@ -154,6 +173,7 @@ class Report:
         """
         This function simply generates the final report HTML and the JSON
         that feeds the JavaScript tables. It also saves the tables as csv
+
         :return: Nothing.
         """
 
@@ -163,32 +183,114 @@ class Report:
         report_df = self.get_report_table()
 
         # reorder columns of report table
-        col_order = ['qc_num', 'passed', 'level', 'order', 'extra',
+        col_order = ['qc_num', 'passed', 'level', 'level_int', 'order', 'extra',
                      'input_file', 'input_file_path', 'exec_time', 'text']
         report_df_filtered = report_df[col_order]
 
-        # add in the extra file names and save them as seperate csvs
+        # format exec_times to be nicer
+        str_exec = report_df_filtered.loc[:, 'exec_time'].map('{:,.4f}s'.format)
+        report_df_filtered.loc[:, 'exec_time'] = str_exec
+
+        # add in the extra file names and save them as separate csvs and JS vars
         extra_counter = 1
+        extra_js = ''
+        n1 = '    '
+        n2 = n1 * 2
+        n3 = n1 * 3
+        n4 = n1 * 4
         for i in report_df_filtered.index:
             extra = report_df_filtered.loc[i, 'extra']
             if extra is not None:
                 extra_name = 'extra_%d' % extra_counter
                 extra_counter += 1
                 out_file = os.path.join(output_dir, extra_name + '.csv')
-                pd.Series(extra).to_csv(out_file)
                 report_df_filtered.loc[i, 'extra'] = extra_name
+
+                # depending on what's in extra we need to proceed differently
+                if isinstance(extra, list):
+                    # save list as csv
+                    pd.Series(extra).to_csv(out_file)
+                    # save list as js var
+                    list_to_str = '\\n'.join(map(str, extra))
+                    extra_js += '%svar %s = "%s";\n' % (n1, extra_name,
+                                                        list_to_str)
+                elif isinstance(extra, str):
+                    # save str as csv
+                    f = open(out_file, 'w')
+                    f.write(extra)
+                    f.close()
+                    # save str as js var
+                    extra_js += '%svar %s = %s;\n' % (n1, extra_name, extra)
+                elif isinstance(extra, dict):
+                    # save dict as csv
+                    pd.DataFrame().from_dict(extra).to_csv(out_file)
+                    # save dict as js var
+                    extra_js += ('%s var %s = "Please check the %s csv file in '
+                                 'the output_dir that contains further info."\n'
+                                 % (n1, extra_name, extra_name))
+                elif isinstance(extra, pd.DataFrame):
+                    # save DataFrame as csv
+                    extra.to_csv(out_file)
+                    # save DataFrame as js var
+                    extra_js += ('%s var %s = "Please check the %s csv file in '
+                                 'the output_dir that contains further info."\n'
+                                 % (n1, extra_name, extra_name))
             else:
                 report_df_filtered.loc[i, 'extra'] = ''
+            # delete None if text is empty
+            if report_df_filtered.loc[i, 'text'] is None:
+                report_df_filtered.loc[i, 'text'] = ''
 
-        # save as csv
+        # save filtered report table as csv
         report_df_filtered.to_csv(os.path.join(output_dir, 'report.csv'))
 
-        # save report table for JavaScript as a list of lists variable
-        t1 = '    '
-        report_df_js = 'var data = [\n'
-        for i in report_df_filtered.index:
-            one_row_js = '","'.join(map(str, report_df_filtered.loc[i].values))
-            report_df_js += '%s["%s"]\n' % (t1, one_row_js)
-        report_df_js += '];'
+        # save report table for JavaScript as JSON, and add tabs for legibility
+        report_df_js = report_df_filtered.to_json(None, orient='records')
+        report_df_js = report_df_js.replace('","', '",\n' + n2 + '"')
+        report_df_js = report_df_js.replace('},{', '},\n' + n2 + '{')
+        # add prefix and suffix so Data-tables accepts it
+        report_df_js = ('%svar table_data = {\n%s"data":\n%s%s\n%s};'
+                        % (n1, n1, n2, report_df_js, n1))
 
-        # write HTML file, with baked in JS and data for the Data-Table.js
+        # collate summary string for HTML site
+        summaries = self.get_summary_stats()
+        qc_sum = summaries['qc_sum']
+        data_file_sum = summaries['data_file_sum']
+        exec_time_sum = "{0:.1f}".format(summaries['total_exec_time'])
+        passed_sum = summaries['passed_sum']
+        failed_sum = summaries['failed_sum']
+        summary_str_js = ("%s<li>%d QC scripts were performed on</li>\n"
+                          "%s<li>%d data files in </li>\n"
+                          "%s<li>%s minutes.</li>\n"
+                          "%s<li>%d qc scripts have passed,</li>\n"
+                          "%s<li>%d have failed.</li>\n"
+                          "%s</ul>\n%s</p>\n%s</div>\n</div>\n"
+                          "<script type='text/javascript'>\n"
+                          % (n4, qc_sum,
+                             n4, data_file_sum,
+                             n4, exec_time_sum,
+                             n4, passed_sum,
+                             n4, failed_sum,
+                             n3, n2, n1))
+
+        # generate the final HTML site from results
+        out_file = os.path.join(output_dir, 'report.html')
+        html_out = open(out_file, 'w')
+        html1 = open("paqc/report/report_template1.txt")
+        html2 = open("paqc/report/report_template2.txt")
+
+        # write first part of HTML template file
+        for l in html1:
+            html_out.write(l)
+        html1.close()
+
+        # add in the report specific variables
+        html_out.write(summary_str_js)
+        html_out.write(report_df_js)
+        html_out.write(extra_js)
+
+        # write the final part of the html template
+        for l in html2:
+            html_out.write(l)
+        html2.close()
+        html_out.close()

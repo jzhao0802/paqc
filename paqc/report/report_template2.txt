@@ -1,0 +1,113 @@
+
+    // populate table dynamically with cols we got from user
+    var table_cols = ['qc_num', 'passed', 'level', 'level_int', 'order', 'extra','input_file', 'input_file_path', 'exec_time', 'text'];
+    var colsBase = [];
+    var cols = colsBase.slice();
+    for (var i = 0; i < table_cols.length; i++) {
+        cols.push({title: table_cols[i], "data": table_cols[i], "type": "natural"})
+    }
+    var table = $('#table').DataTable({
+        data: table_data.data,
+        columns: cols,
+        // order by chromosome number, feature start and end
+        "order": [[3, "asc"], [0, "asc"], [6, "asc"], [7, "asc"]],
+        scrollY: 550,
+        scrollCollapse: true,
+        paging: false,
+        info: false,
+        'autoWidth': true
+    });
+
+    // ----------------------------------------------------------------------------
+    // MOUSE OVER AND OUT
+    // ----------------------------------------------------------------------------
+    $('#table tbody').on('mouseover', 'td', tableMouseOverCell);
+    $('#table tbody').on('mouseout', 'td', tableMouseOutCell);
+    $('#table tbody').on('click', 'td', tableClickedCell);
+
+    function tableMouseOverCell(event) {
+        var colIdx = table.cell(this).index().column;
+        $( table.column( colIdx ).nodes() ).addClass( 'info' );
+        var tr = $(this).closest('tr');
+        tr.addClass('info');
+    }
+
+    function tableMouseOutCell(event) {
+        var colIdx = table.cell(this).index().column;
+        $( table.column( colIdx ).nodes() ).removeClass( 'info' );
+        var tr = $(this).closest('tr');
+        tr.removeClass('info');
+    }
+
+    // pull out extra variables and display then
+    function tableClickedCell(event){
+        var tr = $(this).closest('tr');
+        var extra_cell = table.row($(tr)).data().extra;
+        if (extra_cell  !== ''){
+            $('#extra_text').val(window[extra_cell]);
+        } else{
+            $('#extra_text').val('');
+        }
+    }
+
+    // ----------------------------------------------------------------------------
+    // ADD DYNAMIC COLUMN TOGGLE AND RESET BUTTON TO SEARCH BAR
+    // ----------------------------------------------------------------------------
+    // readjust col widths of search bar
+
+    function addToggleBar(tableName) {
+        $('#' + tableName + '_wrapper .col-sm-6:nth-child(1)')
+            .removeClass('col-sm-6')
+            .addClass('col-sm-9')
+            .addClass('togglebar');
+        $('#' + tableName + '_wrapper .col-sm-6:nth-child(2)')
+            .removeClass('col-sm-6')
+            .addClass('col-sm-3');
+
+        // add reset button and build toogle menu from table_cols array
+        var toggleMenu = '<p><a href="#" id="reset">Reset table</a> | Toggle column: ';
+        for (var i = 0; i < table_cols.length; i++) {
+            var d;
+            if (table_cols[i] !== '# links') {
+                d = table_cols[i];
+            } else {
+                d = "# links";
+            }
+            toggleMenu += '<a class="toggle-vis" data-column="' + (i) + '">' + d + '</a>'
+            if (i < table_cols.length - 1) {
+                toggleMenu += '&nbsp;<span style="color: #aaaaaa">|</span>&nbsp;';
+            } else {
+                toggleMenu += '</p>';
+            }
+        }
+
+        // add menu next to search bar and force hand cursor
+        $(toggleMenu).appendTo('#' + tableName +'_wrapper .col-sm-9').css("cursor", "pointer");
+
+
+        // register click events for toggle menu items
+        $('a.toggle-vis').on('click', function (e) {
+            if($(this).hasClass("active")) {
+                $(this).removeClass("active");
+            } else {
+                $(this).addClass("active");
+            }
+            e.preventDefault();
+            var column = table.column($(this).attr('data-column'));
+            column.visible(!column.visible());
+        });
+    }
+
+    // add toggle bar and reset button for both tables
+    addToggleBar('table');
+    $('#reset').click(resetTables);
+
+    function resetTables(){
+        // reset tables
+        table.search('').columns().search('').draw();
+        table.order([[3, "asc"], [0, "asc"], [6, "asc"], [7, "asc"]]).draw()
+        $('#extra_text').val('');
+    }
+</script>
+</body>
+</html>
