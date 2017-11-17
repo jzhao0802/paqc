@@ -64,10 +64,8 @@ def qc16(df, dict_config):
     threshold = dict_config['qc']['qc_params']['max_fraction_diff']
 
     df_grouped = df.groupby(colname_target)
-    df_size = df_grouped.size()
-    df_sum = df_grouped.agg(lambda x: np.sum((x == 0) | pd.isnull(x)))
-    df_fract = df_sum.div(np.array(df_size), axis='index')
-    df_dif_high = abs(df_fract.iloc[0] - df_fract.iloc[1]) > threshold
-    ls_cols_high_dif = df_dif_high[df_dif_high].index.tolist()
+    df_fract = df_grouped.agg(utils.fraction_zeroes_or_null)
+    ss_dif_high = abs(df_fract.iloc[0] - df_fract.iloc[1]) > threshold
+    ls_cols_high_dif = ss_dif_high[ss_dif_high].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_cols_high_dif, dict_config['qc'])

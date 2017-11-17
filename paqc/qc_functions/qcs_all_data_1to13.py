@@ -235,7 +235,7 @@ def qc11(df, dict_config):
 
     return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])
 
-
+# TODO: Can probably be rewritten in terms of is_zero_or_nul
 def qc12(df, dict_config):
     """
     Checks that if a row has a non missing value for one of the variable types

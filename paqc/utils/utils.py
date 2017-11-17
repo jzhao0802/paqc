@@ -4,6 +4,7 @@ Various general helper functions for the QC package.
 from itertools import islice
 from collections import defaultdict
 import pandas as pd
+import numpy as np
 import re
 
 
@@ -86,3 +87,44 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
                 dict_grouped_cols[re.sub(value, '', colname)][key] = colname
 
     return dict(dict_grouped_cols)
+
+
+def fraction_zeroes_or_null(ss):
+    if pd.api.types.is_numeric_dtype(ss):
+        return ((ss == 0) | ss.isnull()).sum()/len(ss)
+    else:
+        return (ss.isnull()).sum()/len(ss)
+
+
+def mean_all_types(ss):
+    if pd.api.types.is_numeric_dtype(ss):
+        return np.mean(ss)
+    elif pd.api.types.is_datetime64_any_dtype(ss):
+        return mean_datetime(ss)
+    else:
+        return np.nan
+
+
+def mean_datetime(ss_datetime):
+    """
+
+    :param ss_datetime:
+    :return:
+    """
+    ss_datetime = ss_datetime[~ss_datetime.isnull()]
+    dt_mean = np.datetime64(int(ss_datetime.astype('int64').mean()), 'ns')
+    return pd.to_datetime(dt_mean).strftime('%Y-%m-%d')
+
+
+def median_datetime(ss_datetime):
+    """
+
+    :param ss_datetime:
+    :return:
+    """
+    ss_datetime = ss_datetime[~ss_datetime.isnull()]
+    ls_datetime_sorted = list(ss_datetime.sort_values())
+    dt_median = ls_datetime_sorted[len(ls_datetime_sorted)//2]
+    return dt_median.strftime('%Y-%m-%d')
+
+

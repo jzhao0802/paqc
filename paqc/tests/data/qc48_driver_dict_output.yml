@@ -26,5 +26,8 @@ qc:
   input_file_path: paqc/data/training_data.csv
   level: error
   order: 1
-  qc_num: 'qc9'
-
+  qc_num: 'qc48'
+  qc_params:
+    list_columns: 
+        - A_first_exp_dt
+        - A_count
