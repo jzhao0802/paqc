@@ -144,7 +144,7 @@ class Report:
                     value = "1_error"
                 elif item_attr == 'level' and value == 'warning':
                     value = "2_warning"
-                else:
+                elif item_attr == 'level' and value == 'info':
                     value = "3_info"
                 report_d[item_attr].append(value)
 
@@ -162,25 +162,33 @@ class Report:
         self.order_items()
         report_df = self.get_report_table()
 
-        # save CSV
-        report_df.to_csv(os.path.join(output_dir, 'qc_report.csv'))
+        # reorder columns of report table
+        col_order = ['qc_num', 'passed', 'level', 'order', 'extra',
+                     'input_file', 'input_file_path', 'exec_time', 'text']
+        report_df_filtered = report_df[col_order]
 
-        # table to JSON, but make it legible by breaking lines and adding tabs
-        json_str = report_df.to_json(None, orient='records')
-        n1 = '    '
-        n2 = n1 * 2
-        json_str = json_str.replace('","', '",\n' + n2 + '"')
-        json_str = json_str.replace('},{', '},\n' + n2 + '{')
-        # add prefix and suffix so Data-tables (JS library) accepts it
-        json_str = '{\n' + n1 + '"data":\n' + n2 + json_str + '\n}'
+        # add in the extra file names and save them as seperate csvs
+        extra_counter = 1
+        for i in report_df_filtered.index:
+            extra = report_df_filtered.loc[i, 'extra']
+            if extra is not None:
+                extra_name = 'extra_%d' % extra_counter
+                extra_counter += 1
+                out_file = os.path.join(output_dir, extra_name + '.csv')
+                pd.Series(extra).to_csv(out_file)
+                report_df_filtered.loc[i, 'extra'] = extra_name
+            else:
+                report_df_filtered.loc[i, 'extra'] = ''
 
-        # save JSON
-        out_file = os.path.join(output_dir, 'qc_report.json')
-        f = open(out_file, 'w')
-        f.write(json_str)
-        f.close()
+        # save as csv
+        report_df_filtered.to_csv(os.path.join(output_dir, 'report.csv'))
 
-        # write HTML that uses the JSON with Data-tables JS library
+        # save report table for JavaScript as a list of lists variable
+        t1 = '    '
+        report_df_js = 'var data = [\n'
+        for i in report_df_filtered.index:
+            one_row_js = '","'.join(map(str, report_df_filtered.loc[i].values))
+            report_df_js += '%s["%s"]\n' % (t1, one_row_js)
+        report_df_js += '];'
 
-
-
+        # write HTML file, with baked in JS and data for the Data-Table.js

@@ -19,11 +19,12 @@ class Driver:
     one, while collecting their output and generating a report from it.
     """
 
-    def __init__(self, config_path, verbose=True):
+    def __init__(self, config_path, verbose=True, debug=True):
         self.config = config_utils.config_open(config_path)
         self.general = None
         self.report = report.Report(self.config)
         self.verbose = verbose
+        self.debug = debug
         # load the QC functions into a single dict
         self.qc_functions = qcs_main.import_submodules(qcs_main)
         self.config_loader()
@@ -99,11 +100,23 @@ class Driver:
             qc_config['qc']['qc_num'] = qc
             # extract the specific QC object from the qc_functions module
             qc_function = self.qc_functions[qc]
+
             # execute and time it on the data file
             self.printer("Executing test %s on %s: %s" %
                          (qc, input_file, input_file_path))
             ts = time.time()
-            rpi = qc_function(df, qc_config)
+            if self.debug:
+                rpi = qc_function(df, qc_config)
+            # if we're not in debug mode, don't stop at bugs, log them as errors
+            else:
+                try:
+                    rpi = qc_function(df, qc_config)
+                except:
+                    text = "QC failed due to internal bug, report it to admins!"
+                    rpi = report.ReportItem(passed=False, level="error",
+                                            order=1, qc_num=qc,
+                                            input_file=input_file, text=text,
+                                            input_file_path=input_file_path)
             te = time.time()
             rpi.exec_time = te - ts
             self.report.add_item(rpi)
