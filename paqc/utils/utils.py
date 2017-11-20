@@ -70,11 +70,25 @@ def generate_list_columns(df, dict_config, list_keys):
 
 def generate_dict_grouped_columns(df, dict_config, list_keys):
     """
+    Groups the columns of the dataframe df based on the feature, i.e. the
+    prefix of the column names. This is done by creating a dictionary of
+    dictionaries.
+
+    Each key in the upper level is a general feature, the value is a
+    dictionary in which all column names of the wanted columns of that
+    feature are grouped,
+    e.g:
+        {'A': {'count': 'A_count', 'first_exp_date': 'A_first_exp_dt'},
+         'B': {'count': 'B_count', 'first_exp_date': 'B_first_exp_dt'}}
+    Features that do not have all the wanted columns just end up with
+    shorter dictionaries.
 
     :param df:
     :param dict_config:
-    :param list_keys:
-    :return:
+    :param list_keys: The list of keys in the YAML config file that select
+            the wanted column types, so that point to the right column name
+            suffixes.
+    :return: A dictionary of dictionaries
     """
 
     dict_regex = {re.sub(r'_cols$', '', key): "%s$" % dict_config['general'][
@@ -89,14 +103,38 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
     return dict(dict_grouped_cols)
 
 
-def fraction_zeroes_or_null(ss):
+def is_zero_or_null(ss):
+    """
+    pd.datetime or object throws error when compared to 0. This function
+    avoids this problem by comparing values of series to 0 if values are
+    numeric, otherwise only calls isnull()
+
+    :param ss: Pandas series (column of dataframe)
+    :return: Series of boolean values
+    """
     if pd.api.types.is_numeric_dtype(ss):
-        return ((ss == 0) | ss.isnull()).sum()/len(ss)
+        return (ss == 0) | ss.isnull()
     else:
-        return (ss.isnull()).sum()/len(ss)
+        return ss.isnull()
+
+
+def fraction_zeroes_or_null(ss):
+    """
+    Calculates the fraction of values of a pandas series that gave True in
+    function is_zero_or_null.
+
+    :param ss: Pandas series (column of dataframe)
+    :return: Float, fraction of values in column being zero or null.
+    """
+    return is_zero_or_null(ss).sum()/len(ss)
 
 
 def mean_all_types(ss):
+    """
+    Uses the correct mean function, based on the input type.
+    :param ss: pandas series
+    :return: Mean value of the series
+    """
     if pd.api.types.is_numeric_dtype(ss):
         return np.mean(ss)
     elif pd.api.types.is_datetime64_any_dtype(ss):
@@ -126,5 +164,3 @@ def median_datetime(ss_datetime):
     ls_datetime_sorted = list(ss_datetime.sort_values())
     dt_median = ls_datetime_sorted[len(ls_datetime_sorted)//2]
     return dt_median.strftime('%Y-%m-%d')
-
-

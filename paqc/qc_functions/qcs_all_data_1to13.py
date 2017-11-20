@@ -235,7 +235,7 @@ def qc11(df, dict_config):
 
     return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])
 
-# TODO: Can probably be rewritten in terms of is_zero_or_nul
+
 def qc12(df, dict_config):
     """
     Checks that if a row has a non missing value for one of the variable types
@@ -260,13 +260,9 @@ def qc12(df, dict_config):
     ls_features_faulty = []
     for feat, dict_feat in dict_grouped_cols.items():
         df_feat = df[list(dict_feat.values())].copy()
-        ls_numeric_cols = [pd.api.types.is_numeric_dtype(df[colname]) for
-                           colname in df_feat]
-        df_feat.loc[:, ls_numeric_cols] = (df_feat.iloc[:, ls_numeric_cols]
-                                           == 0)
-        df_feat.loc[:, ~np.array(ls_numeric_cols)] = df_feat.loc[:,
-                                        ~np.array(ls_numeric_cols)].isnull()
-        if df_feat.sum(axis=1).between(0, len(dict_feat), inclusive=False).any():
+        df_feat = df_feat.apply(utils.is_zero_or_null, reduce=False)
+        if df_feat.sum(axis=1).between(0, len(dict_feat),
+                                       inclusive=False).any():
             ls_features_faulty.append(feat)
 
     return rp.ReportItem.init_conditional(ls_features_faulty, dict_config['qc'])

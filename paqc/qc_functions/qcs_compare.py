@@ -1,3 +1,9 @@
+"""
+All qcs for test suite 2. Suite 2 is responsible for acceptance of updated
+data: these quality checks are designed to check updated data that we might
+get from AA or BDF. This ensures that the updated file is as similar to the old
+version as possible.
+"""
 import pandas as pd
 import numpy as np
 
@@ -123,28 +129,34 @@ def qc49(df_old, df_new, dict_config):
     :return: ReportItem:
                 -self.passed=True. This function never throws an error,
                 only delivers descriptive statistics of the changes!
-                -self.extra=df_summary, the dateframe with all the
+                -self.extra=df_summary, the dataframe with all the
                 previously described statistics.
     """
+    # TODO: See what to do with median and the second difference function
+    # (medianA - medianB)/(0.5*(medianA + medianB))
 
-    ss_cols_diff = ((df_old != df_new) & ~df_old.isnull()).any()
-    dict_dfs = {'orig': df_old, 'new': df_new}
+    ss_cols_diff = ((df_old != df_new) & (~df_old.isnull() |
+                                          ~df_new.isnull())).any()
+    dict_dfs = {'old': df_old, 'new': df_new}
     dict_summary_dfs = {}
 
     for name, df in dict_dfs.items():
         df_diff = df.iloc[:, ss_cols_diff.values].select_dtypes(
                                             include=['datetime', np.number])
-        df_mean = df_diff.apply(utils.mean_all_types, reduce=False)
-        df_nulls = df_diff.apply(utils.fraction_zeroes_or_null,
+        # Not done in one apply call due to problems with utils.mean_all_types
+        # and utils.fraction_zeroes_or_null and reduce=False.
+        ss_min = df_diff.apply(np.min)
+        ss_max = df_diff.apply(np.max)
+        ss_mean = df_diff.apply(utils.mean_all_types, reduce=False)
+        ss_nulls = df_diff.apply(utils.fraction_zeroes_or_null,
                                             reduce=False).astype(np.float64)
-        df_minmax = df_diff.apply([np.min, np.max])
-        dict_summary_dfs[name] = pd.concat([df_minmax.transpose(),
-                                            df_mean, df_nulls], axis=1)
+        dict_summary_dfs[name] = pd.concat([ss_min, ss_max, ss_mean,
+                                            ss_nulls], axis=1)
         dict_summary_dfs[name].columns = ['min', 'max', 'mean', 'missing']
 
     ss_diff_missing = dict_summary_dfs['new']['missing'] - dict_summary_dfs[
-                                                            'orig']['missing']
-    df_summary = pd.concat({'original': dict_summary_dfs['orig'],
+                                                            'old']['missing']
+    df_summary = pd.concat({'original': dict_summary_dfs['old'],
                             'new': dict_summary_dfs['new'],
                             'difference': ss_diff_missing},
                            axis=1)
