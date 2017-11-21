@@ -214,6 +214,14 @@ class Report:
                     list_to_str = '\\n'.join(map(str, extra))
                     extra_js += '%svar %s = "%s";\n' % (n1, extra_name,
                                                         list_to_str)
+                elif isinstance(extra, set):
+                    # save list as csv
+                    extra = list(extra)
+                    pd.Series(extra).to_csv(out_file)
+                    # save list as js var
+                    list_to_str = '\\n'.join(map(str, extra))
+                    extra_js += '%svar %s = "%s";\n' % (n1, extra_name,
+                                                        list_to_str)
                 elif isinstance(extra, str):
                     # save str as csv
                     f = open(out_file, 'w')
