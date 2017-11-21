@@ -1,12 +1,10 @@
 """
 Various general helper functions for the QC package.
 """
-from itertools import islice
 from collections import defaultdict
 import pandas as pd
 import numpy as np
 import re
-
 
 def generate_hash(df):
     """
@@ -21,21 +19,34 @@ def generate_hash(df):
     return hash(df.values.tobytes())
 
 
-def generate_short_string(ls_items, n_items_printed = 20):
-    """
-    Generate short string of a list of items (column names, indices etc),
-    typically for the ReportItem.text field.
-
-    :param ls_items: list of values that needs to be turned into printable string.
-    :param n_items_printed: First n numbers of the list that are put into the
-    string format.
-    :return: Comma delimited string
+def generate_cc0_lists(dict_config):
     """
 
-    string_list = ", ".join(str(item) for item in islice(ls_items,
-                                                          n_items_printed))
-    string_list += ", ..."
-    return string_list
+    :param dict_config:
+    :return:
+    """
+    code_lvl1_col = 'PROD_CUSTOM_LVL1_DESC'
+    code_lvl2_col = 'PROD_CUSTOM_LVL2_DESC'
+    ls_files = ['ICD_file', 'NCD_file', 'CPT_file', 'HCPC_file',
+                'speciality_file']
+
+    # Load the seperate CSV files
+    dict_dfs = {}
+    for file in ls_files:
+        dict_dfs[file] = pd.read_csv(dict_config['general'][file])
+
+    # Create the dict of 3 sets, each containing the level 2 descriptions that
+    # have the level 1 description of the dictionary key.
+    dict_cc0_sets = {1: set(), 2: set(), 3: set()}
+    for df in dict_dfs.values():
+        for i in range(1, 4):
+            dict_cc0_sets[i].update(df[df[code_lvl1_col] == i][code_lvl2_col])
+    # Changes sets into lists and make sure that each description in those
+    # lists is clean, i.e. only lowercase, white spaces replaced by underscores
+    dict_cc0_lists = {key: [description.lower().replace(' ', '_') for
+                            description in set_descriptions] for key,
+                            set_descriptions in dict_cc0_sets.items()}
+    return dict_cc0_lists
 
 
 def write_list_to_csv(ls_items, path_csv):
@@ -99,8 +110,11 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
         for colname in df.columns:
             if re.search(value, colname):
                 dict_grouped_cols[re.sub(value, '', colname)][key] = colname
-
-    return dict(dict_grouped_cols)
+    # Cleaning up the spelling of the features, i.e. no white spaces and
+    # only lower case.
+    dict_grouped_cols = {key.lower().replace(' ', '_'): dict_cols for key,
+                         dict_cols in dict_grouped_cols.items()}
+    return dict_grouped_cols
 
 
 def is_zero_or_null(ss):
@@ -126,6 +140,7 @@ def fraction_zeroes_or_null(ss):
     :param ss: Pandas series (column of dataframe)
     :return: Float, fraction of values in column being zero or null.
     """
+    print(ss.dtype)
     return is_zero_or_null(ss).sum()/len(ss)
 
 
@@ -135,6 +150,7 @@ def mean_all_types(ss):
     :param ss: pandas series
     :return: Mean value of the series
     """
+    print('mean:', ss.dtype)
     if pd.api.types.is_numeric_dtype(ss):
         return np.mean(ss)
     elif pd.api.types.is_datetime64_any_dtype(ss):

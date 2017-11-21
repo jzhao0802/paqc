@@ -1,0 +1,37 @@
+general:
+  source: csv
+  input1: paqc/data/qc_data.csv
+  input2: paqc/data/qc_data_multi*.csv
+  output_dir: paqc/report/output
+
+  ICD_file: paqc/data/ICD.csv
+  NCD_file: paqc/data/NCD.csv
+  CPT_file: paqc/data/CPT.csv
+  HCPC_file: paqc/data/HCPC.csv
+  speciality_file: paqc/data/speciality.csv
+  
+
+  date_cols: _dt
+  count_cols: _count
+  flag_cols: _flag
+  freq_cols: _freq
+  first_exp_date_cols: _first_exp_dt
+  last_exp_date_cols: _last_exp_dt
+  index_date_col: index_dt
+  lookback_date_col: lookback_dt
+  gender_col: pat_gender
+  age_col: pat_age
+  target_col: LABEL
+  patient_id_col: patient_id
+  matched_patient_id_col: MATCHED_PATIENT_ID
+  special_cols:
+
+  date_format: "%d/%m/%Y %H:%M"
+
+qc:
+  input_file: input1
+  input_file_path: paqc/data/training_data.csv
+  level: error
+  order: 1
+  qc_num: 'qc20'
+

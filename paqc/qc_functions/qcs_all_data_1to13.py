@@ -104,7 +104,7 @@ def qc7(df, dict_config):
                 are completely empty.
     """
 
-    # List with index of all empty rows
+    # List with index of each empty row
     ls_idx_empty = df.index[df.isnull().all(axis=1)].tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_empty, dict_config['qc'])

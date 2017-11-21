@@ -6,6 +6,8 @@ from paqc.utils.config_utils import config_open
 
 DICT_CONFIG = config_open("paqc/tests/data/driver_dict_output.yml")[1]
 DICT_CONFIG_16 = config_open("paqc/tests/data/qc16_driver_dict_output.yml")[1]
+DICT_CONFIG_17TO19 = config_open(
+                        "paqc/tests/data/qc17to19_driver_dict_output.yml")[1]
 
 
 # 14
@@ -53,4 +55,51 @@ def test_qc15(df, expected, ls_faults, dict_config):
 ])
 def test_qc16(df, expected, ls_faults, dict_config):
     rpi = qc16(df, dict_config)
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 17
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_17TO19])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Subset from data/initial_pos.csv
+    (csv.read_csv(DICT_CONFIG_17TO19, "paqc/tests/data/qc17_check1.csv")[1],
+     True, None),
+    # One row has U for gender, another an empty cell
+    (csv.read_csv(DICT_CONFIG_17TO19, "paqc/tests/data/qc17_check2.csv")[1],
+     False, [0, 1]),
+])
+def test_qc17(df, expected, ls_faults, dict_config):
+    rpi = qc17(df, dict_config)
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 18
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_17TO19])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Subset from data/initial_pos.csv
+    (csv.read_csv(DICT_CONFIG_17TO19, "paqc/tests/data/qc18_check1.csv")[1],
+     True, None),
+    # One row has a missing age, another is 86
+    (csv.read_csv(DICT_CONFIG_17TO19, "paqc/tests/data/qc18_check2.csv")[1],
+     False, [1, 2]),
+])
+def test_qc18(df, expected, ls_faults, dict_config):
+    rpi = qc18(df, dict_config)
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 19
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_17TO19])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Subset from data/initial_pos.csv, given minimum index_dt is 01/02/2009
+    # 05:00.
+    (csv.read_csv(DICT_CONFIG_17TO19, "paqc/tests/data/qc19_check1.csv")[1],
+     True, None),
+    # One row has a missing index_dt, another is in 2008, before the given
+    # minimum of 01/02/2009 05:00
+    (csv.read_csv(DICT_CONFIG_17TO19, "paqc/tests/data/qc19_check2.csv")[1],
+     False, [0, 7]),
+])
+def test_qc19(df, expected, ls_faults, dict_config):
+    rpi = qc19(df, dict_config)
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)

@@ -145,23 +145,26 @@ def qc49(df_old, df_new, dict_config):
                                             include=['datetime', np.number])
         # Not done in one apply call due to problems with utils.mean_all_types
         # and utils.fraction_zeroes_or_null and reduce=False.
-        ss_min = df_diff.apply(np.min)
-        ss_max = df_diff.apply(np.max)
-        ss_mean = df_diff.apply(utils.mean_all_types, reduce=False)
-        ss_nulls = df_diff.apply(utils.fraction_zeroes_or_null,
-                                            reduce=False).astype(np.float64)
-        dict_summary_dfs[name] = pd.concat([ss_min, ss_max, ss_mean,
-                                            ss_nulls], axis=1)
-        dict_summary_dfs[name].columns = ['min', 'max', 'mean', 'missing']
+        # ss_min = df_diff.apply(np.min)
+        # ss_max = df_diff.apply(np.max)
+        ss_mean = df_diff.apply([utils.mean_all_types])
+        ss_nulls = df_diff.apply([utils.fraction_zeroes_or_null]).astype(
+                                                                    np.float64)
+        df_summary = df_diff.apply([np.min, np.max,
+                                    utils.fraction_zeroes_or_null])
+    #     dict_summary_dfs[name] = pd.concat([ss_min, ss_max, ss_mean,
+    #                                         ss_nulls], axis=1)
+    #     dict_summary_dfs[name].columns = ['min', 'max', 'mean', 'missing']
+    #
+    # ss_diff_missing = dict_summary_dfs['new']['missing'] - dict_summary_dfs[
+    #                                                         'old']['missing']
+    # df_summary = pd.concat({'original': dict_summary_dfs['old'],
+    #                         'new': dict_summary_dfs['new'],
+    #                         'difference': ss_diff_missing},
+    #                        axis=1)
 
-    ss_diff_missing = dict_summary_dfs['new']['missing'] - dict_summary_dfs[
-                                                            'old']['missing']
-    df_summary = pd.concat({'original': dict_summary_dfs['old'],
-                            'new': dict_summary_dfs['new'],
-                            'difference': ss_diff_missing},
-                           axis=1)
-
-    return rp.ReportItem(passed=True, extra=df_summary, **dict_config['qc'])
+    return rp.ReportItem(passed=True, extra=(df_summary, ss_mean),
+                         **dict_config['qc'])
 
 
 def qc50(df_old, df_new, dict_config):

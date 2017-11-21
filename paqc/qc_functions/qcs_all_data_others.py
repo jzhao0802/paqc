@@ -1,6 +1,4 @@
 import pandas as pd
-import numpy as np
-import re
 
 from paqc.report import report as rp
 from paqc.utils import utils
@@ -69,3 +67,50 @@ def qc16(df, dict_config):
     ls_cols_high_dif = ss_dif_high[ss_dif_high].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_cols_high_dif, dict_config['qc'])
+
+
+def qc17(df, dict_config):
+    """
+    Checks that the gender column only contains "F" and "M".
+
+    :param df:
+    :param dict_config:
+    :return: ReportItem:
+                - Returns list of patient ids of patient that have a gender
+                value that is not M or F.
+    """
+    gender_col = dict_config['general']['gender_col']
+    ls_idx_faulty = df[~df[gender_col].isin(['M', 'F'])].index.tolist()
+
+    return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
+
+
+def qc18(df, dict_config):
+    """
+    Patient age should be between 0 and 85.
+
+    :param df:
+    :param dict_config:
+    :return:
+    """
+    age_col = dict_config['general']['age_col']
+    ls_idx_faulty = df[~df[age_col].between(0, 85)].index.tolist()
+
+    return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
+
+
+def qc19(df, dict_config):
+    """
+    Checks that every row has a valid INDEX_DATE which is after a chosen date.
+
+    :param df:
+    :param dict_config:
+            -date_limit
+    :return:
+    """
+    index_date_col = dict_config['general']['index_date_col']
+    date_limit = pd.to_datetime(dict_config['qc']['qc_params']['date_limit'],
+                                format=dict_config['general']['date_format'])
+    ls_idx_faulty = df[~(df[index_date_col] > date_limit)].index.tolist()
+
+    return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])

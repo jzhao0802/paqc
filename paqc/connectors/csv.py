@@ -32,14 +32,12 @@ def read_csv(config, input_file_path):
                        'index_date_col',
                        'lookback_date_col']
     date_cols = utils.generate_list_columns(header, config, date_cols_types)
-    try:
-        # it turns out we should read the dates first in as strings
-        df = pd.read_csv(input_file_path)
-        # and then we can try to convert them using the user supplied format
-        df[date_cols] = df[date_cols].apply(pd.to_datetime,
-                                            format=general['date_format'])
-        return True, df
-    except:
-        return False, None
+    # it turns out we should read the dates first in as strings
+    df = pd.read_csv(input_file_path)
+    # and then we can try to convert them using the user supplied format
+    df[date_cols] = df[date_cols].apply(pd.to_datetime,
+                                        format=general['date_format'])
+    return True, df
+
 
 
