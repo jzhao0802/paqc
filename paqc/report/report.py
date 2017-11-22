@@ -264,7 +264,7 @@ class Report:
         summaries = self.get_summary_stats()
         qc_sum = summaries['qc_sum']
         data_file_sum = summaries['data_file_sum']
-        exec_time_sum = "{0:.1f}".format(summaries['total_exec_time'])
+        exec_time_sum = "{0:.1f}".format(summaries['total_exec_time']/60)
         passed_sum = summaries['passed_sum']
         failed_sum = summaries['failed_sum']
         summary_str_js = ("%s<li>%d QC scripts were performed on</li>\n"
@@ -283,7 +283,8 @@ class Report:
 
         # generate the final HTML site from results
         out_file = os.path.join(output_dir, 'report.html')
-        html_out = open(out_file, 'w')
+        # the os.expanduser makes this it windows safe
+        html_out = open(os.path.expanduser(out_file), 'w')
         html1 = open("paqc/report/report_template1.txt")
         html2 = open("paqc/report/report_template2.txt")
 
