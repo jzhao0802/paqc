@@ -122,11 +122,17 @@ def qc8(df, dict_config):
                 - self.extra=ls_colnames_nomatch, the list of column names that
                  do not fit one of the allowed column names or suffixes.
     """
-
+    # The 13 main column keys
     keys_colnames = ['target_col', 'patient_id_col', 'matched_patient_id_col',
                      'gender_col', 'date_cols', 'count_cols', 'freq_cols',
-                     'first_exp_date_cols', 'last_exp_date_cols', 'age_col']
-    ls_allowed = dict_config['general']['special_cols']
+                     'flag_cols', 'first_exp_date_cols',
+                     'last_exp_date_cols', 'age_col', 'index_date_col',
+                     'lookback_date_col']
+    # Plus special columns
+    if dict_config['general']['special_cols'] is not None:
+        ls_allowed = dict_config['general']['special_cols']
+    else:
+        ls_allowed = []
     for key in keys_colnames:
         ls_allowed.append(dict_config['general'][key])
 
