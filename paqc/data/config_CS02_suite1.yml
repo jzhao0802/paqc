@@ -1,7 +1,6 @@
 general:
   source: csv
-  input1: paqc/data/qc_data.csv
-  input2: paqc/data/qc_data_multi*.csv
+  input1: paqc/data/random_sample_scoring.csv
   output_dir: paqc/report/output
 
   ICD_file: paqc/data/ICD.csv
@@ -28,10 +27,14 @@ general:
 
   date_format: "%d/%m/%Y %H:%M"
 
-qc:
-  input_file: input1
-  input_file_path: paqc/data/training_data.csv
-  level: error
-  order: 1
-  qc_num: 'qc20'
-
+qcs:
+  qc23:
+    input_file: input1
+    level: error
+    order: 1
+  qc24:
+    input_file: input1
+    level: error
+    order: 2
+    qc_params:
+      disease_first_exp_date: diseasefirstexp_dt

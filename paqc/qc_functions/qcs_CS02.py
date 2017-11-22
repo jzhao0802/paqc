@@ -13,7 +13,10 @@ def qc23(df, dict_config):
 
     :param df:
     :param dict_config:
-    :return:
+    :return: ReportItem:
+                - self.extra=ls_idx_faulty, the list of indices of all rows
+                of patients that have at least one non zero/null value at
+                one of the columns related to the selection criteria in CC01_CP
     """
     ls_cc01_cp = utils.generate_cc0_lists(dict_config)[1]
     dict_features = utils.generate_dict_grouped_columns(df, dict_config,
@@ -37,15 +40,17 @@ def qc23(df, dict_config):
 
 def qc24(df, dict_config):
     """
-    Checks that Disease_FRST_EXP_DT is always missing.
+    Checks that disease_first_exp_date is always missing.
 
     :param df:
     :param dict_config:
-    :return:
+                - disease_first_exp_date: the column name of the
+                disease_first_exp_date column.
+    :return: ReportItem:
+                - self.extra=ls_idx_faulty: the indices of rows that have a
+                non-zero value for disease_first_exp_date
     """
     disease_date_col = dict_config['qc']['qc_params']['disease_first_exp_date']
     ls_idx_faulty = df[~df[disease_date_col].isnull()].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
-
-

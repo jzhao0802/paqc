@@ -13,7 +13,9 @@ def qc20(df, dict_config):
 
     :param df:
     :param dict_config:
-    :return:
+    :return: ReportItem:
+                - self.extra=ls_idx_faulty, the indices of the rows that do
+                not meet any of the criteria listed in CC01_CP
     """
     ls_cc01_cp = utils.generate_cc0_lists(dict_config)[1]
     prog = re.compile("(" + ")|(".join(ls_cc01_cp) + ")")
@@ -29,13 +31,16 @@ def qc20(df, dict_config):
 
 def qc21(df, dict_config):
     """
-    Checks that the index_date is always strictly before the
-    disease_first_exp_date.
+    Checks that the index_date is always strictly before the disease_first_exp
+    _date.
 
     :param df:
     :param dict_config:
-            - Disease_FRST_EXP_DT
-    :return:
+                - disease_first_exp_date: the column name of the
+                disease_first_exp_date column.
+    :return: ReportItem:
+                - self.extra=ls_idx_faulty, the list of indices of rows
+                where index_date is not strictly before disease_first_exp_date
     """
     index_date_col = dict_config['general']['index_date_col']
     disease_date_col = dict_config['qc']['qc_params']['disease_first_exp_date']
@@ -52,7 +57,10 @@ def qc22(df, dict_config):
 
     :param df:
     :param dict_config:
-    :return:
+    :return: ReportItem:
+                - self.extra=ls_idx_faulty, the list of indices of columns
+                where at least one criteria has a date not between
+                index_date and lookback_date.
     """
     ss_index_date = df[dict_config['general']['index_date_col']]
     ss_lookback_date = df[dict_config['general']['lookback_date_col']]
