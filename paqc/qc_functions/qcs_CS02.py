@@ -43,7 +43,7 @@ def qc24(df, dict_config):
     :param dict_config:
     :return:
     """
-    disease_date_col = dict_config['qc']['qc_params']['Disease_FRST_EXP_DT']
+    disease_date_col = dict_config['qc']['qc_params']['disease_first_exp_date']
     ls_idx_faulty = df[~df[disease_date_col].isnull()].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])

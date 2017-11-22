@@ -140,7 +140,6 @@ def fraction_zeroes_or_null(ss):
     :param ss: Pandas series (column of dataframe)
     :return: Float, fraction of values in column being zero or null.
     """
-    print(ss.dtype)
     return is_zero_or_null(ss).sum()/len(ss)
 
 
@@ -150,11 +149,26 @@ def mean_all_types(ss):
     :param ss: pandas series
     :return: Mean value of the series
     """
-    print('mean:', ss.dtype)
+    ss.dtype
     if pd.api.types.is_numeric_dtype(ss):
         return np.mean(ss)
     elif pd.api.types.is_datetime64_any_dtype(ss):
         return mean_datetime(ss)
+    else:
+        return np.nan
+
+
+def median_all_types(ss):
+    """
+    Uses the correct median function, based on the input type.
+    :param ss: pandas series
+    :return: Median value of the series
+    """
+    ss.dtype
+    if pd.api.types.is_numeric_dtype(ss):
+        return np.median(ss)
+    elif pd.api.types.is_datetime64_any_dtype(ss):
+        return median_datetime(ss)
     else:
         return np.nan
 
@@ -165,9 +179,9 @@ def mean_datetime(ss_datetime):
     :param ss_datetime:
     :return:
     """
-    ss_datetime = ss_datetime[~ss_datetime.isnull()]
-    dt_mean = np.datetime64(int(ss_datetime.astype('int64').mean()), 'ns')
-    return pd.to_datetime(dt_mean).strftime('%Y-%m-%d')
+    ss_datetime_int = ss_datetime[~ss_datetime.isnull()].astype('int64')
+    dt_mean_int = int(np.mean(ss_datetime_int))
+    return transform_int_to_dt(dt_mean_int)
 
 
 def median_datetime(ss_datetime):
@@ -176,7 +190,10 @@ def median_datetime(ss_datetime):
     :param ss_datetime:
     :return:
     """
-    ss_datetime = ss_datetime[~ss_datetime.isnull()]
-    ls_datetime_sorted = list(ss_datetime.sort_values())
-    dt_median = ls_datetime_sorted[len(ls_datetime_sorted)//2]
-    return dt_median.strftime('%Y-%m-%d')
+    ss_datetime_int = ss_datetime[~ss_datetime.isnull()].astype('int64')
+    dt_median_int = int(np.median(ss_datetime_int))
+    return transform_int_to_dt(dt_median_int)
+
+
+def transform_int_to_dt(date_int):
+    return pd.to_datetime(np.datetime64(date_int, 'ns'))

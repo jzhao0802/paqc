@@ -118,11 +118,19 @@ def qc48(df_old, df_new, dict_config):
 def qc49(df_old, df_new, dict_config):
     """
     DESCRIPTIVE STATS:    
-    For each column that has changed, it calculate and reports the min, 
-    median, mean and max values and the percentage of zeros and missing for 
-    both df_old.
+    For each column that has changed, it calculate and reports for both
+    dateframes:
+        - min
+        - max
+        - median
+        - mean
+        - fraction of values being zero or missing
     
-    Furthermore it adds two more columns that compare 
+    Furthermore it adds two more columns that calculate the difference
+    between these two dataframes for:
+        - median
+        - fraction of values being zero or missing
+
     :param df_old:
     :param df_new:
     :param dict_config:
@@ -132,39 +140,31 @@ def qc49(df_old, df_new, dict_config):
                 -self.extra=df_summary, the dataframe with all the
                 previously described statistics.
     """
-    # TODO: See what to do with median and the second difference function
-    # (medianA - medianB)/(0.5*(medianA + medianB))
 
     ss_cols_diff = ((df_old != df_new) & (~df_old.isnull() |
                                           ~df_new.isnull())).any()
-    dict_dfs = {'old': df_old, 'new': df_new}
-    dict_summary_dfs = {}
 
+    # Calculate the descriptive stats for both dataframes, only for columns
+    # that are difference between the two and are datetime or np.number
+    dict_dfs = {'old': df_old, 'new': df_new}
+    dict_summ_dfs = {}
     for name, df in dict_dfs.items():
         df_diff = df.iloc[:, ss_cols_diff.values].select_dtypes(
                                             include=['datetime', np.number])
-        # Not done in one apply call due to problems with utils.mean_all_types
-        # and utils.fraction_zeroes_or_null and reduce=False.
-        # ss_min = df_diff.apply(np.min)
-        # ss_max = df_diff.apply(np.max)
-        ss_mean = df_diff.apply([utils.mean_all_types])
-        ss_nulls = df_diff.apply([utils.fraction_zeroes_or_null]).astype(
-                                                                    np.float64)
-        df_summary = df_diff.apply([np.min, np.max,
-                                    utils.fraction_zeroes_or_null])
-    #     dict_summary_dfs[name] = pd.concat([ss_min, ss_max, ss_mean,
-    #                                         ss_nulls], axis=1)
-    #     dict_summary_dfs[name].columns = ['min', 'max', 'mean', 'missing']
-    #
-    # ss_diff_missing = dict_summary_dfs['new']['missing'] - dict_summary_dfs[
-    #                                                         'old']['missing']
-    # df_summary = pd.concat({'original': dict_summary_dfs['old'],
-    #                         'new': dict_summary_dfs['new'],
-    #                         'difference': ss_diff_missing},
-    #                        axis=1)
+        df_summary = df_diff.apply([np.min, np.max, utils.mean_all_types,
+                                    utils.median_all_types,
+                                    utils.fraction_zeroes_or_null]).transpose()
+        df_summary.columns = ['min', 'max', 'mean', 'median', 'null']
+        dict_summ_dfs[name] = df_summary
 
-    return rp.ReportItem(passed=True, extra=(df_summary, ss_mean),
-                         **dict_config['qc'])
+    # Create the difference columns
+    ss_diff_null = dict_summ_dfs['new']['null'] - dict_summ_dfs['old']['null']
+    ss_diff_med = dict_summ_dfs['new']['median'] - dict_summ_dfs['old']['median']
+    dict_summ_dfs['difference'] = pd.concat([ss_diff_med, ss_diff_null], axis=1)
+    # Concatenate everything into one dataframe with keys
+    df_summary = pd.concat(dict_summ_dfs, axis=1)
+
+    return rp.ReportItem(passed=True, extra=df_summary, **dict_config['qc'])
 
 
 def qc50(df_old, df_new, dict_config):

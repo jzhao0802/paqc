@@ -27,7 +27,8 @@ qc:
   input_file_path: paqc/data/training_data.csv
   level: error
   order: 1
-  qc_num: 'qc18'
+  qc_num: 'qc24'
   qc_params:
-    Disease_FRST_EXP_DT: diseasefirstexp
+    disease_first_exp_date: disease_frst_exp_dt
+
 
