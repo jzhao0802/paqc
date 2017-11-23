@@ -51,31 +51,273 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-paqc.qc_functions.qc1">
-<span id="paqc-qc-functions-qc1-module"></span><h2>paqc.qc_functions.qc1 module<a class="headerlink" href="#module-paqc.qc_functions.qc1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-paqc.qc_functions.qcs_CP01">
+<span id="paqc-qc-functions-qcs-cp01-module"></span><h2>paqc.qc_functions.qcs_CP01 module<a class="headerlink" href="#module-paqc.qc_functions.qcs_CP01" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="paqc.qc_functions.qc1.qc1">
-<code class="descclassname">paqc.qc_functions.qc1.</code><code class="descname">qc1</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc1.qc1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Testing if all column names of dataframe have no special characters and no
-spaces. They should only contain letters, numbers and underscores.</p>
+<dt id="paqc.qc_functions.qcs_CP01.qc22">
+<code class="descclassname">paqc.qc_functions.qcs_CP01.</code><code class="descname">qc22</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_CP01.qc22" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that dataset has only patients in it who meet at least one of the
+selection criteria listed in CC01_CP</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> &#8211; The qc-ed dataframe</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True/False</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_faulty, the indices of the rows that do
+not meet any of the criteria listed in CC01_CP</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_CP01.qc23">
+<code class="descclassname">paqc.qc_functions.qcs_CP01.</code><code class="descname">qc23</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_CP01.qc23" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that the index_date is always strictly before the disease_first_exp
+_date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; <ul>
+<li>disease_first_exp_date: the column name of the</li>
+</ul>
+<p>disease_first_exp_date column.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_faulty, the list of indices of rows
+where index_date is not strictly before disease_first_exp_date</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_CP01.qc24">
+<code class="descclassname">paqc.qc_functions.qcs_CP01.</code><code class="descname">qc24</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_CP01.qc24" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all stratification and custom criteria dates are always between
+and including the INDEX_DATE and LOOKBACK_DATE.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_faulty, the list of indices of columns
+where at least one criteria has a date not between
+index_date and lookback_date.</p>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-paqc.qc_functions.qc3">
-<span id="paqc-qc-functions-qc3-module"></span><h2>paqc.qc_functions.qc3 module<a class="headerlink" href="#module-paqc.qc_functions.qc3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-paqc.qc_functions.qcs_CS02">
+<span id="paqc-qc-functions-qcs-cs02-module"></span><h2>paqc.qc_functions.qcs_CS02 module<a class="headerlink" href="#module-paqc.qc_functions.qcs_CS02" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="paqc.qc_functions.qc3.qc3">
-<code class="descclassname">paqc.qc_functions.qc3.</code><code class="descname">qc3</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc3.qc3" title="Permalink to this definition">¶</a></dt>
+<dt id="paqc.qc_functions.qcs_CS02.qc25">
+<code class="descclassname">paqc.qc_functions.qcs_CS02.</code><code class="descname">qc25</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_CS02.qc25" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that dataset has NO patients in it who meet at least one of the
+selection criteria listed in CC01_CP.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_faulty, the list of indices of all rows
+of patients that have at least one non zero/null value at
+one of the columns related to the selection criteria in CC01_CP</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_CS02.qc26">
+<code class="descclassname">paqc.qc_functions.qcs_CS02.</code><code class="descname">qc26</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_CS02.qc26" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that disease_first_exp_date is always missing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; <ul>
+<li>disease_first_exp_date: the column name of the</li>
+</ul>
+<p>disease_first_exp_date column.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_faulty: the indices of rows that have a
+non-zero value for disease_first_exp_date</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.qc_functions.qcs_all_data_1to13">
+<span id="paqc-qc-functions-qcs-all-data-1to13-module"></span><h2>paqc.qc_functions.qcs_all_data_1to13 module<a class="headerlink" href="#module-paqc.qc_functions.qcs_all_data_1to13" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc1">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc1</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing if all column names of dataframe have no special characters and no
+spaces. They should only contain letters, numbers and underscores.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_colnames_faulty, the list of column names
+that have special characters, spaces, numbers and underscores.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc10">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc10</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all first and last exposure date columns only have dates that
+are after or on the lookback date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_cols_faulty, the list of names of all
+first_exp_date_cols and last_exp_date_cols that contain any
+date that is before the lookback date.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc11">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc11</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc11" title="Permalink to this definition">¶</a></dt>
+<dd><p>All first exposure dates are before their last exposure date, unless
+corresponding count=1 in which case they are equal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_features_faulty, the list of all features
+that have at least one row where last_exp_date is after
+first_exp_date or where first_exp_date == last_exp_date and
+count bigger than 1.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc12">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc12</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that if a row has a non missing value for one of the variable types
+(flag, counts, freq, dates) for a feature/predictor, then all corresponding
+columns of that feature/predictor should have non-missing entries for that
+row.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_feature_faulty, list of all the features that
+have at least one row where some variables are missing/0 and
+other not.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc13">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc13</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc13" title="Permalink to this definition">¶</a></dt>
+<dd><p>When first exposure date is before last exposure date, the count for
+that feature has to be bigger than 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_feature_faulty, list of all the features that
+have at least one row where first_exp_date is before
+last_exp_date but count is not bigger than 1.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc3">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc3</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc3" title="Permalink to this definition">¶</a></dt>
 <dd><p>All columns ending in FLAG, COUNT or FREQ should be 0 or positive, and
 never missing.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -88,7 +330,134 @@ never missing.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_cols_faulty, the list of column names of all
+FLAG/COUNT/FREQ columns that have missing or negative elements.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc4">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc4</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc4" title="Permalink to this definition">¶</a></dt>
+<dd><p>No duplicate patient IDs within the same cohort file.</p>
+<p>In the case of several emtpy patient IDs (NaN according to pandas
+definition), these will NOT be considered as duplicates. Different qc
+for looking for NaN patient_id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; The qc-ed dataframe</li>
+<li><strong>dict_config</strong> &#8211; Meta-data in dictionary</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_duplicateID, the indices of
+the patient rows with duplicate patient IDs.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc6">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc6</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for columns that are a 100% empty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; The qc-ed dataframe</li>
+<li><strong>dict_config</strong> &#8211; Meta-data in dictionary</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- Self.extra=ls_cols_empty, the list of names of all columns
+that are completely empty.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc7">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc7</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that for rows that are a 100% empty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; The qc-ed dataframe</li>
+<li><strong>dict_config</strong> &#8211; Meta-data in dictionary</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_empty, the list indices of all rows that
+are completely empty.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc8">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc8</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all columns end with one of the official suffixes in the config,
+or are equal to the gender, target, patient_id, matched_patient_id cols, or
+one of the special columns.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; The qc-ed dataframe</li>
+<li><strong>dict_config</strong> &#8211; Meta-data in dictionary</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>ReportItem:
+- self.extra=ls_colnames_nomatch, the list of column names that</p>
+<blockquote>
+<div><p>do not fit one of the allowed column names or suffixes.</p>
+</div></blockquote>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_1to13.qc9">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_1to13.</code><code class="descname">qc9</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_1to13.qc9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all first and last exposure dates are before or on the index
+date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_cols_faulty, the list of names of all
+first_exp_date_cols and last_exp_date_cols that contain any
+date that is after the index date.</p>
 </td>
 </tr>
 </tbody>
@@ -96,41 +465,323 @@ never missing.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-paqc.qc_functions.qc6">
-<span id="paqc-qc-functions-qc6-module"></span><h2>paqc.qc_functions.qc6 module<a class="headerlink" href="#module-paqc.qc_functions.qc6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-paqc.qc_functions.qcs_all_data_others">
+<span id="paqc-qc-functions-qcs-all-data-others-module"></span><h2>paqc.qc_functions.qcs_all_data_others module<a class="headerlink" href="#module-paqc.qc_functions.qcs_all_data_others" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="paqc.qc_functions.qc6.qc6">
-<code class="descclassname">paqc.qc_functions.qc6.</code><code class="descname">qc6</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc6.qc6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks that no columns are a 100% empty.
-:param df: The qc-ed dataframe
-:param dict_config: Meta-data in dictionary
-:return: ReportItem</p>
+<dt id="paqc.qc_functions.qcs_all_data_others.qc14">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_others.</code><code class="descname">qc14</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_others.qc14" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for missing patient IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_idx_missing_id, the list of indices of rows
+that miss a patient ID.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_others.qc15">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_others.</code><code class="descname">qc15</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_others.qc15" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if all columns expected to be numeric are actually numeric (
+according to the pd.read_csv function of pandas).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_others.qc16">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_others.</code><code class="descname">qc16</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_others.qc16" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the columns for which the fraction of values that is missing or 0
+differs less over the two classes than the provided threshold, provided
+as max_fraction_diff.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; <ul>
+<li>max_fraction_diff: the parameter that decides how</li>
+</ul>
+<p>different the fraction of missing/zero values for the two
+different classes is allowed to be.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- self.extra=ls_cols_high_dif, the list of names of all
+columns that pass the previously explained threshold.
+- self.qc_params={max_fraction_diff:value}</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_others.qc17">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_others.</code><code class="descname">qc17</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_others.qc17" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that the gender column only contains &#8220;F&#8221; and &#8220;M&#8221;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+- Returns list of patient ids of patient that have a gender
+value that is not M or F.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_others.qc18">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_others.</code><code class="descname">qc18</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_others.qc18" title="Permalink to this definition">¶</a></dt>
+<dd><p>Patient age should be between 0 and 85.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_all_data_others.qc19">
+<code class="descclassname">paqc.qc_functions.qcs_all_data_others.</code><code class="descname">qc19</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_all_data_others.qc19" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that every row has a valid INDEX_DATE which is after a chosen date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; -date_limit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-paqc.qc_functions.qc7">
-<span id="paqc-qc-functions-qc7-module"></span><h2>paqc.qc_functions.qc7 module<a class="headerlink" href="#module-paqc.qc_functions.qc7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-paqc.qc_functions.qcs_compare">
+<span id="paqc-qc-functions-qcs-compare-module"></span><h2>paqc.qc_functions.qcs_compare module<a class="headerlink" href="#module-paqc.qc_functions.qcs_compare" title="Permalink to this headline">¶</a></h2>
+<p>All qcs for test suite 2. Suite 2 is responsible for acceptance of updated
+data: these quality checks are designed to check updated data that we might
+get from AA or BDF. This ensures that the updated file is as similar to the old
+version as possible.</p>
 <dl class="function">
-<dt id="paqc.qc_functions.qc7.qc7">
-<code class="descclassname">paqc.qc_functions.qc7.</code><code class="descname">qc7</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc7.qc7" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks that no rows are a 100% empty.
-:param df: The qc-ed dataframe
-:param dict_config: Meta-data in dictionary
-:return: ReportItem</p>
+<dt id="paqc.qc_functions.qcs_compare.qc46">
+<code class="descclassname">paqc.qc_functions.qcs_compare.</code><code class="descname">qc46</code><span class="sig-paren">(</span><em>df_old</em>, <em>df_new</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_compare.qc46" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if two dataframes have the same columns and if they are in the same
+order.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df_old</strong> &#8211; </li>
+<li><strong>df_new</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>ReportItem:
+-self.passed=False when df_old and df_new have do not have the
+same columns OR their columns are in a different order.
+-self.extra={&#8216;missing columns&#8217;:ls_missing_cols,</p>
+<blockquote>
+<div><blockquote>
+<div><p>&#8216;new columns&#8217;: ls_new_cols}. A dictionary of
+two lists when there is a difference in columns.</p>
+</div></blockquote>
+<p>=None, when the columns are the same but in
+different order.</p>
+</div></blockquote>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-</div>
-<div class="section" id="module-paqc.qc_functions.qc8">
-<span id="paqc-qc-functions-qc8-module"></span><h2>paqc.qc_functions.qc8 module<a class="headerlink" href="#module-paqc.qc_functions.qc8" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="paqc.qc_functions.qc8.qc8">
-<code class="descclassname">paqc.qc_functions.qc8.</code><code class="descname">qc8</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qc8.qc8" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks that all columns end with one of the official suffixes in the config,
-or be equal to the gender, target, patient_id, matched_patient_id cols, or
-one of the special columns.
-:param df: The qc-ed dataframe
-:param dict_config: Meta-data in dictionary
-:return: ReportItem</p>
+<dt id="paqc.qc_functions.qcs_compare.qc47">
+<code class="descclassname">paqc.qc_functions.qcs_compare.</code><code class="descname">qc47</code><span class="sig-paren">(</span><em>df_old</em>, <em>df_new</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_compare.qc47" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if two dataframes have the same number of rows and patient IDs are in
+the same order.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df_old</strong> &#8211; </li>
+<li><strong>df_new</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>ReportItem:
+-self.passed=False when df_old and df_new have do not have the
+same rows OR their rows are in a different order.
+-self.extra={&#8216;missing IDs&#8217;:ls_missing_ids,</p>
+<blockquote>
+<div><blockquote>
+<div><p>&#8216;new IDs&#8217;: ls_new_ids}. A dictionary of
+two lists when there is a difference in patient IDs.</p>
+</div></blockquote>
+<p>=None, when the rows are the same but in
+different order.</p>
+</div></blockquote>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_compare.qc48">
+<code class="descclassname">paqc.qc_functions.qcs_compare.</code><code class="descname">qc48</code><span class="sig-paren">(</span><em>df_old</em>, <em>df_new</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_compare.qc48" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if columns in df_new that should have stayed identical to df_old,
+are indeed identical.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df_old</strong> &#8211; </li>
+<li><strong>df_new</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; -list_columns: list of columns to be tested on being
+identical in both dataframes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+-self.extra=ls_cols_faulty, list of columns of list_columns
+that are not identical over the two dataframes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_compare.qc49">
+<code class="descclassname">paqc.qc_functions.qcs_compare.</code><code class="descname">qc49</code><span class="sig-paren">(</span><em>df_old</em>, <em>df_new</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_compare.qc49" title="Permalink to this definition">¶</a></dt>
+<dd><p>DESCRIPTIVE STATS:    
+For each column that has changed, it calculate and reports for both
+dateframes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>min</li>
+<li>max</li>
+<li>median</li>
+<li>mean</li>
+<li>fraction of values being zero or missing</li>
+</ul>
+</div></blockquote>
+<p>Furthermore it adds two more columns that calculate the difference
+between these two dataframes for:</p>
+<blockquote>
+<div><ul class="simple">
+<li>median</li>
+<li>fraction of values being zero or missing</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df_old</strong> &#8211; </li>
+<li><strong>df_new</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+-self.passed=True. This function never throws an error,
+only delivers descriptive statistics of the changes!
+-self.extra=df_summary, the dataframe with all the
+previously described statistics.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.qc_functions.qcs_compare.qc50">
+<code class="descclassname">paqc.qc_functions.qcs_compare.</code><code class="descname">qc50</code><span class="sig-paren">(</span><em>df_old</em>, <em>df_new</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.qc_functions.qcs_compare.qc50" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the percentage of missing and zero values across the classes are
+the same in both files within an X% error rate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df_old</strong> &#8211; </li>
+<li><strong>df_new</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; -max_fraction_diff: the parameter that decides how large the
+difference in the fraction of missing/zero values for df_old
+and df_new is allowed to be.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ReportItem:
+-self.extra=ls_cols_high_diff, the list of columns where the
+fraction of 0/missing values changed more between df_old and
+df_new than the provided threshold in one or several classes.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -166,11 +817,11 @@ and put all the QC functions within a single dictionary.</p>
   <ul>
 <li><a class="reference internal" href="#">paqc.qc_functions package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-paqc.qc_functions.qc1">paqc.qc_functions.qc1 module</a></li>
-<li><a class="reference internal" href="#module-paqc.qc_functions.qc3">paqc.qc_functions.qc3 module</a></li>
-<li><a class="reference internal" href="#module-paqc.qc_functions.qc6">paqc.qc_functions.qc6 module</a></li>
-<li><a class="reference internal" href="#module-paqc.qc_functions.qc7">paqc.qc_functions.qc7 module</a></li>
-<li><a class="reference internal" href="#module-paqc.qc_functions.qc8">paqc.qc_functions.qc8 module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qcs_CP01">paqc.qc_functions.qcs_CP01 module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qcs_CS02">paqc.qc_functions.qcs_CS02 module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qcs_all_data_1to13">paqc.qc_functions.qcs_all_data_1to13 module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qcs_all_data_others">paqc.qc_functions.qcs_all_data_others module</a></li>
+<li><a class="reference internal" href="#module-paqc.qc_functions.qcs_compare">paqc.qc_functions.qcs_compare module</a></li>
 <li><a class="reference internal" href="#module-paqc.qc_functions">Module contents</a></li>
 </ul>
 </li>

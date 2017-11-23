@@ -131,6 +131,76 @@ files.</td>
 <span id="paqc-utils-utils-module"></span><h2>paqc.utils.utils module<a class="headerlink" href="#module-paqc.utils.utils" title="Permalink to this headline">¶</a></h2>
 <p>Various general helper functions for the QC package.</p>
 <dl class="function">
+<dt id="paqc.utils.utils.fraction_zeroes_or_null">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">fraction_zeroes_or_null</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.fraction_zeroes_or_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the fraction of values of a pandas series that gave True in
+function is_zero_or_null.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss</strong> &#8211; Pandas series (column of dataframe)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Float, fraction of values in column being zero or null.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_cc0_lists">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_cc0_lists</code><span class="sig-paren">(</span><em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_cc0_lists" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_config</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_dict_grouped_columns">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_dict_grouped_columns</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em>, <em>list_keys</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_dict_grouped_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Groups the columns of the dataframe df based on the feature, i.e. the
+prefix of the column names. This is done by creating a dictionary of
+dictionaries.</p>
+<p>Each key in the upper level is a general feature, the value is a
+dictionary in which all column names of the wanted columns of that
+feature are grouped,
+e.g:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{&#8216;A&#8217;: {&#8216;count&#8217;: &#8216;A_count&#8217;, &#8216;first_exp_date&#8217;: &#8216;A_first_exp_dt&#8217;},</dt>
+<dd>&#8216;B&#8217;: {&#8216;count&#8217;: &#8216;B_count&#8217;, &#8216;first_exp_date&#8217;: &#8216;B_first_exp_dt&#8217;}}</dd>
+</dl>
+</div></blockquote>
+<p>Features that do not have all the wanted columns just end up with
+shorter dictionaries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+<li><strong>list_keys</strong> &#8211; The list of keys in the YAML config file that select
+the wanted column types, so that point to the right column name
+suffixes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dictionary of dictionaries</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="paqc.utils.utils.generate_hash">
 <code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_hash</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a pandas DataFrame, this function will generate a unique hash value
@@ -152,24 +222,109 @@ the test was carried out on.</p>
 <dt id="paqc.utils.utils.generate_list_columns">
 <code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_list_columns</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em>, <em>list_keys</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_list_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates list of all column names needed, based on the list of keys for
-the dict_config.
-:param df:
-:param dict_config:
-:param list_keys:
-:return: List of all column names that match the values of the key-value
-pairs from list_keys</p>
+the dict_config.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> &#8211; </li>
+<li><strong>dict_config</strong> &#8211; </li>
+<li><strong>list_keys</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of all column names that match the values of the key-value</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>pairs from list_keys.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="paqc.utils.utils.generate_short_string">
-<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_short_string</code><span class="sig-paren">(</span><em>ls_items</em>, <em>n_items_printed=20</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_short_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate short string of a list of items (column names, indices etc),
-typically for the ReportItem.text field.
-:param ls_items: list of values that needs to be turned into printable string.
-:param n_items_printed: First n numbers of the list that are put into the
-string format.
-:return: Comma delimited string</p>
+<dt id="paqc.utils.utils.get_qcs_desc">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">get_qcs_desc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.get_qcs_desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the qc list file from data, which has to be exported and downloaded
+from the online tracker manually every time it&#8217;s updated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary of qc_num: qc description pairs.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.is_zero_or_null">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">is_zero_or_null</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.is_zero_or_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>pd.datetime or object throws error when compared to 0. This function
+avoids this problem by comparing values of series to 0 if values are
+numeric, otherwise only calls isnull()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss</strong> &#8211; Pandas series (column of dataframe)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Series of boolean values</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.mean_all_types">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">mean_all_types</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.mean_all_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the correct mean function, based on the input type.
+:param ss: pandas series
+:return: Mean value of the series</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.mean_datetime">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">mean_datetime</code><span class="sig-paren">(</span><em>ss_datetime</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.mean_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss_datetime</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.median_all_types">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">median_all_types</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.median_all_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the correct median function, based on the input type.
+:param ss: pandas series
+:return: Median value of the series</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.median_datetime">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">median_datetime</code><span class="sig-paren">(</span><em>ss_datetime</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.median_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss_datetime</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.transform_int_to_dt">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">transform_int_to_dt</code><span class="sig-paren">(</span><em>date_int</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.transform_int_to_dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="paqc.utils.utils.write_list_to_csv">

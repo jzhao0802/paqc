@@ -9,7 +9,6 @@ Subpackages
     paqc.driver
     paqc.qc_functions
     paqc.report
-    paqc.tests
     paqc.utils
 
 Module contents

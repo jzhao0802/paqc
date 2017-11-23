@@ -58,7 +58,7 @@ executes the QC scripts in the requested order and collates their findings in a
 report.</p>
 <dl class="class">
 <dt id="paqc.driver.driver.Driver">
-<em class="property">class </em><code class="descclassname">paqc.driver.driver.</code><code class="descname">Driver</code><span class="sig-paren">(</span><em>config_path</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">paqc.driver.driver.</code><code class="descname">Driver</code><span class="sig-paren">(</span><em>config_path</em>, <em>verbose=True</em>, <em>debug=True</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Main executor class of the the QC pipeline. It reads in a YAML config
 file, checks it, then executes the tests on the specified input files one by
@@ -128,7 +128,8 @@ even if those have multiple chunked data files within them.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing, calls the <code class="xref py py-func docutils literal"><span class="pre">do_qc()</span></code> on each
-data_file and executes the required qc functions.</td>
+data_file and executes the required qc functions, then
+generates the .csv and HTML report</td>
 </tr>
 </tbody>
 </table>

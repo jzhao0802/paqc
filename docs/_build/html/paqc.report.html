@@ -81,8 +81,15 @@ individual tests.</p>
 <dt id="paqc.report.report.Report.generate_report">
 <code class="descname">generate_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.generate_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function simply generates the final report HTML and the JSON
-that feeds the JavaScript tables. It also saves the tables as csv
-:return: Nothing.</p>
+that feeds the JavaScript tables. It also saves the tables as csv</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -101,14 +108,16 @@ Report object into a pandas DataFrame.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="paqc.report.report.Report.get_total_exec_time">
-<code class="descname">get_total_exec_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.get_total_exec_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return total execution time of the QC suite.</p>
+<dt id="paqc.report.report.Report.get_summary_stats">
+<code class="descname">get_summary_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.get_summary_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>This gathers a few simple summary stats about the Report object. The
+keys of the returned dict are self-explanatory, so see those.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of seconds it took to execute all QC functions.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict, with the following keys: qc_sum, data_file_sum,
+passed_sum, failed_sum, total_exec_time.</td>
 </tr>
 </tbody>
 </table>
@@ -149,7 +158,7 @@ where error &gt; warning &gt; info.</p>
 
 <dl class="class">
 <dt id="paqc.report.report.ReportItem">
-<em class="property">class </em><code class="descclassname">paqc.report.report.</code><code class="descname">ReportItem</code><span class="sig-paren">(</span><em>passed</em>, <em>level</em>, <em>order</em>, <em>input_file</em>, <em>input_file_path</em>, <em>extra=None</em>, <em>text=None</em>, <em>exec_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">paqc.report.report.</code><code class="descname">ReportItem</code><span class="sig-paren">(</span><em>passed</em>, <em>level</em>, <em>order</em>, <em>qc_num</em>, <em>input_file</em>, <em>input_file_path</em>, <em>extra=None</em>, <em>text=None</em>, <em>exec_time=0</em>, <em>qc_params=None</em>, <em>data_hash=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Simple lass for the output of an individual test. Each item has to have a
 level, and input file, and a text the holds the info, warning or error
