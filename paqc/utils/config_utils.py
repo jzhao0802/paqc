@@ -7,6 +7,7 @@ import os
 import yaml
 import re
 import numpy as np
+import copy
 
 
 def config_open(path):
@@ -206,19 +207,20 @@ def config_parser(yml):
                 add_qc_to_input_qc_dict(input_qc, input_file, qc)
 
     # replace qc part of yml with new structure
+
     for k, v in input_qc.items():
         # add a new node to the config object for the input file
         yml[k] = dict()
         # fill up the new node with qcs that we need to carry out on this input
         for qc in v:
-            yml[k][qc] = yml['qcs'][qc]
+            yml[k][qc] = copy.deepcopy(yml['qcs'][qc])
             # update the input_file param to ensure it points to a single file
             yml[k][qc]['input_file'] = k
 
     # delete old qcs section
     yml.pop('qcs', None)
 
-    return yml
+    return input_qc,yml
 
 
 def add_qc_to_input_qc_dict(input_qc, input_file, qc):

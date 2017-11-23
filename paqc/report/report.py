@@ -6,7 +6,8 @@ is generated during the run of the series of tests.
 import os
 import numpy as np
 import pandas as pd
-from time import gmtime, strftime
+from paqc.utils import utils
+from time import gmtime, strftime, time
 
 
 class ReportItem:
@@ -65,7 +66,9 @@ class Report:
     def __init__(self, config):
         self.config = config
         self.items = []
-        self.datetime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        self.report_name = "report_%s" % strftime("%Y-%m-%d_%H_%M_%S", gmtime())
+        self.ts = time()
+        self.qcs_desc = utils.get_qcs_desc()
 
     def add_item(self, report_item):
         """
@@ -155,7 +158,9 @@ class Report:
 
         # add new key so we can sort by level in the HTML table
         report_d['level_int'] = []
+        report_d['qc_desc'] = []
         for item in self.items:
+            report_d['qc_desc'].append(self.qcs_desc[item])
             for item_attr in item_attrs:
                 value = getattr(item, item_attr)
                 # add severity level numerically, so ordering in HTML is easier
@@ -177,7 +182,11 @@ class Report:
         :return: Nothing.
         """
 
+        # extract output dir and create it if necessary
         output_dir = self.config['general']['output_dir']
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
         # order ReportItems, and get report table
         self.order_items()
         report_df = self.get_report_table()
@@ -250,7 +259,8 @@ class Report:
                 report_df_filtered.loc[i, 'text'] = ''
 
         # save filtered report table as csv
-        report_df_filtered.to_csv(os.path.join(output_dir, 'report.csv'))
+        out_file = '%s.csv' % self.report_name
+        report_df_filtered.to_csv(os.path.join(output_dir, out_file))
 
         # save report table for JavaScript as JSON, and add tabs for legibility
         report_df_js = report_df_filtered.to_json(None, orient='records')
@@ -282,7 +292,8 @@ class Report:
                              n3, n2, n1))
 
         # generate the final HTML site from results
-        out_file = os.path.join(output_dir, 'report.html')
+        out_file = '%s.html' % self.report_name
+        out_file = os.path.join(output_dir, out_file)
         # the os.expanduser makes this it windows safe
         html_out = open(os.path.expanduser(out_file), 'w')
         html1 = open("paqc/report/report_template1.txt")

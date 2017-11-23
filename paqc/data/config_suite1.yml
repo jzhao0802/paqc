@@ -46,9 +46,3 @@ qcs:
     input_file: input2
     level: info
     order: 6
-  qc16:
-    input_file: input2
-    level: info
-    order: 7
-    qc_params:
-      max_fraction_diff: 0.3

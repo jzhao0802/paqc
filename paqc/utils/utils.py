@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import re
 
+
 def generate_hash(df):
     """
     Given a pandas DataFrame, this function will generate a unique hash value
@@ -197,3 +198,24 @@ def median_datetime(ss_datetime):
 
 def transform_int_to_dt(date_int):
     return pd.to_datetime(np.datetime64(date_int, 'ns'))
+
+
+def get_qcs_desc():
+    """
+    Loads the qc list file from data, which has to be exported and downloaded
+    from the online tracker manually every time it's updated.
+
+    :return: Dictionary of qc_num: qc description pairs.
+    """
+
+    df = pd.read_excel("paqc/data/Status_QC.xlsx")
+    qc_dict = dict()
+
+    for i in df.index:
+        row = df.loc[i]
+        id = row.ID
+        if not pd.isnull(id) and id not in qc_dict:
+            key = 'qc%d' % id
+            qc_dict[key] = row['Test description']
+
+    return qc_dict
