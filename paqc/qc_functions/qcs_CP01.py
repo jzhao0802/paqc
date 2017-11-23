@@ -6,7 +6,7 @@ from paqc.report import report as rp
 from paqc.utils import utils
 
 
-def qc20(df, dict_config):
+def qc22(df, dict_config):
     """
     Checks that dataset has only patients in it who meet at least one of the
     selection criteria listed in CC01_CP
@@ -29,7 +29,7 @@ def qc20(df, dict_config):
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
 
 
-def qc21(df, dict_config):
+def qc23(df, dict_config):
     """
     Checks that the index_date is always strictly before the disease_first_exp
     _date.
@@ -50,7 +50,7 @@ def qc21(df, dict_config):
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
 
 
-def qc22(df, dict_config):
+def qc24(df, dict_config):
     """
     Checks that all stratification and custom criteria dates are always between
     and including the INDEX_DATE and LOOKBACK_DATE.

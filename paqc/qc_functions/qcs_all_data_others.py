@@ -60,8 +60,12 @@ def qc16(df, dict_config):
 
     colname_target = dict_config['general']['target_col']
     threshold = dict_config['qc']['qc_params']['max_fraction_diff']
-
-    df_grouped = df.groupby(colname_target)
+    try:
+        df_grouped = df.groupby(colname_target)
+    except KeyError:
+        return rp.ReportItem(passed=False,
+                             text='No matching target_col in the dataset',
+                             **dict_config['qc'])
     df_fract = df_grouped.agg(utils.fraction_zeroes_or_null)
     ss_dif_high = abs(df_fract.iloc[0] - df_fract.iloc[1]) > threshold
     ls_cols_high_dif = ss_dif_high[ss_dif_high].index.tolist()

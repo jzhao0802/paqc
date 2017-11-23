@@ -6,7 +6,7 @@ from paqc.report import report as rp
 from paqc.utils import utils
 
 
-def qc23(df, dict_config):
+def qc25(df, dict_config):
     """
     Checks that dataset has NO patients in it who meet at least one of the
     selection criteria listed in CC01_CP.
@@ -38,7 +38,7 @@ def qc23(df, dict_config):
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
 
 
-def qc24(df, dict_config):
+def qc26(df, dict_config):
     """
     Checks that disease_first_exp_date is always missing.
 
