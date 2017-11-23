@@ -220,7 +220,7 @@ def config_parser(yml):
     # delete old qcs section
     yml.pop('qcs', None)
 
-    return input_qc,yml
+    return yml
 
 
 def add_qc_to_input_qc_dict(input_qc, input_file, qc):

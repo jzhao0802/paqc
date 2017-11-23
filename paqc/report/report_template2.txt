@@ -1,6 +1,6 @@
 
     // populate table dynamically with cols we got from user
-    var table_cols = ['qc_num', 'passed', 'level', 'level_int', 'order', 'extra','input_file', 'input_file_path', 'exec_time', 'text'];
+    var table_cols = ['qc_num', 'qc_desc', 'passed', 'level', 'level_int', 'order', 'extra','input_file', 'input_file_path', 'data_hash', 'exec_time', 'text'];
     var colsBase = [];
     var cols = colsBase.slice();
     for (var i = 0; i < table_cols.length; i++) {
@@ -10,7 +10,7 @@
         data: table_data.data,
         columns: cols,
         // order by chromosome number, feature start and end
-        "order": [[3, "asc"], [0, "asc"], [6, "asc"], [7, "asc"]],
+        "order": [[3, "asc"], [0, "asc"], [7, "asc"], [8, "asc"]],
         scrollY: 550,
         scrollCollapse: true,
         paging: false,
@@ -105,9 +105,10 @@
     function resetTables(){
         // reset tables
         table.search('').columns().search('').draw();
-        table.order([[3, "asc"], [0, "asc"], [6, "asc"], [7, "asc"]]).draw()
+        table.order([[3, "asc"], [0, "asc"], [7, "asc"], [8, "asc"]]).draw()
         $('#extra_text').val('');
     }
 </script>
 </body>
 </html>
+

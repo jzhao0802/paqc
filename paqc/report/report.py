@@ -19,7 +19,7 @@ class ReportItem:
 
     def __init__(self, passed, level, order, qc_num, input_file,
                  input_file_path, extra=None, text=None, exec_time=0,
-                 qc_params=None):
+                 qc_params=None, data_hash=None):
         self.level = level
         self.passed = passed
         self.order = order
@@ -30,6 +30,7 @@ class ReportItem:
         self.extra = extra
         self.exec_time = exec_time
         self.qc_params = qc_params
+        self.data_hash = data_hash
 
     @classmethod
     def init_conditional(cls, list_failures, dict_config):
@@ -66,7 +67,7 @@ class Report:
     def __init__(self, config):
         self.config = config
         self.items = []
-        self.report_name = "report_%s" % strftime("%Y-%m-%d_%H_%M_%S", gmtime())
+        self.datetime = strftime("%Y-%m-%d_%H_%M_%S", gmtime())
         self.ts = time()
         self.qcs_desc = utils.get_qcs_desc()
 
@@ -160,7 +161,6 @@ class Report:
         report_d['level_int'] = []
         report_d['qc_desc'] = []
         for item in self.items:
-            report_d['qc_desc'].append(self.qcs_desc[item])
             for item_attr in item_attrs:
                 value = getattr(item, item_attr)
                 # add severity level numerically, so ordering in HTML is easier
@@ -171,6 +171,8 @@ class Report:
                 elif item_attr == 'level' and value == 'info':
                     report_d['level_int'].append(3)
                 report_d[item_attr].append(value)
+            # add description to qc
+            report_d['qc_desc'].append(self.qcs_desc[item.qc_num])
 
         return pd.DataFrame.from_dict(report_d)
 
@@ -182,8 +184,9 @@ class Report:
         :return: Nothing.
         """
 
-        # extract output dir and create it if necessary
+        # extract output dir and create it if necessary (win compatible)
         output_dir = self.config['general']['output_dir']
+        output_dir = os.path.expanduser(output_dir)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
@@ -192,8 +195,9 @@ class Report:
         report_df = self.get_report_table()
 
         # reorder columns of report table
-        col_order = ['qc_num', 'passed', 'level', 'level_int', 'order', 'extra',
-                     'input_file', 'input_file_path', 'exec_time', 'text']
+        col_order = ['qc_num', 'qc_desc', 'passed', 'level', 'level_int',
+                     'order', 'extra', 'input_file', 'input_file_path',
+                     'data_hash', 'exec_time', 'text']
         report_df_filtered = report_df[col_order]
 
         # format exec_times to be nicer
@@ -212,7 +216,8 @@ class Report:
             if extra is not None:
                 extra_name = 'extra_%d' % extra_counter
                 extra_counter += 1
-                out_file = os.path.join(output_dir, extra_name + '.csv')
+                extra_file = 'extra%d_%s.csv' % (i, self.datetime)
+                out_file = os.path.join(output_dir, extra_file)
                 report_df_filtered.loc[i, 'extra'] = extra_name
 
                 # depending on what's in extra we need to proceed differently
@@ -259,7 +264,7 @@ class Report:
                 report_df_filtered.loc[i, 'text'] = ''
 
         # save filtered report table as csv
-        out_file = '%s.csv' % self.report_name
+        out_file = 'report_%s.csv' % self.datetime
         report_df_filtered.to_csv(os.path.join(output_dir, out_file))
 
         # save report table for JavaScript as JSON, and add tabs for legibility
@@ -274,25 +279,26 @@ class Report:
         summaries = self.get_summary_stats()
         qc_sum = summaries['qc_sum']
         data_file_sum = summaries['data_file_sum']
-        exec_time_sum = "{0:.1f}".format(summaries['total_exec_time']/60)
+        exec_time_sum = "{0:.2f}".format(summaries['total_exec_time']/60)
         passed_sum = summaries['passed_sum']
         failed_sum = summaries['failed_sum']
+        total_qc_time = "{0:.2f}".format((time() - self.ts)/60)
         summary_str_js = ("%s<li>%d QC scripts were performed on</li>\n"
-                          "%s<li>%d data files in </li>\n"
-                          "%s<li>%s minutes.</li>\n"
-                          "%s<li>%d qc scripts have passed,</li>\n"
-                          "%s<li>%d have failed.</li>\n"
+                          "%s<li>%d data file(s) in </li>\n"
+                          "%s<li>%s mins (total) / %s mins (qc time).</li>\n"
+                          "%s<li>%d qc scripts passed,</li>\n"
+                          "%s<li>%d failed.</li>\n"
                           "%s</ul>\n%s</p>\n%s</div>\n</div>\n"
                           "<script type='text/javascript'>\n"
                           % (n4, qc_sum,
                              n4, data_file_sum,
-                             n4, exec_time_sum,
+                             n4, total_qc_time, exec_time_sum,
                              n4, passed_sum,
                              n4, failed_sum,
                              n3, n2, n1))
 
         # generate the final HTML site from results
-        out_file = '%s.html' % self.report_name
+        out_file = 'report_%s.html' % self.datetime
         out_file = os.path.join(output_dir, out_file)
         # the os.expanduser makes this it windows safe
         html_out = open(os.path.expanduser(out_file), 'w')

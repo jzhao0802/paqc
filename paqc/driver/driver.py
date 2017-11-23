@@ -99,12 +99,13 @@ class Driver:
 
         df = self.data_loader(input_file_path)
         df_hash = utils.generate_hash(df)
-        print("Unique generated hash: %d" % df_hash)
         for qc in qcs:
             # generate mini config object for the QC function
             qc_config = {'general': self.general, 'qc': qcs[qc]}
             qc_config['qc']['input_file_path'] = input_file_path
             qc_config['qc']['qc_num'] = qc
+            qc_config['qc']['data_hash'] = df_hash
+
             # extract the specific QC object from the qc_functions module
             qc_function = self.qc_functions[qc]
 
