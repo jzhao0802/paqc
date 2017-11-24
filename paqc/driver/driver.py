@@ -27,7 +27,26 @@ class Driver:
         self.debug = debug
         # load the QC functions into a single dict
         self.qc_functions = qcs_main.import_submodules(qcs_main)
+
+    def run(self, generate_report=True):
+        """
+        Runs the QC pipeline by executing the various methods of the Driver
+        class in succession.
+
+
+        :param generate_report: Boolean, if set to False Driver will not
+                                generate report, but simply run the QCs.
+        :return: None
+        """
+
+        # load, check, parse config
         self.config_loader()
+        # parsed config successfully, let's execute qc functions
+        self.main()
+        # generate report
+        if generate_report:
+            self.printer("Generating HTML and CSV report...", True, True)
+            self.report.generate_report()
 
     def config_loader(self):
         """
@@ -43,6 +62,7 @@ class Driver:
             if config_utils.config_checker(self.config):
                 self.config = config_utils.config_parser(self.config)
                 self.general = self.config['general']
+                # init the report object
                 self.report = report.Report(self.config)
                 self.printer("Config file checked and parsed. "
                              "Starting QC pipeline...")
@@ -53,9 +73,6 @@ class Driver:
         else:
             self.printer("Couldn't load config file. It's badly formatted.")
             return
-
-        # parsed config successfully, let's execute qc functions
-        self.main()
 
     def main(self):
         """
@@ -81,10 +98,6 @@ class Driver:
                     self.printer("Starting QCs on %s, file path: %s" %
                                  (k, self.general[k]), True)
                     self.do_qc(k, self.general[k], v)
-
-        # generate final report
-        self.printer("Generating HTML and CSV report...", True, True)
-        self.report.generate_report()
 
     def do_qc(self, input_file, input_file_path, qcs):
         """
