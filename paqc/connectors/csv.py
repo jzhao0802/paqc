@@ -48,7 +48,7 @@ def read_csv(config, input_file_path):
     else:
         df[date_cols] = df[date_cols].apply(pd.to_datetime,
                                             format=general['date_format'])
-    return True, df
+    return df
 
 
 def parse_dates(column, **kwargs):

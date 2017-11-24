@@ -5,6 +5,7 @@ report.
 """
 
 import time
+import traceback
 from paqc.connectors import csv
 from paqc.utils import config_utils
 from paqc.utils import utils
@@ -167,15 +168,15 @@ class Driver:
             raise ValueError("We only support .csv input files currently.")
 
         if source == 'csv':
-            loaded, df = csv.read_csv(self.config, input_file_path)
-            if loaded:
-                return df
-            else:
-                raise ValueError("We couldn't load the following file: %s. "
-                                 "It's most likely, that your dates are "
-                                 "formatted inconsistently. Make sure to visit "
-                                 "http://strftime.org/ for the correct date "
-                                 "format specs." % input_file_path)
+            try:
+                return csv.read_csv(self.config, input_file_path)
+            except:
+                self.printer("We couldn't load the following file: %s. It's "
+                             "most likely, that your dates are formatted "
+                             "inconsistently. Make sure to visit "
+                             "http://strftime.org/ for the correct date format"
+                             " specs.\n\nTRACEBACK:\n\n%s"
+                             % (input_file_path, traceback.format_exc()))
 
     def printer(self, to_print, hline_before=False, hline_after=False):
         """
