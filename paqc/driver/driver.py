@@ -21,7 +21,8 @@ class Driver:
     """
 
     def __init__(self, config_path, verbose=True, debug=True):
-        self.config = config_path
+        self.config_path = config_path
+        self.config = None
         self.general = None
         self.report = None
         self.verbose = verbose
@@ -56,7 +57,7 @@ class Driver:
         :return: Nothing. Updates the internal config object of the driver.
         """
         self.printer("Loading config file...")
-        self.config = config_utils.config_open(self.config)
+        self.config = config_utils.config_open(self.config_path)
         if self.config[0]:
             self.printer("Checking and parsing config file...")
             self.config = self.config[1]
@@ -133,6 +134,14 @@ class Driver:
             else:
                 try:
                     rpi = qc_function(df, qc_config)
+                # Some qcs need to load an extra csv with path given in config,
+                # this error is raised when the file does not exist.
+                except FileNotFoundError as e:
+                    text = str(e)
+                    rpi = report.ReportItem(passed=False, level="error",
+                                            order=1, qc_num=qc,
+                                            input_file=input_file, text=text,
+                                            input_file_path=input_file_path)
                 except:
                     text = "QC failed due to internal bug, report it to admins!"
                     rpi = report.ReportItem(passed=False, level="error",

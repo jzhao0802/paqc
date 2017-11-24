@@ -13,19 +13,19 @@ DICT_CONFIG_9TO13 = config_open(
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_1TO8])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Original column names from data/qc_data.csv
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check1.csv"),
      True, None),
     # GENDER has trailing space, D_7931_AVG_CLAIM_CNT leading space
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check2.csv"),
      False, ['GENDER ', ' D_7931_AVG_CLAIM_CNT']),
     # Second column name is empty
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check3.csv"),
      False, ['Unnamed: 1']),
     # Created column name with single $
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check4.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check4.csv"),
      False, ['$']),
     # First column name is lab*el
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check5.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc1_check5.csv"),
      False, ['lab*el'])
 ])
 def test_qc1(df, expected, ls_faults, dict_config):
@@ -37,17 +37,17 @@ def test_qc1(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_1TO8])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Subset from data/qc_data.csv
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check1.csv"),
      True, None),
     # column test_FLAG has negative float
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check2.csv"),
      False, ["test_FLAG"]),
     # One empty cell, one cell with special character (;)
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check3.csv"),
      False, ["D_7245_AVG_CLAIM_FREQ", "D_V048_AVG_CLAIM_CNT"]),
     # empty cell and special character (.). Also one non-relevant column
     # with negative integers, should not be picked up.
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check4.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc3_check4.csv"),
      False, ["test_FLAG", "D_7245_AVG_CLAIM_FREQ", "D_V048_AVG_CLAIM_CNT"])
 ])
 def test_qc3(df, expected, ls_faults, dict_config):
@@ -59,17 +59,17 @@ def test_qc3(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_1TO8])
 @pytest.mark.parametrize("df, expected, ls_duplicates", [
     # Subset from data/qc_data.csv
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check1.csv"),
      True, None),
     # Made two patient_ids equal, in row indices 1 and 2
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check2.csv"),
      False, [1, 2]),
     # Two empty patient_id cells, not considered as duplicate
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check3.csv"),
      True, None),
     # Row with indices 3 and 4 have a dot (.) as patient_id, considered
     # valid input and thus flagged as duplicates
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check4.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc4_check4.csv"),
      False, [3, 4])
 ])
 def test_qc4(df, expected, ls_duplicates, dict_config):
@@ -81,13 +81,13 @@ def test_qc4(df, expected, ls_duplicates, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_1TO8])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Subset from data/qc_data.csv
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc6_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc6_check1.csv"),
      True, None),
     # GENDER is empty
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc6_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc6_check2.csv"),
      False, ['GENDER']),
     # Sparse dataframe, GENDER only one field with 'F', but no empty columns
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc6_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc6_check3.csv"),
      True, None),
 ])
 def test_qc6(df, expected, ls_faults, dict_config):
@@ -99,13 +99,13 @@ def test_qc6(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_1TO8])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Subset from data/qc_data.csv
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc7_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc7_check1.csv"),
      True, None),
     # Row 4 is empty
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc7_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc7_check2.csv"),
      False, [3]),
     # Sparse dataframe, but no empty rows
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc7_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc7_check3.csv"),
      True, None),
 ])
 def test_qc7(df, expected, ls_faults, dict_config):
@@ -117,13 +117,13 @@ def test_qc7(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_1TO8])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Subset from data/qc_data.csv
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc8_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc8_check1.csv"),
      True, None),
     # Column name G has trailing s
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc8_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc8_check2.csv"),
      False, ['D_7245_AVG_CLAIM_FREQs']),
     # Added some special columns
-    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc8_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_1TO8, "paqc/tests/data/qc8_check3.csv"),
      True, None),
 ])
 def test_qc8(df, expected, ls_faults, dict_config):
@@ -135,13 +135,13 @@ def test_qc8(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check1.csv"),
      True, None),
     # Two columns have respectively 1 and 5 dates after the index date
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check2.csv"),
      False, ['A_first_exp_dt', 'A_last_exp_dt']),
     # Some dates are on the index date, which is allowed.
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check3.csv"),
      True, None)
 ])
 def test_qc9(df, expected, ls_faults, dict_config):
@@ -153,10 +153,10 @@ def test_qc9(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc10_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc10_check1.csv"),
      True, None),
     # Two columns have 1 date before the lookback date
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc10_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc10_check2.csv"),
      False, ['B_first_exp_dt', 'C_last_exp_dt'])
 ])
 def test_qc10(df, expected, ls_faults, dict_config):
@@ -168,17 +168,17 @@ def test_qc10(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check1.csv"),
      True, None),
     # predictorA has first_exp_date after last_exp_date, predictorB has
     # first_exp_date == last_exp_date, but with count > 1
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check2.csv"),
      False, ['predictora', 'predictorb']),
     # predictorA has a first_exp_date missing for row with count 5, THIS IS
     # NOT PICKED UP BY THIS QC, QC12 responsible for this.
     # predictorB has row with count == 1, but first_exp_date before
     # last_exp_date.
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc11_check3.csv"),
      False, ['predictorb'])
 ])
 def test_qc11(df, expected, ls_faults, dict_config):
@@ -190,14 +190,14 @@ def test_qc11(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check1.csv"),
      True, None),
     # predictorA has first_exp_date and last_exp_date, but no _count or _flag,
     # predictorB lacks first_exp_date on rows with counts and flags
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check2.csv"),
      False, ['predictora', 'predictorb']),
     # predictorB lacks first_exp_date and last_exp_date for row with counts
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc12_check3.csv"),
      False, ['predictorb'])
 ])
 def test_qc12(df, expected, ls_faults, dict_config):
@@ -209,14 +209,14 @@ def test_qc12(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check1.csv"),
      True, None),
     # predictorA and B have row with first_exp != last_exp, but count 1
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check2.csv"),
      False, ['predictora', 'predictorb']),
     # predictorA has row that misses _first_exp_date, not flagged here!
     # predictorB has row with first_exp != last_exp, but count 1
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check3.csv")[1],
+    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc13_check3.csv"),
      False, ['predictorb'])
 ])
 def test_qc13(df, expected, ls_faults, dict_config):

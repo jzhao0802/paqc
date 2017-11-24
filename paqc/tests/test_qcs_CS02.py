@@ -11,10 +11,10 @@ DICT_CONFIG_CS02 = config_open("paqc/tests/data/driver_dict_output_CS02.yml")[1]
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_CS02])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Original subset from data/random_sample_scoring.csv
-    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc25_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc25_check1.csv"),
      True, None),
     # Copied two patient IDs from the cp01 file into check2
-    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc25_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc25_check2.csv"),
      False, ['57616631', '81744431'])
 ])
 def test_qc25(df, expected, ls_faults, dict_config):
@@ -26,10 +26,10 @@ def test_qc25(df, expected, ls_faults, dict_config):
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_CS02])
 @pytest.mark.parametrize("df, expected, ls_faults", [
     # Original subset from data/random_sample_scoring.csv
-    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc26_check1.csv")[1],
+    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc26_check1.csv"),
      True, None),
     # Row 1 has a date value for diseasefirstexp
-    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc26_check2.csv")[1],
+    (csv.read_csv(DICT_CONFIG_CS02, "paqc/tests/data/qc26_check2.csv"),
      False, [1])
 ])
 def test_qc26(df, expected, ls_faults, dict_config):

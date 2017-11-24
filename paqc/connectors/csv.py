@@ -82,5 +82,3 @@ def apply_parallel(df, func, **kwargs):
     pool.join()
 
     return df
-
-
