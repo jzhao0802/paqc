@@ -17,7 +17,6 @@ def qc1(df, dict_config):
                 - self.extra=ls_colnames_faulty, the list of column names
                 that have special characters, spaces, numbers and underscores.
     """
-
     # Pattern matches any non \w character or fully empty string
     prog = re.compile(r'[^\w]+|^[\w]{0}$')
     it_match = (prog.search(colname) for colname in df.columns)
@@ -31,16 +30,15 @@ def qc3(df, dict_config):
     All columns ending in FLAG, COUNT or FREQ should be 0 or positive, and
     never missing.
 
-    :param df: The qc-ed dataframe
-    :param dict_config: Meta-data in dictionary
+    :param df:
+    :param dict_config:
     :return: ReportItem:
                 - self.extra=ls_cols_faulty, the list of column names of all
                 FLAG/COUNT/FREQ columns that have missing or negative elements.
     """
-
     ls_colnames = utils.generate_list_columns(df, dict_config,
-                                                ['flag_cols', 'freq_cols',
-                                                 'count_cols'])
+                                              ['flag_cols', 'freq_cols',
+                                               'count_cols'])
     ls_cols_faulty = []
     for colname in ls_colnames:
         if pd.api.types.is_numeric_dtype(df[colname]):
@@ -62,8 +60,8 @@ def qc4(df, dict_config):
     definition), these will NOT be considered as duplicates. Different qc
     for looking for NaN patient_id.
 
-    :param df: The qc-ed dataframe
-    :param dict_config: Meta-data in dictionary
+    :param df:
+    :param dict_config:
     :return: ReportItem:
                 - self.extra=ls_idx_duplicateID, the indices of
                 the patient rows with duplicate patient IDs.
@@ -80,13 +78,12 @@ def qc6(df, dict_config):
     """
     Checks for columns that are a 100% empty.
 
-    :param df: The qc-ed dataframe
-    :param dict_config: Meta-data in dictionary
+    :param df:
+    :param dict_config:
     :return: ReportItem:
                 - Self.extra=ls_cols_empty, the list of names of all columns
                 that are completely empty.
     """
-
     # List with names of all empty columns
     ls_cols_empty = df.columns[df.isnull().all(axis=0)].tolist()
 
@@ -97,13 +94,12 @@ def qc7(df, dict_config):
     """
     Checks that for rows that are a 100% empty.
 
-    :param df: The qc-ed dataframe
-    :param dict_config: Meta-data in dictionary
+    :param df:
+    :param dict_config:
     :return: ReportItem:
                 - self.extra=ls_idx_empty, the list indices of all rows that
                 are completely empty.
     """
-
     # List with index of each empty row
     ls_idx_empty = df.index[df.isnull().all(axis=1)].tolist()
 
@@ -116,8 +112,8 @@ def qc8(df, dict_config):
     or are equal to the gender, target, patient_id, matched_patient_id cols, or
     one of the special columns.
 
-    :param df: The qc-ed dataframe
-    :param dict_config: Meta-data in dictionary
+    :param df:
+    :param dict_config:
     :return: ReportItem:
                 - self.extra=ls_colnames_nomatch, the list of column names that
                  do not fit one of the allowed column names or suffixes.
@@ -145,8 +141,7 @@ def qc8(df, dict_config):
     ls_colnames_nomatch = [colname for colname in df.columns if not
                                                         prog.search(colname)]
 
-    return rp.ReportItem.init_conditional(ls_colnames_nomatch, dict_config[
-        'qc'])
+    return rp.ReportItem.init_conditional(ls_colnames_nomatch, dict_config['qc'])
 
 
 def qc9(df, dict_config):
@@ -170,8 +165,7 @@ def qc9(df, dict_config):
         index_date_colname]).any()
     ls_cols_faulty = ss_cols_faulty[ss_cols_faulty].index.tolist()
 
-    return rp.ReportItem.init_conditional(ls_cols_faulty, dict_config[
-        'qc'])
+    return rp.ReportItem.init_conditional(ls_cols_faulty, dict_config['qc'])
 
 
 def qc10(df, dict_config):
@@ -186,7 +180,6 @@ def qc10(df, dict_config):
                 first_exp_date_cols and last_exp_date_cols that contain any
                 date that is before the lookback date.
     """
-
     ls_colnames = utils.generate_list_columns(df, dict_config,
                                               ['first_exp_date_cols',
                                                'last_exp_date_cols'])
@@ -195,28 +188,48 @@ def qc10(df, dict_config):
         lookback_date_colname]).any()
     ls_cols_faulty = ss_cols_faulty[ss_cols_faulty].index.tolist()
 
-    return rp.ReportItem.init_conditional(ls_cols_faulty, dict_config[
-        'qc'])
+    return rp.ReportItem.init_conditional(ls_cols_faulty, dict_config['qc'])
 
 
 def qc11(df, dict_config):
     """
-    All first exposure dates are before their last exposure date, unless
-    corresponding count=1 in which case they are equal.
+    All first exposure dates are before or on their last exposure date.
+
+    When first exposure date is on last exposure date, the qc allows counts
+    to be higher than 1 or not, depending on dict_config['qc']['qc_params'][
+    'multiple_a_day']
+
 
     :param df:
     :param dict_config:
+                - dict_config['qc']['qc_params']['multiple_a_day']: Boolean,
+                if True: count is allowed to be higher than 1 when
+                first_exp_date and last_exp_date are the same.
+                if False: rows where count is higher than 1 while
+                first_exp_date and last_exp_date are the same, fail the qc.
+                The relevant feature will be added to ls_features_faulty.
     :return: ReportItem:
                 - self.extra=ls_features_faulty, the list of all features
                 that have at least one row where last_exp_date is after
                 first_exp_date or where first_exp_date == last_exp_date and
                 count bigger than 1.
     """
+    # Warns in the report if user forgot to provide needed parameters
+    try:
+        multiple_a_day = dict_config['qc']['qc_params']['multiple_a_day']
+    # Making True the default parameter, this allows count > 1!
+    except KeyError:
+        multiple_a_day = True
+    # multiple_a_day is provided, but (due to typo?) not a boolean, finish test
+    if multiple_a_day not in [True, False]:
+        return rp.ReportItem(passed=False,
+                             text='multiple_a_day qc_parameter needs to be: '
+                                  'True or False', **dict_config['qc'])
 
     dict_grouped_cols = utils.generate_dict_grouped_columns(df, dict_config,
                                                         ['first_exp_date_cols',
-                                                        'last_exp_date_cols',
-                                                        'count_cols'])
+                                                         'last_exp_date_cols',
+                                                         'count_cols'])
     # Only run the test on predictors that have all those three columns
     dict_grouped_cols = {predictor: dict_grouped for
                          predictor, dict_grouped in dict_grouped_cols.items()
@@ -227,15 +240,12 @@ def qc11(df, dict_config):
         # Columns contains at least one row where first_exp is after last_exp
         if (df[dict_feat['first_exp_date']] > df[dict_feat['last_exp_date']]).any():
             ls_features_faulty.append(feat)
-        # Or at least one row where first_exp == last_exp but not count == 1
-        elif ((df[dict_feat['first_exp_date']] == df[dict_feat[
-                'last_exp_date']]) & ~(df[dict_feat['count']] == 1)).any():
+        # Or at least one row where first_exp == last_exp but not count == 1,
+        # only when multiple_a_day parameter is not True
+        elif (~multiple_a_day &
+                ((df[dict_feat['first_exp_date']] == df[dict_feat[
+                'last_exp_date']]) & (df[dict_feat['count']] > 1)).any()):
             ls_features_faulty.append(feat)
-        # Or at least one row where count == 1 but not first_exp == last_exp
-        elif (~(df[dict_feat['first_exp_date']] == df[dict_feat[
-                'last_exp_date']]) & (df[dict_feat['count']] == 1)).any():
-            ls_features_faulty.append(feat)
-        # Otherwise, feature is fine
         else:
             pass
 
@@ -276,8 +286,8 @@ def qc12(df, dict_config):
 
 def qc13(df, dict_config):
     """
-    When first exposure date is before last exposure date, the count for
-    that feature has to be bigger than 1.
+    Checks that when first exposure date is before last exposure date,
+    the count for that feature is bigger than 1.
 
     :param df:
     :param dict_config:
@@ -286,7 +296,6 @@ def qc13(df, dict_config):
                 have at least one row where first_exp_date is before
                 last_exp_date but count is not bigger than 1.
     """
-
     dict_grouped_cols = utils.generate_dict_grouped_columns(df, dict_config,
                                                         ['first_exp_date_cols',
                                                          'last_exp_date_cols',

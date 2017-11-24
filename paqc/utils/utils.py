@@ -150,6 +150,8 @@ def mean_all_types(ss):
     :param ss: pandas series
     :return: Mean value of the series
     """
+    # This seemingly useless line is used to avoid a bug in pandas'
+    # DataFrame.apply, DO NOT REMOVE.
     ss.dtype
     if pd.api.types.is_numeric_dtype(ss):
         return np.mean(ss)
@@ -165,6 +167,8 @@ def median_all_types(ss):
     :param ss: pandas series
     :return: Median value of the series
     """
+    # This seemingly useless line is used to avoid a bug in pandas'
+    # DataFrame.apply, DO NOT REMOVE.
     ss.dtype
     if pd.api.types.is_numeric_dtype(ss):
         return np.median(ss)

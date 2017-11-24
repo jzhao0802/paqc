@@ -4,13 +4,6 @@ general:
   input2: paqc/data/qc_data_multi*.csv
   output_dir: paqc/report/output
 
-  ICD_file: paqc/data/ICD.csv
-  NCD_file: paqc/data/NCD.csv
-  CPT_file: paqc/data/CPT.csv
-  HCPC_file: paqc/data/HCPC.csv
-  speciality_file: paqc/data/speciality.csv
-  
-
   date_cols: _dt
   count_cols: _count
   flag_cols: _flag
@@ -33,6 +26,8 @@ qc:
   input_file_path: paqc/data/training_data.csv
   level: error
   order: 1
-  qc_num: 'qc23'
+  qc_num: 'qc25'
   qc_params:
     disease_first_exp_date: disease_frst_exp_dt
+    path_file_cp01: paqc/tests/data/qc25_check_cp01.csv
+    patient_id_col_cp01: patient_id

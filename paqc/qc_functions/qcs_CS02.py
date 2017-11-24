@@ -8,34 +8,39 @@ from paqc.utils import utils
 
 def qc25(df, dict_config):
     """
-    Checks that dataset has NO patients in it who meet at least one of the
-    selection criteria listed in CC01_CP.
+    Checks that dataset has NO patients listed in CP01, this is checked by
+    comparing the patient_id columns of both datasets.
 
     :param df:
     :param dict_config:
+                - dict_config['qc']['qc_params']['path_file_cp01']:
+                the absolute path to the cp01 file.
+                - dict_config['qc']['qc_params']['patient_id_col_cp01']:
+                the column name of patient_id column in the cp01 file.
     :return: ReportItem:
-                - self.extra=ls_idx_faulty, the list of indices of all rows
-                of patients that have at least one non zero/null value at
-                one of the columns related to the selection criteria in CC01_CP
+                - self.extra=ls_pat_ids_faulty: The list of patient ids of
+                this dataframe that also show up in the cp01 file.
     """
-    ls_cc01_cp = utils.generate_cc0_lists(dict_config)[1]
-    dict_features = utils.generate_dict_grouped_columns(df, dict_config,
-                                                        ['flag_cols',
-                                                         'freq_cols',
-                                                         'first_exp_date_cols',
-                                                         'last_exp_date_cols',
-                                                         'count_cols'])
-    # List with all columns related to descriptions part of CC01_CP
-    prog = re.compile("(" + ")|(".join(ls_cc01_cp) + ")")
-    ls_cc01_cp_cols = [dict_feat.values() for key, dict_feat in
-                            dict_features.items() if prog.search(key)]
-    # Flatten list
-    ls_cc01_cp_cols = [item for sublist in ls_cc01_cp_cols for item in sublist]
-    ss_boolean = df[ls_cc01_cp_cols].apply(lambda x: ~utils.is_zero_or_null(
-        x)).any(axis=1)
-    ls_idx_faulty = ss_boolean[ss_boolean].index.tolist()
+    # Warns in the report if user forgot to provide needed parameters
+    try:
+        path_file_cp01 = dict_config['qc']['qc_params']['path_file_cp01']
+        patient_id_col_cp01 = dict_config['qc']['qc_params'][
+                                                'patient_id_col_cp01']
+    except KeyError:
+        return rp.ReportItem(passed=False,
+                             text='QC needs extra parameters in qc_params: '
+                                  'path_file_cp01 and patient_id_col_cp01',
+                             **dict_config['qc'])
+    ss_pat_ids = df[dict_config['general']['patient_id_col']].astype(str)
+    # Only load the patient_col, make it a series and both have string type,
+    # this avoids false negatives by two equal values being different types
+    ss_pat_ids_cp01 = pd.read_csv(path_file_cp01,
+                                  dtype={patient_id_col_cp01: str},
+                                  usecols=[patient_id_col_cp01]).iloc[:, 0]
+    ss_isin_cp01 = ss_pat_ids.isin(ss_pat_ids_cp01)
+    ls_pat_ids_faulty = ss_pat_ids[ss_isin_cp01].values.tolist()
 
-    return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
+    return rp.ReportItem.init_conditional(ls_pat_ids_faulty, dict_config['qc'])
 
 
 def qc26(df, dict_config):
@@ -44,13 +49,22 @@ def qc26(df, dict_config):
 
     :param df:
     :param dict_config:
-                - disease_first_exp_date: the column name of the
-                disease_first_exp_date column.
+                - dict_config['qc']['qc_params']['disease_first_exp_date']:
+                the column name of the disease_first_exp_date column.
     :return: ReportItem:
                 - self.extra=ls_idx_faulty: the indices of rows that have a
                 non-zero value for disease_first_exp_date
     """
-    disease_date_col = dict_config['qc']['qc_params']['disease_first_exp_date']
+    # Warns in the report if user forgot to provide needed parameters
+    try:
+        disease_date_col = dict_config['qc']['qc_params'][
+                                             'disease_first_exp_date']
+    except KeyError:
+        return rp.ReportItem(passed=False,
+                             text='QC needs extra parameter in qc_params: '
+                                  'disease_first_exp_date',
+                             **dict_config['qc'])
+
     ls_idx_faulty = df[~df[disease_date_col].isnull()].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])

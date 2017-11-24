@@ -36,16 +36,24 @@ def qc23(df, dict_config):
 
     :param df:
     :param dict_config:
-                - disease_first_exp_date: the column name of the
-                disease_first_exp_date column.
+                - dict_config['qc']['qc_params']['disease_first_exp_date']:
+                the column name of the disease_first_exp_date column.
     :return: ReportItem:
                 - self.extra=ls_idx_faulty, the list of indices of rows
                 where index_date is not strictly before disease_first_exp_date
     """
-    index_date_col = dict_config['general']['index_date_col']
-    disease_date_col = dict_config['qc']['qc_params']['disease_first_exp_date']
+    # Warns in the report if user forgot to provide needed parameters
+    try:
+        disease_date_col = dict_config['qc']['qc_params'][
+                                             'disease_first_exp_date']
+    except KeyError:
+        return rp.ReportItem(passed=False,
+                             text='QC needs extra parameter in qc_params: '
+                                  'disease_first_exp_date')
 
-    ls_idx_faulty = df[~(df[index_date_col] < df[disease_date_col])].index.tolist()
+    index_date_col = dict_config['general']['index_date_col']
+    ls_idx_faulty = df[~(df[index_date_col] < df[disease_date_col])].index.\
+                                                                     tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
 

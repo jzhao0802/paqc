@@ -27,4 +27,6 @@ qc:
   level: error
   order: 1
   qc_num: 'qc9'
+  qc_params:
+    multiple_a_day: False
 
