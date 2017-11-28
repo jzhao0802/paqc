@@ -43,10 +43,19 @@ def generate_cc0_lists(dict_config):
         for i in range(1, 4):
             dict_cc0_sets[i].update(df[df[code_lvl1_col] == i][code_lvl2_col])
     # Changes sets into lists and make sure that each description in those
-    # lists is clean, i.e. only lowercase, white spaces replaced by underscores
-    dict_cc0_lists = {key: [description.lower().replace(' ', '_') for
-                            description in set_descriptions] for key,
-                            set_descriptions in dict_cc0_sets.items()}
+    # lists is clean, i.e:
+    #                      - only lowercase
+    #                      - white spaces replaced by underscores
+    #                      - brackets replaced by underscores
+    #                      - multiple underscores in a row replaced by one
+    #                        underscore (e.g. ' (' -> '__' -> '_'
+    dict_cc0_lists = {key: [re.sub(
+                                   r'(_)\1+',
+                                   r'\1',
+                                   re.sub(r'( )|(\()|(\))', '_', desc.lower())
+                                   )
+                            for desc in set_descriptions]
+                      for key, set_descriptions in dict_cc0_sets.items()}
     return dict_cc0_lists
 
 
@@ -111,10 +120,20 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
         for colname in df.columns:
             if re.search(value, colname):
                 dict_grouped_cols[re.sub(value, '', colname)][key] = colname
-    # Cleaning up the spelling of the features, i.e. no white spaces and
-    # only lower case.
-    dict_grouped_cols = {key.lower().replace(' ', '_'): dict_cols for key,
-                         dict_cols in dict_grouped_cols.items()}
+    # Changes sets into lists and make sure that each description in those
+    # lists is clean, i.e:
+    #                      - only lowercase
+    #                      - white spaces replaced by underscores
+    #                      - brackets replaced by underscores
+    #                      - multiple underscores in a row replaced by one
+    #                        underscore (e.g. ' (' -> '__' -> '_'
+    dict_grouped_cols = {re.sub(
+                                r'(_)\1+',
+                                r'\1',
+                                re.sub(r'( )|(\()|(\))', '_', key.lower())
+                                )
+                         : dict_cols for key, dict_cols in
+                         dict_grouped_cols.items()}
     return dict_grouped_cols
 
 

@@ -4,11 +4,11 @@ general:
   input2: paqc/data/qc_data_multi*.csv
   output_dir: paqc/report/output
 
-  ICD_file: paqc/data/ICD.csv
-  NCD_file: paqc/data/NCD.csv
-  CPT_file: paqc/data/CPT.csv
-  HCPC_file: paqc/data/HCPC.csv
-  speciality_file: paqc/data/speciality.csv
+  ICD_file: paqc/tests/data/ICD.csv
+  NCD_file: paqc/tests/data/NCD.csv
+  CPT_file: paqc/tests/data/CPT.csv
+  HCPC_file: paqc/tests/data/HCPC.csv
+  speciality_file: paqc/tests/data/speciality.csv
   
 
   date_cols: _dt
