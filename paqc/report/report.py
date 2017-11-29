@@ -242,7 +242,7 @@ class Report:
                     f.write(extra)
                     f.close()
                     # save str as js var
-                    extra_js += '%svar %s = %s;\n' % (n1, extra_name, extra)
+                    extra_js += '%svar %s = "%s";\n' % (n1, extra_name, extra)
                 elif isinstance(extra, dict):
                     # save dict as csv
                     pd.DataFrame().from_dict(extra).to_csv(out_file)
