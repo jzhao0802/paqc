@@ -42,19 +42,9 @@ def generate_cc0_lists(dict_config):
     for df in dict_dfs.values():
         for i in range(1, 4):
             dict_cc0_sets[i].update(df[df[code_lvl1_col] == i][code_lvl2_col])
-    # Changes sets into lists and make sure that each description in those
-    # lists is clean, i.e:
-    #                      - only lowercase
-    #                      - white spaces replaced by underscores
-    #                      - brackets replaced by underscores
-    #                      - multiple underscores in a row replaced by one
-    #                        underscore (e.g. ' (' -> '__' -> '_'
-    dict_cc0_lists = {key: [re.sub(
-                                   r'(_)\1+',
-                                   r'\1',
-                                   re.sub(r'( )|(\()|(\))', '_', desc.lower())
-                                   )
-                            for desc in set_descriptions]
+    # Changes sets into lists and make sure that each description string in
+    # those lists is in the right format
+    dict_cc0_lists = {key: [clean_string(desc) for desc in set_descriptions]
                       for key, set_descriptions in dict_cc0_sets.items()}
     return dict_cc0_lists
 
@@ -67,7 +57,6 @@ def write_list_to_csv(ls_items, path_csv):
     :param path_csv: path of the csv file to be written to
     :return: None
     """
-
     df_tocsv = pd.DataFrame(ls_items)
     df_tocsv.to_csv(path_csv, index=False, header=False)
 
@@ -83,7 +72,6 @@ def generate_list_columns(df, dict_config, list_keys):
     :return: List of all column names that match the values of the key-value
     pairs from list_keys.
     """
-
     list_regex = ["%s$" % dict_config['general'][key] for key in list_keys]
     prog = re.compile("(" + ")|(".join(list_regex) + ")")
     return [colname for colname in df.columns if prog.search(colname)]
@@ -111,7 +99,6 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
             suffixes.
     :return: A dictionary of dictionaries
     """
-
     dict_regex = {re.sub(r'_cols$', '', key): "%s$" % dict_config['general'][
         key] for key in list_keys}
 
@@ -120,21 +107,30 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
         for colname in df.columns:
             if re.search(value, colname):
                 dict_grouped_cols[re.sub(value, '', colname)][key] = colname
-    # Changes sets into lists and make sure that each description in those
-    # lists is clean, i.e:
-    #                      - only lowercase
-    #                      - white spaces replaced by underscores
-    #                      - brackets replaced by underscores
-    #                      - multiple underscores in a row replaced by one
-    #                        underscore (e.g. ' (' -> '__' -> '_'
-    dict_grouped_cols = {re.sub(
-                                r'(_)\1+',
-                                r'\1',
-                                re.sub(r'( )|(\()|(\))', '_', key.lower())
-                                )
-                         : dict_cols for key, dict_cols in
+    dict_grouped_cols = {clean_string(key): dict_cols for key, dict_cols in
                          dict_grouped_cols.items()}
     return dict_grouped_cols
+
+
+def clean_string(s):
+    """
+    Function that cleans up string, typically used for column names. Changes
+    the incoming string s so that:
+        - only lowercase
+        - white spaces replaced by underscores
+        - brackets replaced by underscores
+        - multiple underscores in a row replaced by one
+          underscore (e.g. ' (' -> '__' -> '_'
+    :param s: string
+    :return: new string
+    """
+    # only lowercase
+    s = s.lower()
+    # whites spaces and brackets replaced by underscores
+    s = re.sub(r'( )|(\()|(\))', '_', s)
+    # multiple underscores in a row replaced by one underscore
+    s = re.sub(r'(_)\1+', r'\1', s)
+    return s
 
 
 def is_zero_or_null(ss):
@@ -230,7 +226,6 @@ def get_qcs_desc():
 
     :return: Dictionary of qc_num: qc description pairs.
     """
-
     df = pd.read_excel("paqc/data/Status_QC.xlsx")
     qc_dict = dict()
 

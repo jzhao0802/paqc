@@ -43,6 +43,7 @@ qcs:
     input_file: input1
     level: error
     order: 2
+    qc_params:
       lookback_dys_cn01: lookback_dys
       path_file_cp02: paqc/data/restricted_pos.csv
       lookback_dys_cp02: lookback_dys
@@ -62,4 +63,3 @@ qcs:
     level: info
     order: 3
     qc_params:
-      disease_first_exp_date: diseasefirstexp_dt

@@ -34,9 +34,9 @@ def qc27(df, dict_config):
     if n_cp02*n01_match == n_cn01:
         return rp.ReportItem(passed=True, **dict_config['qc'])
     else:
-        str_extra = "Number of patients in CN01: %d. \n" \
-                    "Number of patients in CP02 * N01_MATCH: %d." \
-                    % (n_cn01, n_cp02*n01_match)
+        str_extra = str("Number of patients in CN01: %d. \n" \
+                        "Number of patients in CP02 * N01_MATCH: %d." \
+                        % (n_cn01, n_cp02*n01_match))
         return rp.ReportItem(passed=False, extra=str_extra, **dict_config['qc'])
 
 
@@ -70,7 +70,7 @@ def qc28(df, dict_config):
     if diff_mean.values[0] < 31:
         return rp.ReportItem(passed=True, **dict_config['qc'])
     else:
-        str_extra = 'Difference in avg lookback is %d days.' % diff_mean
+        str_extra = str('Difference in avg lookback is %d days.' % diff_mean)
         return rp.ReportItem(passed=False, extra=str_extra, **dict_config['qc'])
 
 
@@ -104,6 +104,8 @@ def qc29(df, dict_config):
                              **dict_config['qc'])
     # Load the needed columns of the CP02 file
     df_cp02 = pd.read_csv(path_file_cp02,
+                          dtype={pat_id_col_cp02: df[matched_pat_id_col].dtype,
+                                 lookback_col_cp02: df[lookback_col].dtype},
                           usecols=[pat_id_col_cp02, lookback_col_cp02])
     # Pandas .merge gives suffixes _x and _y when the colnames are identical
     if lookback_col == lookback_col_cp02:
