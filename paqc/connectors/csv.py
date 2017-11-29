@@ -59,7 +59,6 @@ def parse_dates(column, **kwargs):
     :param column: DataFrame column, with type str.
     :return: DataFrame column as datatime column with date_format applied.
     """
-
     return pd.to_datetime(column, **kwargs)
 
 

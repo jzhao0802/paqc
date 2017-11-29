@@ -113,7 +113,8 @@ class Driver:
         """
 
         df = self.data_loader(input_file_path)
-        df_hash = utils.generate_hash(df)
+        # df_hash = utils.generate_hash(df)
+        df_hash = ''
         for qc in qcs:
             # generate mini config object for the QC function
             qc_config = {'general': self.general, 'qc': qcs[qc]}
