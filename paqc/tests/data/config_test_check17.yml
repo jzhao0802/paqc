@@ -20,12 +20,23 @@ general:
     - special1
     - special2
   date_format: "%Y-%m-%d %H:%M:%S"
+
 qcs:
   qc1:
-    input_file: input1
+    input_file:
+      - input1
+      - input2
     level: error
     order: 1
   qc5:
-    input_file: input1
+    input_file:
+      - input1
+      - input2
     level: warning
-    order: 1
+    order: 3
+  qc50:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 2

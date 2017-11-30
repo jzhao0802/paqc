@@ -1,7 +1,7 @@
 general:
   source: csv
   input1: paqc/data/qc_data.csv
-  input2: paqc/data/qc_data_multi*.csv
+  input2: paqc/data/qc_data_multi.csv
   output_dir: paqc/report/output
   date_cols: _DATE
   count_cols: _CNT
@@ -20,12 +20,21 @@ general:
     - special1
     - special2
   date_format: "%Y-%m-%d %H:%M:%S"
+
 qcs:
   qc1:
-    input_file: input1
+    input_file:
+      - input1
+      - input2
     level: error
     order: 1
   qc5:
-    input_file: input1
+    input_file:
+      - input1
+      - input2
     level: warning
-    order: 1
+    order: 3
+  qc3:
+    input_file: input2
+    level: error
+    order: 2

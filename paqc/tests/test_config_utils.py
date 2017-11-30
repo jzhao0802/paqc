@@ -44,8 +44,14 @@ def test_config_open(path_to_file, expected):
     ("paqc/tests/data/config_test_check14.yml", False),
     # none unique order for test (each should have a different)
     ("paqc/tests/data/config_test_check15.yml", False),
+    # compare qc doesn't have two input files
+    ("paqc/tests/data/config_test_check16.yml", False),
+    # compare qc doesn't have two different input files
+    ("paqc/tests/data/config_test_check17.yml", False),
+    # compare qc doesn't have multi-input files with * in their path
+    ("paqc/tests/data/config_test_check18.yml", False),
     # properly formatted config YAML
-    ("paqc/tests/data/config_test_check16.yml", True)
+    ("paqc/tests/data/config_test_check19.yml", True)
 ])
 def test_config_checker(path_to_file, expected):
     assert config_checker(config_open(path_to_file)[1]) == expected

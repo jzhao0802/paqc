@@ -153,10 +153,24 @@ def config_checker(yml):
                 # check if the qc is a comparison one and it has two inputs
                 if ((qcs_compare[k] and not multiple_inputs) or
                     (qcs_compare[k] and len(input_file) != 2)):
-                    print("Comparison QC (%s) has to have exactly two input"
-                          "files." % k)
+                    print("ConfigError: Comparison QC (%s) has to have exactly "
+                          "two input files." % k)
                     return False
-
+                # check if the two input files are the same
+                elif qcs_compare[k] and input_file[0] == input_file[1]:
+                    print("ConfigError: Comparison QC (%s) has to have two"
+                          " different input files." % k)
+                    return False
+                # check if any of the input files are multi-files
+                if qcs_compare[k]:
+                    for input_file_key in input_file:
+                        input_file_path = yml['general'][input_file_key ]
+                        if bool(re.search(r"\*", input_file_path )):
+                            print(
+                                "ConfigError: Comparison QC (%s) has to have "
+                                "two full datafiles, and not multi-file input"
+                                " path: %s." % (k, input_file_path))
+                            return False
             else:
                 # we'll warn the user about mis-formatted tags later
                 non_qcs.append(k)

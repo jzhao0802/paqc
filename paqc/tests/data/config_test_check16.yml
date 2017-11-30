@@ -28,13 +28,13 @@ qcs:
       - input2
     level: error
     order: 1
-  qc2:
+  qc5:
     input_file:
       - input1
       - input2
     level: warning
     order: 3
-  qc3:
+  qc50:
     input_file: input2
     level: error
     order: 2
