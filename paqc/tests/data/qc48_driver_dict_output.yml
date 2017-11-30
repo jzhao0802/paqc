@@ -28,6 +28,6 @@ qc:
   order: 1
   qc_num: 'qc48'
   qc_params:
-    list_columns: 
+    ls_colnames: 
         - A_first_exp_dt
         - A_count

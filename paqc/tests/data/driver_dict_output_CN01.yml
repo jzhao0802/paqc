@@ -38,6 +38,6 @@ qc:
   qc_params:
     n01_match: 2
     path_file_cp02: paqc/tests/data/qc27_check_cp02.csv
-    patient_id_col_cp02: patient_id
-    lookback_dys_cn01: lookback_dys_cn
-    lookback_dys_cp02: lookback_dys
+    pat_id_col_cp02: patient_id
+    lookback_col_cn01: lookback_dys_cn
+    lookback_col_cp02: lookback_dys

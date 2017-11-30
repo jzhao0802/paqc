@@ -23,37 +23,28 @@ def qc22(df, dict_config):
     dict_features = utils.generate_dict_grouped_columns(df, dict_config,
                                                         ['flag_cols'])
     ls_cc01_cp_flag_cols = [dict_feat['flag'] for key, dict_feat in
-                           dict_features.items() if prog.search(key)]
+                            dict_features.items() if prog.search(key)]
     ls_idx_faulty = df[~df[ls_cc01_cp_flag_cols].any(axis=1)].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
 
 
-def qc23(df, dict_config):
+def qc23(df, dict_config, diseasefirstexp_col='diseasefirstexp_dt'):
     """
     Checks that the index_date is always strictly before the disease_first_exp
     _date.
 
     :param df:
     :param dict_config:
-                - dict_config['qc']['qc_params']['disease_first_exp_date']:
-                the column name of the disease_first_exp_date column.
+    :param diseasefirstexp_col: the column name of the disease_first_exp_date
+    column.
     :return: ReportItem:
                 - self.extra=ls_idx_faulty, the list of indices of rows
                 where index_date is not strictly before disease_first_exp_date
     """
-    # Warns in the report if user forgot to provide needed parameters
-    try:
-        disease_date_col = dict_config['qc']['qc_params'][
-                                             'disease_first_exp_date']
-    except KeyError:
-        return rp.ReportItem(passed=False,
-                             text='QC needs extra parameter in qc_params: '
-                                  'disease_first_exp_date')
-
     index_date_col = dict_config['general']['index_date_col']
-    ls_idx_faulty = df[~(df[index_date_col] < df[disease_date_col])].index.\
-                                                                     tolist()
+    ls_idx_faulty = df[~(df[index_date_col] < df[diseasefirstexp_col])].index.\
+                                                                        tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
 

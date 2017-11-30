@@ -18,7 +18,9 @@ DICT_CONFIG_CN01 = config_open("paqc/tests/data/driver_dict_output_CN01.yml")[1]
      False),
 ])
 def test_qc27(df, expected, dict_config):
-    rpi = qc27(df, dict_config)
+    qc_params = dict_config['qc']['qc_params']
+    rpi = qc27(df, dict_config, qc_params['path_file_cp02'], qc_params[
+        'pat_id_col_cp02'], qc_params['n01_match'])
     assert (rpi.passed == expected)
 
 
@@ -33,7 +35,9 @@ def test_qc27(df, expected, dict_config):
      False),
 ])
 def test_qc28(df, expected, dict_config):
-    rpi = qc28(df, dict_config)
+    qc_params = dict_config['qc']['qc_params']
+    rpi = qc28(df, dict_config, qc_params['path_file_cp02'], qc_params[
+        'lookback_col_cn01'], qc_params['lookback_col_cp02'])
     assert (rpi.passed == expected)
 
 
@@ -51,9 +55,11 @@ def test_qc28(df, expected, dict_config):
      False, [7])
 ])
 def test_qc29(df, expected, ls_faults, dict_config):
-    rpi = qc29(df, dict_config)
+    qc_params = dict_config['qc']['qc_params']
+    rpi = qc29(df, dict_config, qc_params['path_file_cp02'],
+               qc_params['pat_id_col_cp02'], qc_params['lookback_col_cn01'],
+               qc_params['lookback_col_cp02'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
-
 
 # 30
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_CN01])

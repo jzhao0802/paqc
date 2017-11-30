@@ -28,6 +28,6 @@ qc:
   order: 1
   qc_num: 'qc25'
   qc_params:
-    disease_first_exp_date: disease_frst_exp_dt
+    diseasefirstexp_col: disease_frst_exp_dt
     path_file_cp01: paqc/tests/data/qc25_check_cp01.csv
-    patient_id_col_cp01: patient_id
+    pat_id_col_cp01: patient_id

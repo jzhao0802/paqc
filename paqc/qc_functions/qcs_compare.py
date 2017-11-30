@@ -87,7 +87,7 @@ def qc47(df_old, df_new, dict_config):
                                               dict_config['qc'])
 
 
-def qc48(df_old, df_new, dict_config):
+def qc48(df_old, df_new, dict_config, ls_colnames=()):
     """
     Tests if columns in df_new that should have stayed identical to df_old,
     are indeed identical.
@@ -95,20 +95,12 @@ def qc48(df_old, df_new, dict_config):
     :param df_old:
     :param df_new:
     :param dict_config:
-                -dict_config['qc']['qc_params']['list_columns']: list of
-                columns to be tested on being identical in both dataframes.
+    :param ls_colnames: list of columns to be tested on being identical in both
+    dataframes.
     :return: ReportItem:
                 -self.extra=ls_cols_faulty, list of columns of list_columns
                 that are not identical over the two dataframes.
-                
     """
-    # Warns in the report if user forgot to provide needed parameters
-    try:
-        ls_colnames = dict_config['qc']['qc_params']['list_columns']
-    except KeyError:
-        return rp.ReportItem(passed=False,
-                             text='QC needs extra parameter in qc_params: '
-                                  'list_columns', **dict_config['qc'])
     # Part of the dataframes to be tested
     df1 = df_old[ls_colnames]
     df2 = df_new[ls_colnames]
@@ -173,7 +165,7 @@ def qc49(df_old, df_new, dict_config):
     return rp.ReportItem(passed=True, extra=df_summary, **dict_config['qc'])
 
 
-def qc50(df_old, df_new, dict_config):
+def qc50(df_old, df_new, dict_config, max_fraction_diff=0.1):
     """
     Check if the percentage of missing and zero values across the classes are
     the same in both files within an X% error rate.
@@ -181,22 +173,14 @@ def qc50(df_old, df_new, dict_config):
     :param df_old:
     :param df_new:
     :param dict_config:
-                -dict_config['qc']['qc_params']['max_fraction_diff']: the
-                parameter that decides how large the difference in the fraction
-                of missing/zero values for df_old and df_new is allowed to be.
+    :param max_fraction_diff: the parameter that decides how large the
+    difference in the fraction of missing/zero values for df_old and df_new is
+    allowed to be.
     :return: ReportItem:
                 -self.extra=ls_cols_high_diff, the list of columns where the
                 fraction of 0/missing values changed more between df_old and
                 df_new than the provided threshold in one or several classes.
     """
-    # Warns in the report if user forgot to provide needed parameters
-    try:
-        threshold = dict_config['qc']['qc_params']['max_fraction_diff']
-    except KeyError:
-        return rp.ReportItem(passed=False,
-                             text='QC needs extra parameter in qc_params: '
-                                  'max_fraction_diff', **dict_config['qc'])
-
     colname_target = dict_config['general']['target_col']
     dict_summary_dfs = {}
     dict_dfs = {'orig': df_old, 'new': df_new}
@@ -205,7 +189,7 @@ def qc50(df_old, df_new, dict_config):
         dict_summary_dfs[name] = df_grouped.agg(utils.fraction_zeroes_or_null)
 
     df_diff = np.abs(dict_summary_dfs['new'] - dict_summary_dfs['orig'])
-    ss_bool = (df_diff > threshold).any(axis=0)
+    ss_bool = (df_diff > max_fraction_diff).any(axis=0)
     ls_cols_high_diff = ss_bool[ss_bool].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_cols_high_diff, dict_config['qc'])

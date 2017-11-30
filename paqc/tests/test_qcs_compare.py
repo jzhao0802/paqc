@@ -68,7 +68,8 @@ def test_qc47(df_old, df_new, expected, ls_faults, dict_config):
      False, ['A_count'])
 ])
 def test_qc48(df_old, df_new, expected, ls_faults, dict_config):
-    rpi = qc48(df_old, df_new, dict_config)
+    rpi = qc48(df_old, df_new, dict_config, dict_config['qc']['qc_params'][
+        'ls_colnames'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
 
 
@@ -92,5 +93,6 @@ def test_qc48(df_old, df_new, expected, ls_faults, dict_config):
              'C_hcp_spec'])
 ])
 def test_qc50(df_old, df_new, expected, ls_faults, dict_config):
-    rpi = qc50(df_old, df_new, dict_config)
+    rpi = qc50(df_old, df_new, dict_config, dict_config['qc']['qc_params'][
+        'max_fraction_diff'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)

@@ -18,7 +18,9 @@ DICT_CONFIG_CS02 = config_open("paqc/tests/data/driver_dict_output_CS02.yml")[1]
      False, ['57616631', '81744431'])
 ])
 def test_qc25(df, expected, ls_faults, dict_config):
-    rpi = qc25(df, dict_config)
+    qc_params = dict_config['qc']['qc_params']
+    rpi = qc25(df, dict_config, qc_params['path_file_cp01'], qc_params[
+        'pat_id_col_cp01'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
 
 
@@ -33,5 +35,6 @@ def test_qc25(df, expected, ls_faults, dict_config):
      False, [1])
 ])
 def test_qc26(df, expected, ls_faults, dict_config):
-    rpi = qc26(df, dict_config)
+    rpi = qc26(df, dict_config, dict_config['qc']['qc_params'][
+        'diseasefirstexp_col'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)

@@ -28,9 +28,9 @@ qc:
   order: 1
   qc_num: 'qc1'
   qc_params:
-    lookback_dys: LOOKBACK_DYS
+    lookback_days_col: LOOKBACK_DYS
     days_months_years: days
-    list_columns:
+    ls_dd_columns:
       - _FIRST_EXP_DD
       - _LAST_EXP_DD
     

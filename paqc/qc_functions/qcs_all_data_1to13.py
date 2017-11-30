@@ -92,7 +92,7 @@ def qc6(df, dict_config):
 
 def qc7(df, dict_config):
     """
-    Checks that for rows that are a 100% empty.
+    Checks for rows that are a 100% empty.
 
     :param df:
     :param dict_config:
@@ -191,35 +191,26 @@ def qc10(df, dict_config):
     return rp.ReportItem.init_conditional(ls_cols_faulty, dict_config['qc'])
 
 
-def qc11(df, dict_config):
+def qc11(df, dict_config, multiple_a_day=True):
     """
     All first exposure dates are before or on their last exposure date.
 
     When first exposure date is on last exposure date, the qc allows counts
-    to be higher than 1 or not, depending on dict_config['qc']['qc_params'][
-    'multiple_a_day']
-
+    to be higher than 1 or not, depending on multiple_a_day boolean parameter.
 
     :param df:
     :param dict_config:
-                - dict_config['qc']['qc_params']['multiple_a_day']: Boolean,
-                if True: count is allowed to be higher than 1 when
-                first_exp_date and last_exp_date are the same.
-                if False: rows where count is higher than 1 while
-                first_exp_date and last_exp_date are the same, fail the qc.
-                The relevant feature will be added to ls_features_faulty.
+    :param multiple_a_day: Boolean, if True: count is allowed to be higher than
+     1 when first_exp_date and last_exp_date are the same.
+    if False: rows where count is higher than 1 while first_exp_date and
+    last_exp_date are the same, fail the qc. The relevant feature will be added
+     to ls_features_faulty.
     :return: ReportItem:
                 - self.extra=ls_features_faulty, the list of all features
                 that have at least one row where last_exp_date is after
                 first_exp_date or where first_exp_date == last_exp_date and
                 count bigger than 1.
     """
-    # Warns in the report if user forgot to provide needed parameters
-    try:
-        multiple_a_day = dict_config['qc']['qc_params']['multiple_a_day']
-    # Making True the default parameter, this allows count > 1!
-    except KeyError:
-        multiple_a_day = True
     # multiple_a_day is provided, but (due to typo?) not a boolean, finish test
     if multiple_a_day not in [True, False]:
         return rp.ReportItem(passed=False,

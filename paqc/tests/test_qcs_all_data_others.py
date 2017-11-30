@@ -101,5 +101,5 @@ def test_qc18(df, expected, ls_faults, dict_config):
      False, [0, 7]),
 ])
 def test_qc19(df, expected, ls_faults, dict_config):
-    rpi = qc19(df, dict_config)
+    rpi = qc19(df, dict_config, dict_config['qc']['qc_params']['date_limit'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)

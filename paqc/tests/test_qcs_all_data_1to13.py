@@ -182,7 +182,8 @@ def test_qc10(df, expected, ls_faults, dict_config):
      False, ['predictorb'])
 ])
 def test_qc11(df, expected, ls_faults, dict_config):
-    rpi = qc11(df, dict_config)
+    rpi = qc11(df, dict_config, dict_config['qc']['qc_params'][
+        'multiple_a_day'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
 
 
