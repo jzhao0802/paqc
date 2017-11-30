@@ -146,12 +146,17 @@ def qc20(df, dict_config, lookback_days_col='lookback_dys',
 
     :param df:
     :param dict_config:
-    :param lookback_days_col:
-    :param days_months_years:
-    :return:
+    :param lookback_days_col: Column name of the lookback length in days column
+    :param days_months_years: The unit freq should be calculated in,
+    'years' for counts/years, 'months' for counts/months and 'days' for
+    counts/'days'
+    :return: ReportItem:
+                - self.extra=ls_feat_faulty: list of all features that were
+                found to violate the expected way of calculating frequency
+                columns.
     """
     try:
-        cte = {'days': 1, 'months': 12, 'years': 365}[days_months_years]
+        cte = {'days': 1, 'months': 12, 'years': 365}[days_months_years.lower()]
     except KeyError as e:
         return rp.ReportItem(passed=False,
                              text='days_month_year value %s not part of '
@@ -167,9 +172,10 @@ def qc20(df, dict_config, lookback_days_col='lookback_dys',
 
     n_samples = 10000/len(dict_grouped_cols)
     ls_feat_faulty = []
-    for feat, dict_feat in dict_grouped_cols:
+    for feat, dict_feat in dict_grouped_cols.items():
         col_count, col_freq = dict_feat['count'], dict_feat['freq']
-        df_sample = df[[lookback_days_col, col_count, col_freq]].sample(n_samples)
+        df_sample = df[[lookback_days_col, col_count, col_freq]].sample(
+            n=int(n_samples), replace=True)
         is_not_same = (abs(df_sample[col_count]/df_sample[lookback_days_col]*cte -
                        df_sample[col_freq]) > df_sample[col_freq]*0.1).any()
         if is_not_same:
@@ -191,13 +197,15 @@ def qc21(df, dict_config, lookback_days_col='lookback_dys', ls_dd_columns=(
     column.
     :param ls_dd_columns: List of all column names/suffixes of columns that
     are date difference variables
-    :return:
+    :return: ReportItem:
+                - self.extra=ls_cols_faulty: list of all columns that have
+                negative or higher than lookback length date difference values.
     """
 
     ls_regex = ["%s$" % col for col in ls_dd_columns]
     prog = re.compile("(" + ")|(".join(ls_regex) + ")")
     ls_colnames = [colname for colname in df if prog.search(colname)]
-    ss_bool =df[ls_colnames].apply(lambda x:  (x < 0) | (x > df[
+    ss_bool = df[ls_colnames].apply(lambda x:  (x < 0) | (x > df[
         lookback_days_col])).any()
     ls_cols_faulty = ss_bool[ss_bool].index.tolist()
 

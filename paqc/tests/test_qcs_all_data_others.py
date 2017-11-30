@@ -8,6 +8,8 @@ DICT_CONFIG = config_open("paqc/tests/data/driver_dict_output.yml")[1]
 DICT_CONFIG_16 = config_open("paqc/tests/data/qc16_driver_dict_output.yml")[1]
 DICT_CONFIG_17TO19 = config_open(
                         "paqc/tests/data/qc17to19_driver_dict_output.yml")[1]
+DICT_CONFIG_20TO21 = config_open(
+                        "paqc/tests/data/qc20to21_driver_dict_output.yml")[1]
 
 
 # 14
@@ -102,4 +104,38 @@ def test_qc18(df, expected, ls_faults, dict_config):
 ])
 def test_qc19(df, expected, ls_faults, dict_config):
     rpi = qc19(df, dict_config, dict_config['qc']['qc_params']['date_limit'])
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 20
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_20TO21])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Subset from date_diff_vars.csv
+    (csv.read_csv(DICT_CONFIG_20TO21, "paqc/tests/data/qc20_check1.csv"),
+     True, None),
+    # Recalculated A_FREQ by dividing count by lookback length in days
+    (csv.read_csv(DICT_CONFIG_20TO21, "paqc/tests/data/qc20_check2.csv"),
+     False, ['a']),
+])
+def test_qc20(df, expected, ls_faults, dict_config):
+    qc_params = dict_config['qc']['qc_params']
+    rpi = qc20(df, dict_config, qc_params['lookback_days_col'], qc_params[
+        'days_months_years'])
+    assert (rpi.passed == expected) & (rpi.extra == ls_faults)
+
+
+# 21
+@pytest.mark.parametrize("dict_config", [DICT_CONFIG_20TO21])
+@pytest.mark.parametrize("df, expected, ls_faults", [
+    # Subset from date_diff_vars.csv
+    (csv.read_csv(DICT_CONFIG_20TO21, "paqc/tests/data/qc21_check1.csv"),
+     True, None),
+    #
+    (csv.read_csv(DICT_CONFIG_20TO21, "paqc/tests/data/qc21_check2.csv"),
+     False, ['A_FIRST_EXP_DD', 'A_LAST_EXP_DD']),
+])
+def test_qc21(df, expected, ls_faults, dict_config):
+    qc_params = dict_config['qc']['qc_params']
+    rpi = qc21(df, dict_config, qc_params['lookback_days_col'], qc_params[
+        'ls_dd_columns'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
