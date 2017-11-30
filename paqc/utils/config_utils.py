@@ -8,6 +8,7 @@ import yaml
 import re
 import numpy as np
 import copy
+from paqc.utils import utils
 
 
 def config_open(path):
@@ -107,41 +108,55 @@ def config_checker(yml):
         return False
     else:
         qcs = yml['qcs']
-
         # check if we have at least one QC and if they are well spec-ed
         counter = 0
         non_qcs = []
         order_nums = []
+        qcs_compare = utils.get_qcs_compare()
         mandatory_qc_fields = {'order', 'input_file', 'level'}
         severity_levels = ['error', 'warning', 'info']
         for k, v in qcs.items():
             if bool(re.match(r"^qc\d{1,3}$", k)):
                 counter += 1
+                # check if qc is one of the known ones
+                if k not in qcs_compare:
+                    print("ConfigError: Unknown QC function: %s." % k)
+                    return False
                 # check if the qc has all necessary fields
-                if not mandatory_qc_fields.issubset(qcs[k].keys()):
+                if not mandatory_qc_fields.issubset(v.keys()):
                     print("ConfigError: Each QC must have these fields: "
                           "%s." % ', '.join(list(mandatory_qc_fields)))
                     return False
                 # check if the severity level is specified as supposed to
-                elif qcs[k]['level'] not in severity_levels:
+                elif v['level'] not in severity_levels:
                     print("ConfigError: QC severity level has to be one "
                           "of %s." % ', '.join(severity_levels))
                     return False
                 # check order is an int and add it to the list of order
-                elif not isinstance(qcs[k]['order'], int):
+                elif not isinstance(v['order'], int):
                     print("ConfigError: %s has a non-integer order." % k)
                     return False
                 else:
-                    order_nums.append(qcs[k]['order'])
-                # check if the input_file is one of ones listed in general
-                input_file = qcs[k]['input_file']
+                    order_nums.append(v['order'])
+
+                # check if the input_file is one that's listed in general
+                input_file = v['input_file']
                 multiple_inputs = not isinstance(input_file, str)
                 cond1 = not multiple_inputs and input_file not in inputs
                 cond2 = multiple_inputs and not set(input_file).issubset(inputs)
                 if cond1 or cond2:
-                    print("ConfigError: %s has an input_file that is not "
-                          "listed in the general section as an input." % k)
+                    print("ConfigError: %s has an input_file (%s) that is not "
+                          "listed in the general section as an input." %
+                          (k, input_file))
                     return False
+
+                # check if the qc is a comparison one and it has two inputs
+                if ((qcs_compare[k] and not multiple_inputs) or
+                    (qcs_compare[k] and len(input_file) != 2)):
+                    print("Comparison QC (%s) has to have exactly two input"
+                          "files." % k)
+                    return False
+
             else:
                 # we'll warn the user about mis-formatted tags later
                 non_qcs.append(k)
@@ -197,17 +212,22 @@ def config_parser(yml):
     # do all tests on it then proceed with the next data file
     qcs = yml['qcs']
     input_qc = dict()
+    qcs_compare = utils.get_qcs_compare()
     for input_file in input_paths.keys():
         for qc in qcs:
             # does this qc have to be applied to multiple input_files?
             multiple_inputs = not isinstance(qcs[qc]['input_file'], str)
-            if multiple_inputs and input_file in qcs[qc]['input_file']:
-                add_qc_to_input_qc_dict(input_qc, input_file, qc)
-            elif not multiple_inputs and input_file == qcs[qc]['input_file']:
-                add_qc_to_input_qc_dict(input_qc, input_file, qc)
+            # is this a qc that is for comparing two dataframes?
+            if not qcs_compare[qc]:
+                if multiple_inputs and input_file in qcs[qc]['input_file']:
+                    add_qc_to_input_qc_dict(input_qc, input_file, qc)
+                elif not multiple_inputs and input_file == qcs[qc]['input_file']:
+                    add_qc_to_input_qc_dict(input_qc, input_file, qc)
+            else:
+                # add comparison qc to the root of the config file
+                yml[qc] = qcs[qc]
 
     # replace qc part of yml with new structure
-
     for k, v in input_qc.items():
         # add a new node to the config object for the input file
         yml[k] = dict()

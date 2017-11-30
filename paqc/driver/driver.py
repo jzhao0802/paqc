@@ -29,6 +29,8 @@ class Driver:
         self.debug = debug
         # load the QC functions into a single dict
         self.qc_functions = qcs_main.import_submodules(qcs_main)
+        # load list of comparison qc functions
+        self.qcs_compare = utils.get_qcs_compare()
 
     def run(self, generate_report=True):
         """
@@ -113,7 +115,7 @@ class Driver:
         """
 
         df = self.data_loader(input_file_path)
-        # df_hash = utils.generate_hash(df)
+        df_hash = utils.generate_hash(df)
         df_hash = ''
         for qc in qcs:
             # generate mini config object for the QC function
@@ -152,17 +154,6 @@ class Driver:
             te = time.time()
             rpi.exec_time = te - ts
             self.report.add_item(rpi)
-
-    def report_generator(self):
-        """
-        Generates an HTML and .txt report from the Driver's
-        :obj:`~report.report.Report`
-
-        :return: Nothing, generates report to the output folder instead.
-        """
-
-        self.report.print_items()
-        return True
 
     def data_loader(self, input_file_path):
         """

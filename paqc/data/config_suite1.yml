@@ -42,7 +42,9 @@ qcs:
     input_file: input2
     level: info
     order: 5
-  qc8:
-    input_file: input2
+  qc50:
+    input_file:
+      - input1
+      - input2
     level: info
     order: 6

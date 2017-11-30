@@ -235,5 +235,27 @@ def get_qcs_desc():
         if not pd.isnull(id) and id not in qc_dict:
             key = 'qc%d' % id
             qc_dict[key] = row['Test description']
+    return qc_dict
 
+
+def get_qcs_compare():
+    """
+    Loads the qc list file from data, which has to be exported and downloaded
+    from the online tracker manually every time it's updated. For each QC it
+    checks if it's a comparison type, i.e. it requires two dataframes as input.
+
+    :return: Dictionary of qc_num: boolean, whether the QC is a compare.
+    """
+    df = pd.read_excel("paqc/data/Status_QC.xlsx")
+    qc_dict = dict()
+
+    for i in df.index:
+        row = df.loc[i]
+        id = row.ID
+        if not pd.isnull(id) and id not in qc_dict:
+            key = 'qc%d' % id
+            if row['Test data'] == "Compare":
+                qc_dict[key] = True
+            else:
+                qc_dict[key] = False
     return qc_dict
