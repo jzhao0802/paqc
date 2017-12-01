@@ -1,0 +1,29 @@
+general:
+  source: csv
+  input1: paqc/data/qc_data.csv
+  input2: paqc/data/qc_data_multi*.csv
+  output_dir: paqc/report/output
+
+  code_col: code
+  category_col: category
+  description_col: descrp
+  cp02_count_col: cp02_count
+  cn01_count_col: cn01_count
+  cp02_prop_col: cp02_prop
+  cn01_prop_col: cn01_prop
+
+qc:
+  input_file: input1
+  input_file_path: paqc/data/training_data.csv
+  level: error
+  order: 1
+  qc_num: 'qc25'
+  qc_params:
+    ls_metrictypes: 
+      - DATE_FIRST_INDEX
+      - FREQ
+      - COUNT
+
+
+
+

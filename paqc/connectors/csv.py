@@ -41,13 +41,19 @@ def read_csv(config, input_file_path):
     df = pd.read_csv(input_file_path, dtype=date_cols_types)
 
     # convert string dates to dates using the date format
-    if df.shape[0] > 20000 or len(date_cols) > 50:
+    # Large dataset, conversion done in parallel
+    if len(date_cols) > 50 or (df.shape[0] > 20000 and len(date_cols) > 1):
         # we have to do this in parallel otherwise it takes forever
         df[date_cols] = apply_parallel(df[date_cols], parse_dates,
-                                       format=general['date_format'])
-    else:
+                                            format=general['date_format'])
+    # Small dataset, faster to convert in non-parallel fashion
+    elif len(date_cols) > 0:
         df[date_cols] = df[date_cols].apply(pd.to_datetime,
                                             format=general['date_format'])
+    # No date columns to convert
+    else:
+        pass
+
     return df
 
 

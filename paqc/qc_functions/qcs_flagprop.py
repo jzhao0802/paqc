@@ -5,7 +5,7 @@ from paqc.report import report as rp
 from paqc.utils import utils
 
 
-def qc40(df, dict_config, set_metrictypes={'FLAG', 'FREQ', 'COUNT'}):
+def qc40(df, dict_config, ls_metrictypes=('FLAG', 'FREQ', 'COUNT')):
     """
     Predictor names should follow the naming convention in Table 1.10 2.
 
@@ -20,11 +20,16 @@ def qc40(df, dict_config, set_metrictypes={'FLAG', 'FREQ', 'COUNT'}):
 
     :param df:
     :param dict_config:
-    :param set_metrictypes:
+    :param ls_metrictypes:
     :return:
     """
+    code_col = dict_config['general']['code_col']
+    category_col = dict_config['general']['category_col']
     dict_prefix = {'CPT': 'C', 'GPI6': 'G', 'GPI-10': 'G', 'ICD9': 'D',
                    'HCPC': 'H', 'Specialty': 'S', 'ICD10': 'D'}
+    set_metrictypes = set(ls_metrictypes)
+
+    ss_code_split = df[code_col].apply(lambda x: re.split('_', x, maxsplit=2))
 
     def is_not_wellnamed(code, cat):
         is_not = (not (len(code) == 3) or
@@ -32,10 +37,9 @@ def qc40(df, dict_config, set_metrictypes={'FLAG', 'FREQ', 'COUNT'}):
                   not (dict_prefix[cat] == code[0]))
         return is_not
 
-    ss_code_split = df[dict_config['code']].apply(lambda x: re.split('_', x))
-    ss_bool = pd.concat([ss_code_split, df['category']], axis=1).apply(
-                        lambda x: is_not_wellnamed(*x), axis=1)
-    ls_codes_faulty = df.loc[ss_bool, 'code']
+    ss_bool = pd.concat([ss_code_split, df[category_col]], axis=1)\
+                                .apply(lambda x: is_not_wellnamed(*x), axis=1)
+    ls_codes_faulty = df.loc[ss_bool, 'code'].tolist()
 
     return rp.ReportItem.init_conditional(ls_codes_faulty, dict_config['qc'])
 
@@ -62,7 +66,8 @@ def qc42(df, dict_config):
     :param dict_config:
     :return:
     """
-    ss_boolean = df.duplicated(subset=dict_config['description'], keep=False)
+    description_col = dict_config['general']['description_col']
+    ss_boolean = df.duplicated(subset=description_col, keep=False)
     ls_idx_duplicate = ss_boolean[ss_boolean].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_duplicate, dict_config['qc'])

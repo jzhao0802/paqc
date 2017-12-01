@@ -66,15 +66,23 @@ def generate_list_columns(df, dict_config, list_keys):
     Generates list of all column names needed, based on the list of keys for
     the dict_config.
 
+    If none of the keys exists in the dict_config, or none of the
+    suffixes/column names is found in the list of column names, an empty
+    list is returned.
+
     :param df:
     :param dict_config:
     :param list_keys:
     :return: List of all column names that match the values of the key-value
     pairs from list_keys.
     """
-    list_regex = ["%s$" % dict_config['general'][key] for key in list_keys]
-    prog = re.compile("(" + ")|(".join(list_regex) + ")")
-    return [colname for colname in df.columns if prog.search(colname)]
+    list_regex = ["%s$" % dict_config['general'][key] for key in list_keys
+                  if key in dict_config['general']]
+    if list_regex:
+        prog = re.compile("(" + ")|(".join(list_regex) + ")")
+        return [colname for colname in df.columns if prog.search(colname)]
+    else:
+        return []
 
 
 def generate_dict_grouped_columns(df, dict_config, list_keys):
@@ -100,7 +108,7 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
     :return: A dictionary of dictionaries
     """
     dict_regex = {re.sub(r'_cols$', '', key): "%s$" % dict_config['general'][
-        key] for key in list_keys}
+        key] for key in list_keys if key in dict_config['general']}
 
     dict_grouped_cols = defaultdict(dict)
     for key, value in dict_regex.items():
