@@ -20,8 +20,11 @@ def qc40(df, dict_config, ls_metrictypes=('FLAG', 'FREQ', 'COUNT')):
 
     :param df:
     :param dict_config:
-    :param ls_metrictypes:
-    :return:
+    :param ls_metrictypes: List of metrictype suffixes allowed in naming of
+    the predictors.
+    :return: ReportItem:
+                - self.extra=ls_codes_faulty: The list of codes that do not
+                follow the naming convention.
     """
     code_col = dict_config['general']['code_col']
     category_col = dict_config['general']['category_col']
@@ -50,7 +53,9 @@ def qc41(df, dict_config):
 
     :param df:
     :param dict_config:
-    :return:
+    :return: ReportItem:
+                - self.extra=ls_idx_faulty: The list of indices of
+                rows that have missing values.
     """
     ss_rows_with_nulls = df.isnull().any(axis=1)
     ls_idx_faulty = ss_rows_with_nulls[ss_rows_with_nulls].index.tolist()
@@ -64,7 +69,9 @@ def qc42(df, dict_config):
 
     :param df:
     :param dict_config:
-    :return:
+    :return: ReportItem:
+                - self.extra=ls_idx_faulty: The list of indices of
+                rows that have duplicate descriptions.
     """
     description_col = dict_config['general']['description_col']
     ss_boolean = df.duplicated(subset=description_col, keep=False)

@@ -6,7 +6,7 @@ from paqc.report import report as rp
 from paqc.utils import utils
 
 
-def qc25(df, dict_config, path_file_cp01='data/cp02.csv',
+def qc25(df, dict_config, path_file_cp01='data/cp01.csv',
          pat_id_col_cp01='patient_id'):
     """
     Checks that dataset has NO patients listed in CP01, this is checked by

@@ -223,7 +223,7 @@ class Report:
                 # depending on what's in extra we need to proceed differently
                 if isinstance(extra, list):
                     # save list as csv
-                    pd.Series(extra).to_csv(out_file)
+                    pd.Series(extra).to_csv(out_file, index=False)
                     # save list as js var
                     list_to_str = '\\n'.join(map(str, extra))
                     extra_js += '%svar %s = "%s";\n' % (n1, extra_name,
@@ -231,7 +231,7 @@ class Report:
                 elif isinstance(extra, set):
                     # save list as csv
                     extra = list(extra)
-                    pd.Series(extra).to_csv(out_file)
+                    pd.Series(extra).to_csv(out_file, index=False)
                     # save list as js var
                     list_to_str = '\\n'.join(map(str, extra))
                     extra_js += '%svar %s = "%s";\n' % (n1, extra_name,
@@ -245,14 +245,15 @@ class Report:
                     extra_js += '%svar %s = "%s";\n' % (n1, extra_name, extra)
                 elif isinstance(extra, dict):
                     # save dict as csv
-                    pd.DataFrame().from_dict(extra).to_csv(out_file)
+                    pd.DataFrame().from_dict(extra).to_csv(out_file,
+                                                           index=False)
                     # save dict as js var
                     extra_js += ('%s var %s = "Please check the %s csv file in '
                                  'the output_dir that contains further info."\n'
                                  % (n1, extra_name, extra_name))
                 elif isinstance(extra, pd.DataFrame):
                     # save DataFrame as csv
-                    extra.to_csv(out_file)
+                    extra.to_csv(out_file, index=False)
                     # save DataFrame as js var
                     extra_js += ('%s var %s = "Please check the %s csv file in '
                                  'the output_dir that contains further info."\n'

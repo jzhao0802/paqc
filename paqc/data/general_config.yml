@@ -1,0 +1,181 @@
+general:
+  source: csv
+  input1: paqc/data/qc_data.csv
+  input2: paqc/data/qc_data_multi*.csv
+  output_dir: paqc/report/output
+  date_cols: _DATE
+  count_cols: _CNT
+  flag_cols: _FLAG
+  freq_cols: _FREQ
+  first_exp_date_cols: _FIRST_EXP_DT
+  last_exp_date_cols: _LAST_EXP_DT
+  index_date_col: INDEX_DATE
+  lookback_date_col: LOOKBACK_DATE
+  gender_col: GENDER
+  age_col: AGE
+  target_col: LABEL
+  patient_id_col: PATIENT_ID
+  matched_patient_id_col: MATCHED_PATIENT_ID
+  special_cols:
+    - special1
+    - special2
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+qcs:
+  qc1:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 1
+
+  qc3:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 2
+
+  qc4:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 3
+
+  qc6:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 4
+
+  qc7:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 5
+
+  qc8:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 6
+
+  qc9:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 7
+
+  qc10:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 8
+
+  qc11:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 9
+    qc_params:
+      multiple_a_day: True
+
+  qc12:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 10
+
+  qc13:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 11
+
+  qc14:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 12
+
+  qc15:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 13
+    qc_params:
+      keys_num_cols:
+        - count_cols
+        - freq_cols
+        - flag_cols
+        - age_col
+
+  qc16:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 14
+    qc_params:
+      max_fraction_diff: 0.1
+
+  qc17:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 15
+
+  qc18:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 16
+
+  qc19:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 17
+    qc_params:
+      date_limit: 2009-01-01 05:00:00
+
+  qc20:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 18
+    qc_params:
+      lookback_days_col: lookback_dys
+      days_months_years: years
+
+  qc21:
+    input_file:
+      - input1
+      - input2
+    level: error
+    order: 17
+    qc_params:
+      lookback_days_col: lookback_dys
+      ls_dd_columns:
+        - _DATE_FIRST_LAST
+	- _DATE_FIRST_INDEX
+	- _DATE_LAST_INDEX
+        - _DATE_FIRST_DISEASE
+	- _DATE_LAST_DISEASE
+
+

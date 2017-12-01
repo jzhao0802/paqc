@@ -1,0 +1,39 @@
+general:
+  source: csv
+  input1: paqc/data/flag_proportions.csv
+  output_dir: paqc/report/output
+
+  code_col: code
+  category_col: category
+  description_col: descrp
+  cp02_count_col: cp02_count
+  cn01_count_col: cn01_count
+  cp02_prop_col: cp02_prop
+  cn01_prop_col: cn01_prop
+
+qcs:
+  qc40:
+    input_file: input1
+    level: error
+    order: 1
+    qc_params:
+      ls_metrictypes: 
+        - FLAG
+        - FREQ
+        - COUNT
+
+  qc41:
+    input_file: input1
+    level: error
+    order: 2
+    qc_params:
+
+  qc42:
+    input_file: input1
+    level: error
+    order: 3
+    qc_params:
+
+
+
+

@@ -1,0 +1,37 @@
+general:
+  source: csv
+  input1: paqc/data/CS03.csv
+  output_dir: paqc/report/output
+
+  date_cols: _dt
+  count_cols: _count
+  flag_cols: _flag
+  freq_cols: _freq
+  first_exp_date_cols: _first_exp_dt
+  last_exp_date_cols: _last_exp_dt
+  index_date_col: index_dt
+  lookback_date_col: lookback_dt
+  gender_col: pat_gender_cd
+  age_col: pat_age
+  target_col: LABEL
+  patient_id_col: patient_id
+  matched_patient_id_col: MATCHED_PATIENT_ID
+  special_cols:
+
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+qcs:
+  qc25:
+    input_file: input1
+    level: error
+    order: 1
+    qc_params:
+      path_file_cp01: paqc/data/CP01.csv
+      pat_id_col_cp01: patient_id
+
+  qc26:
+    input_file: input1
+    level: error
+    order: 2
+    qc_params:
+      diseasefirstexp_col: disease_frst_exp_dt

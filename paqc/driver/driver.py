@@ -144,11 +144,11 @@ class Driver:
             ts = time.time()
 
             # check if we have params for this qc function
-            if "qc_params" in qc_config:
-                if qc_config["qc_params"] is None:
+            if "qc_params" in qc_config['qc']:
+                if qc_config['qc']['qc_params'] is None:
                     qc_params = dict()
                 else:
-                    qc_params = qc_config["qc_params"]
+                    qc_params = qc_config['qc']['qc_params']
             else:
                 qc_params = dict()
 

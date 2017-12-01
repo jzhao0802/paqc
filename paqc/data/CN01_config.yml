@@ -1,0 +1,64 @@
+general:
+  source: csv
+  input1: paqc/data/CN01.csv
+  output_dir: paqc/report/output
+
+  ICD_file: paqc/data/clinical_input_files/ICD_CC01_CS.csv
+  NCD_file: paqc/data/clinical_input_files/NCD_CC01_CS.csv
+  CPT_file: paqc/data/clinical_input_files/CPT_CC01_CS.csv
+  HCPC_file: paqc/data/clinical_input_files/HCPC_CC01_CS.csv
+  speciality_file: paqc/data/clinical_input_files/speciality_CC01_CS.csv
+  
+
+  date_cols: _dt
+  count_cols: _count
+  flag_cols: _flag
+  freq_cols: _freq
+  first_exp_date_cols: _first_exp_dt
+  last_exp_date_cols: _last_exp_dt
+  index_date_col: index_dt_cn
+  lookback_date_col: lookback_dt_cn
+  gender_col: pat_gender_cd
+  age_col: pat_age
+  target_col: LABEL
+  patient_id_col: patient_id
+  matched_patient_id_col: cp02patientid
+  special_cols:
+    - lookback_dys_cn
+    - lookback_mnths_cn
+    - _spec
+  date_format: "%d/%m/%Y %H:%M"
+
+qcs:
+  qc27:
+    input_file: input1
+    level: error
+    order: 1
+    qc_params:
+      n01_match: 2
+      path_file_cp02: paqc/data/CP02.csv
+      pat_id_col_cp02: patient_id
+      
+  qc28:
+    input_file: input1
+    level: error
+    order: 2
+    qc_params:
+      path_file_cp02: paqc/data/CP02.csv
+      lookback_col_cn01: lookback_dys_cn
+      lookback_col_cp02: lookback_dys
+
+  qc29:
+    input_file: input1
+    level: info
+    order: 3
+    qc_params:
+      path_file_cp02: paqc/data/CP02.csv
+      lookback_col_cn01: lookback_dys_cn
+      lookback_col_cp02: lookback_dys
+      pat_id_col_cp02: patient_id
+
+  qc30:
+    input_file: input1
+    level: info
+    order: 4
