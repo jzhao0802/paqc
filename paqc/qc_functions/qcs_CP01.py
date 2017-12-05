@@ -17,7 +17,7 @@ def qc22(df, dict_config):
                 - self.extra=ls_idx_faulty, the indices of the rows that do
                 not meet any of the criteria listed in CC01_CP
     """
-    ls_cc01_cp = utils.generate_cc0_lists(dict_config)[1]
+    ls_cc01_cp = utils.generate_list_cc0x_feats(dict_config, lvl1_desc=1)
     prog = re.compile("(" + ")|(".join(ls_cc01_cp) + ")")
 
     dict_features = utils.generate_dict_grouped_columns(df, dict_config,
@@ -37,7 +37,7 @@ def qc23(df, dict_config, diseasefirstexp_col='diseasefirstexp_dt'):
     :param df:
     :param dict_config:
     :param diseasefirstexp_col: the column name of the disease_first_exp_date
-    column.
+           column.
     :return: ReportItem:
                 - self.extra=ls_idx_faulty, the list of indices of rows
                 where index_date is not strictly before disease_first_exp_date
@@ -66,7 +66,7 @@ def qc24(df, dict_config):
     dict_features = utils.generate_dict_grouped_columns(df, dict_config,
                                                         ['first_exp_date_cols',
                                                          'last_exp_date_cols'])
-    ls_cc03_cp = utils.generate_cc0_lists(dict_config)[3]
+    ls_cc03_cp = utils.generate_list_cc0x_feats(dict_config, lvl1_desc=3)
 
     # Take the date columns of all features part of cc03_cp
     prog = re.compile("(" + ")|(".join(ls_cc03_cp) + ")")

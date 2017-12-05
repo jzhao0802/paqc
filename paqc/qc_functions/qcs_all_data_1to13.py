@@ -144,51 +144,99 @@ def qc8(df, dict_config):
     return rp.ReportItem.init_conditional(ls_colnames_nomatch, dict_config['qc'])
 
 
-def qc9(df, dict_config):
+def qc9(df, dict_config,
+        keys_columns_a=('first_exp_date_cols', 'last_exp_date_cols'),
+        comparison='>', key_column_b='lookback_date_col', axis=0):
     """
-    Checks that all first and last exposure dates are before or on the index
-    date.
+    General function to compare chosen date columns with one other date
+    column, it tests if columns_a are </<=/>=/> column_b, where the comparison
+    operator is defined by the parameter comparison.
+
+    The comparison itself is done by the paqc.utils.utils.compare_date_columns.
+
+    Both columns_a and column_b are accessed by their key in the
+    config_file, NOT the column name itself. keys_columns_a should be a
+    list, not a single string, while key_column_b should be a key single name,
+    not a list.
+
+    The values that do not follow the expected date order can be returned in
+    two ways, when axis=0 a list of all columns that have at least one wrong
+    value is returned, when axis=1 a list of all row indices with at least
+    one wrong value is returned.
 
     :param df:
     :param dict_config:
+    :param keys_columns_a: The list of keys that point to column names that
+           need to be tested.
+    :param comparison: Comparison operator, possible values: '>', '>=',
+           '<=', '<'. ALWAYS USE THE APOSTROPHES.
+    :param key_column_b: The single key to the column that all the columns
+           of keys_columns_a need to be compared with.
+    :param axis: When 0, function returns faulty columns, when 1, faulty rows
     :return: ReportItem:
-                - self.extra=ls_cols_faulty, the list of names of all
-                first_exp_date_cols and last_exp_date_cols that contain any
-                date that is after the index date.
+                - self.extra=ls_faulty, the list of column names/row indices
+                that have at least one value that breaks the expected date
+                order with column_b.
     """
+    ls_colnames_a = utils.generate_list_columns(df, dict_config, keys_columns_a)
+    colname_b = dict_config['general'][key_column_b]
+    if colname_b in ls_colnames_a:
+        ls_colnames_a.remove(colname_b)
+    ls_faulty = utils.compare_date_columns(df, ls_colnames_a, comparison,
+                                     colname_b, axis=axis)
 
-    ls_colnames = utils.generate_list_columns(df, dict_config,
-                                              ['first_exp_date_cols',
-                                               'last_exp_date_cols'])
-    index_date_colname = dict_config['general']['index_date_col']
-    ss_cols_faulty = df[ls_colnames].apply(lambda x: x > df[
-        index_date_colname]).any()
-    ls_cols_faulty = ss_cols_faulty[ss_cols_faulty].index.tolist()
-
-    return rp.ReportItem.init_conditional(ls_cols_faulty, dict_config['qc'])
+    return rp.ReportItem.init_conditional(ls_faulty, dict_config['qc'])
 
 
-def qc10(df, dict_config):
+def qc10(df, dict_config, lvl1_desc=1, comparison='>',
+         key_column_b='lookback_date_col', axis=0):
     """
-    Checks that all first and last exposure date columns only have dates that
-    are after or on the lookback date. 
+    General function to compare the first_exp_date and last_exp_date columns of
+    chosen criteria (CC01_CP, CC02_CP, CC03_CP, chosen by putting lvl1_desc as
+    1,2 or 3 respectively) with one other date column. It tests if the date
+    columns belonging to CC0X are </<=/>=/> column_b, where the comparison
+    operator is defined by the parameter comparison.
+
+    The comparison itself is done by the paqc.utils.utils.compare_date_columns.
+
+    lvl1_desc should be 1,2 or 3 or a list with several of these values,
+    while key_column_b should be a single key name, not a list.
+
+    The values that do not follow the expected date order can be returned in
+    two ways, when axis=0 a list of all columns that have at least one wrong
+    value is returned, when axis=1 a list of all row indices with at least
+    one wrong value is returned.
 
     :param df:
     :param dict_config:
+    :param lvl1_desc: the PROD_CUSTOM_LVL1_DESC, only values 1, 2, 3 or a
+           list with several of these are allowed. Decides features
+           belonging to which criteria (CC01, CC02 or CC03) are checked.
+    :param comparison: Comparison operator, possible values: '>', '>=',
+           '<=', '<'. ALWAYS USE THE APOSTROPHES.
+    :param key_column_b: The single key to the column that all the columns
+           of keys_columns_a need to be compared with.
+    :param axis: When 0, function returns faulty columns, when 1, faulty rows
     :return: ReportItem:
-                - self.extra=ls_cols_faulty, the list of names of all
-                first_exp_date_cols and last_exp_date_cols that contain any
-                date that is before the lookback date.
+                - self.extra=ls_faulty, the list of column names/row indices
+                that have at least one value that breaks the expected date
+                order with column_b.
     """
-    ls_colnames = utils.generate_list_columns(df, dict_config,
-                                              ['first_exp_date_cols',
-                                               'last_exp_date_cols'])
-    lookback_date_colname = dict_config['general']['lookback_date_col']
-    ss_cols_faulty = df[ls_colnames].apply(lambda x: x < df[
-        lookback_date_colname]).any()
-    ls_cols_faulty = ss_cols_faulty[ss_cols_faulty].index.tolist()
+    # lvl1_desc can be both a list of levels, or just one level, in which
+    # case we put it in a list to make the next part compatible.
+    if isinstance(lvl1_desc, int):
+        lvl1_desc = [lvl1_desc]
 
-    return rp.ReportItem.init_conditional(ls_cols_faulty, dict_config['qc'])
+    ls_colnames_a = []
+    for i in lvl1_desc:
+        ls_colnames_a.extend(utils.generate_list_cc0x_columns(df, dict_config,
+                             lvl1_desc=i, list_keys=['first_exp_date_cols',
+                                                     'last_exp_date_cols']))
+    colname_b = dict_config['general'][key_column_b]
+    ls_faulty = utils.compare_date_columns(df, ls_colnames_a, comparison,
+                                           colname_b, axis=axis)
+
+    return rp.ReportItem.init_conditional(ls_faulty, dict_config['qc'])
 
 
 def qc11(df, dict_config, multiple_a_day=True):
@@ -201,10 +249,10 @@ def qc11(df, dict_config, multiple_a_day=True):
     :param df:
     :param dict_config:
     :param multiple_a_day: Boolean, if True: count is allowed to be higher than
-     1 when first_exp_date and last_exp_date are the same.
-    if False: rows where count is higher than 1 while first_exp_date and
-    last_exp_date are the same, fail the qc. The relevant feature will be added
-     to ls_features_faulty.
+           1 when first_exp_date and last_exp_date are the same.
+           if False: rows where count is higher than 1 while first_exp_date and
+           last_exp_date are the same, fail the qc. The relevant feature will
+           be added to ls_features_faulty.
     :return: ReportItem:
                 - self.extra=ls_features_faulty, the list of all features
                 that have at least one row where last_exp_date is after

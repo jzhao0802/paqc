@@ -21,7 +21,7 @@ def qc40(df, dict_config, ls_metrictypes=('FLAG', 'FREQ', 'COUNT')):
     :param df:
     :param dict_config:
     :param ls_metrictypes: List of metrictype suffixes allowed in naming of
-    the predictors.
+           the predictors.
     :return: ReportItem:
                 - self.extra=ls_codes_faulty: The list of codes that do not
                 follow the naming convention.

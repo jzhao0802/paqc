@@ -5,6 +5,7 @@ from collections import defaultdict
 import pandas as pd
 import numpy as np
 import re
+import operator
 
 
 def generate_hash(df):
@@ -20,10 +21,94 @@ def generate_hash(df):
     return hash(df.values.tobytes())
 
 
-def generate_cc0_lists(dict_config):
+def write_list_to_csv(ls_items, path_csv):
+    """
+    Creates a csv file with the list items in a single column
+
+    :param ls_items: input list
+    :param path_csv: path of the csv file to be written to
+    :return: None
+    """
+    df_tocsv = pd.DataFrame(ls_items)
+    df_tocsv.to_csv(path_csv, index=False, header=False)
+
+
+def compare_date_columns(df, ls_colnames_a, comparison, colname_b, axis):
+    """
+    Searches for cells in date columns where:
+            df[ls_colnames_a]   comparison  df[colname_b]
+                               >, >=, <=, <
+    Is not followed.
+
+    e.g. If you expect all lookback dates to be strictly smaller than the
+    index dates, then compare_date_columns(df, ['lookback_dt'], <, 'index_dt',
+    axis =0) will return an empty list if all lookback dates are strictly
+    smaller than their index date, while it will return ['lookback_dt'] if
+    at least one loockback date is greater or equal than the index date.
+
+    :param df:
+    :param ls_colnames_a: The list of columns that needed to be checked.
+    :param comparison: The comparison operator the columns should follow.
+    :param colname_b: The name (a string!) of the column that the columns in
+           ls_colnames_a need to be checked against to.
+    :param axis: When 0, function returns faulty columns, when 1, faulty rows
+    :return: ls_faulty, a list with the row indices or column names
+             containing values that do not follow the expected date order.
+    """
+    # Turning the operators around, as the aim is to find values that break
+    # the expected ordering.
+    dict_operator = {'>': operator.le,
+                     '>=': operator.lt,
+                     '<': operator.ge,
+                     '<=': operator.gt}
+    compare_op = dict_operator[comparison]
+    # When ls_colnames_a consists of only one column name, df[ls_colnames_a]
+    # becomes a Series, making .apply() unwanted.
+    if isinstance(ls_colnames_a, str):
+        ls_colnames_a = [ls_colnames_a]
+    if len(ls_colnames_a) == 1:
+        if compare_op(df[ls_colnames_a], df[colname_b]).any():
+            ls_faulty = ls_colnames_a
+        else:
+            ls_faulty = []
+    else:
+        ss_faulty = df[ls_colnames_a].apply(lambda x: compare_op(x,
+                                        df[colname_b])).any(axis=axis)
+        ls_faulty = ss_faulty[ss_faulty].index.tolist()
+
+    return ls_faulty
+
+
+def generate_list_cc0x_columns(df, dict_config, lvl1_desc, list_keys=(
+        'first_exp_date_cols', 'last_exp_date_cols')):
+    """
+
+    :param df:
+    :param dict_config:
+    :param lvl1_desc:
+    :param list_keys:
+    :return:
+    """
+    # Take all the column names based on the keys for the dict_config
+    ls_cols = generate_list_columns(df, dict_config, list_keys)
+    # Take all the feature names that belong to the right lvl1_desc and
+    # clean string
+    ls_cc0x_feats = generate_list_cc0x_feats(dict_config, lvl1_desc=lvl1_desc)
+    ls_cc0x_feats = [clean_string(cc0x_feat) for cc0x_feat in ls_cc0x_feats]
+
+    # Take all column names that belong both to right key and have the right
+    # PROD_CUSTOM_LVL1_DESC
+    prog = re.compile("(" + ")|(".join(ls_cc0x_feats) + ")")
+    ls_cc0x_cols = [colname for colname in ls_cols if prog.search(
+        clean_string(colname))]
+    return ls_cc0x_cols
+
+
+def generate_list_cc0x_feats(dict_config, lvl1_desc):
     """
 
     :param dict_config:
+    :param lvl1_desc:
     :return:
     """
     code_lvl1_col = 'PROD_CUSTOM_LVL1_DESC'
@@ -38,27 +123,14 @@ def generate_cc0_lists(dict_config):
 
     # Create the dict of 3 sets, each containing the level 2 descriptions that
     # have the level 1 description of the dictionary key.
-    dict_cc0_sets = {1: set(), 2: set(), 3: set()}
+    set_lvl2_desc = set()
     for df in dict_dfs.values():
-        for i in range(1, 4):
-            dict_cc0_sets[i].update(df[df[code_lvl1_col] == i][code_lvl2_col])
-    # Changes sets into lists and make sure that each description string in
+        set_lvl2_desc.update(df[df[code_lvl1_col] == lvl1_desc][code_lvl2_col])
+    # Changes set into list and make sure that each description string in
     # those lists is in the right format
-    dict_cc0_lists = {key: [clean_string(desc) for desc in set_descriptions]
-                      for key, set_descriptions in dict_cc0_sets.items()}
-    return dict_cc0_lists
+    ls_lvl2_desc = [clean_string(desc) for desc in set_lvl2_desc]
 
-
-def write_list_to_csv(ls_items, path_csv):
-    """
-    Creates a csv file with the list items in a single column
-
-    :param ls_items: input list
-    :param path_csv: path of the csv file to be written to
-    :return: None
-    """
-    df_tocsv = pd.DataFrame(ls_items)
-    df_tocsv.to_csv(path_csv, index=False, header=False)
+    return ls_lvl2_desc
 
 
 def generate_list_columns(df, dict_config, list_keys):

@@ -31,7 +31,7 @@ def qc15(df, dict_config, keys_num_cols=('count_cols', 'freq_cols',
     :param df:
     :param dict_config:
     :param keys_num_cols: All the keys in the dict_config that point to
-    column names/suffixes of columns that are supposed to be numeric
+           column names/suffixes of columns that are supposed to be numeric.
     :return: ReportItem:
                 - self.extra=ls_cols_not_numeric, the names of columns that
                 should be numeric, but aren't.
@@ -53,8 +53,8 @@ def qc16(df, dict_config, max_fraction_diff=0.1):
     :param df:
     :param dict_config:
     :param max_fraction_diff: the parameter that decides how different the
-    fraction of missing/zero values for the two different classes is allowed to
-    be.
+           fraction of missing/zero values for the two different classes is
+           allowed to be.
     :return: ReportItem:
                 - self.extra=ls_cols_high_dif, the list of names of all
                 columns that pass the previously explained threshold.
@@ -148,8 +148,8 @@ def qc20(df, dict_config, lookback_days_col='lookback_dys',
     :param dict_config:
     :param lookback_days_col: Column name of the lookback length in days column
     :param days_months_years: The unit freq should be calculated in,
-    'years' for counts/years, 'months' for counts/months and 'days' for
-    counts/'days'
+           'years' for counts/years, 'months' for counts/months and 'days' for
+           counts/'days'
     :return: ReportItem:
                 - self.extra=ls_feat_faulty: list of all features that were
                 found to violate the expected way of calculating frequency
@@ -194,9 +194,9 @@ def qc21(df, dict_config, lookback_days_col='lookback_dys', ls_dd_columns=(
     :param df:
     :param dict_config:
     :param lookback_days_col: Column name of the lookback length in days
-    column.
+           column.
     :param ls_dd_columns: List of all column names/suffixes of columns that
-    are date difference variables
+           are date difference variables
     :return: ReportItem:
                 - self.extra=ls_cols_faulty: list of all columns that have
                 negative or higher than lookback length date difference values.

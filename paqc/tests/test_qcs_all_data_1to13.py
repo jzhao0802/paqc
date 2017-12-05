@@ -132,35 +132,75 @@ def test_qc8(df, expected, ls_faults, dict_config):
 
 
 # 9
-@pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
-@pytest.mark.parametrize("df, expected, ls_faults", [
-    # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check1.csv"),
-     True, None),
-    # Two columns have respectively 1 and 5 dates after the index date
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check2.csv"),
-     False, ['A_first_exp_dt', 'A_last_exp_dt']),
-    # Some dates are on the index date, which is allowed.
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc9_check3.csv"),
-     True, None)
+dict_config_91 = config_open("paqc/tests/data/qc9_check1.yml")[1]
+dict_config_92 = config_open("paqc/tests/data/qc9_check2.yml")[1]
+dict_config_93 = config_open("paqc/tests/data/qc9_check3.yml")[1]
+dict_config_94 = config_open("paqc/tests/data/qc9_check4.yml")[1]
+dict_config_95 = config_open("paqc/tests/data/qc9_check5.yml")[1]
+dict_config_96 = config_open("paqc/tests/data/qc9_check6.yml")[1]
+
+
+@pytest.mark.parametrize("df, dict_config, expected, ls_faults", [
+    # Testing if all date columns are after the lookback_date_col
+    (csv.read_csv(dict_config_91, "paqc/tests/data/qc9_check1.csv"),
+     dict_config_91, False, ['frst_rx_clm_dt', 'frst_dx_clm_dt']),
+    # Deleted frst_rx_clm_dt and frst_dx_clm_dt
+    (csv.read_csv(dict_config_92, "paqc/tests/data/qc9_check2.csv"),
+     dict_config_92, True, None),
+    # frst_rx_clm_dt and frst_dx_clm_dt are <= lookback_dt, index_dt and
+    # diseasefirstexp_dt aren't
+    (csv.read_csv(dict_config_93, "paqc/tests/data/qc9_check3.csv"),
+     dict_config_93, False, ['index_dt', 'diseasefirstexp_dt']),
+    # None of them are strictly < than lookback_dt
+    (csv.read_csv(dict_config_94, "paqc/tests/data/qc9_check4.csv"),
+     dict_config_94, False, ['frst_rx_clm_dt', 'frst_dx_clm_dt', 'index_dt',
+                             'diseasefirstexp_dt']),
+    # Only looking at index_dt and diseasefirstexp_dt, all are >= compared
+    # to lookback
+    (csv.read_csv(dict_config_95, "paqc/tests/data/qc9_check5.csv"),
+     dict_config_95, True, None),
+    # But with slightly altered data, row 0 and 1 are not strictly >
+    # compared to lookback date
+    (csv.read_csv(dict_config_96, "paqc/tests/data/qc9_check6.csv"),
+     dict_config_96, False, [0, 1]),
 ])
 def test_qc9(df, expected, ls_faults, dict_config):
-    rpi = qc9(df, dict_config)
+    rpi = qc9(df, dict_config, **dict_config['qc']['qc_params'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
 
 
 # 10
-@pytest.mark.parametrize("dict_config", [DICT_CONFIG_9TO13])
-@pytest.mark.parametrize("df, expected, ls_faults", [
-    # Modified subset from paqc/data/initial_pos.csv
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc10_check1.csv"),
-     True, None),
-    # Two columns have 1 date before the lookback date
-    (csv.read_csv(DICT_CONFIG_9TO13, "paqc/tests/data/qc10_check2.csv"),
-     False, ['B_first_exp_dt', 'C_last_exp_dt'])
+dict_config_101 = config_open("paqc/tests/data/qc10_check1.yml")[1]
+dict_config_102 = config_open("paqc/tests/data/qc10_check2.yml")[1]
+dict_config_103 = config_open("paqc/tests/data/qc10_check3.yml")[1]
+dict_config_104 = config_open("paqc/tests/data/qc10_check4.yml")[1]
+dict_config_105 = config_open("paqc/tests/data/qc10_check5.yml")[1]
+
+
+@pytest.mark.parametrize("df, dict_config, expected, ls_faults", [
+    # lvl1_desc = 1
+    (csv.read_csv(dict_config_101, "paqc/tests/data/qc10_check1.csv"),
+     dict_config_101, True, None),
+    # lvl1_desc = [1,2,3]
+    (csv.read_csv(dict_config_102, "paqc/tests/data/qc10_check2.csv"),
+     dict_config_102, False, ['albuterolcc02_cp_first_exp_dt',
+                              'albuterolcc02_cp_last_exp_dt',
+                              'antihistaminescc03_cp_first_exp_dt',
+                              'antihistaminescc03_cp_last_exp_dt']),
+    # Deleted some index dates, none of these rows can violate the comparison
+    (csv.read_csv(dict_config_103, "paqc/tests/data/qc10_check3.csv"),
+     dict_config_103, False, ['albuterolcc02_cp_first_exp_dt',
+                              'albuterolcc02_cp_last_exp_dt']),
+    # Testing lvl1_desc = [2, 3] on being smaller or equal than index_dt
+    (csv.read_csv(dict_config_104, "paqc/tests/data/qc10_check4.csv"),
+     dict_config_104, True, None),
+    # Testing lvl1_desc = [2, 3] on being smaller or equal than index_dt,
+    # axis=1 this time, so it returns indices instead of column names
+    (csv.read_csv(dict_config_105, "paqc/tests/data/qc10_check5.csv"),
+     dict_config_105, False, [0, 1]),
 ])
 def test_qc10(df, expected, ls_faults, dict_config):
-    rpi = qc10(df, dict_config)
+    rpi = qc10(df, dict_config, **dict_config['qc']['qc_params'])
     assert (rpi.passed == expected) & (rpi.extra == ls_faults)
 
 

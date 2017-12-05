@@ -96,7 +96,7 @@ def qc48(df_old, df_new, dict_config, ls_colnames=()):
     :param df_new:
     :param dict_config:
     :param ls_colnames: list of columns to be tested on being identical in both
-    dataframes.
+           dataframes.
     :return: ReportItem:
                 -self.extra=ls_cols_faulty, list of columns of list_columns
                 that are not identical over the two dataframes.
@@ -174,8 +174,8 @@ def qc50(df_old, df_new, dict_config, max_fraction_diff=0.1):
     :param df_new:
     :param dict_config:
     :param max_fraction_diff: the parameter that decides how large the
-    difference in the fraction of missing/zero values for df_old and df_new is
-    allowed to be.
+           difference in the fraction of missing/zero values for df_old and
+           df_new is allowed to be.
     :return: ReportItem:
                 -self.extra=ls_cols_high_diff, the list of columns where the
                 fraction of 0/missing values changed more between df_old and

@@ -39,7 +39,7 @@ def qc26(df, dict_config, diseasefirstexp_col='diseasefirstexp_dt'):
     :param df:
     :param dict_config:
     :param diseasefirstexp_col: the column name of the disease_first_exp_date
-    column.
+           column.
     :return: ReportItem:
                 - self.extra=ls_idx_faulty: the indices of rows that have a
                 non-zero value for disease_first_exp_date

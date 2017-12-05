@@ -6,7 +6,7 @@ from paqc.utils.config_utils import config_open
 
 DICT_CONFIG_CP01 = config_open("paqc/tests/data/driver_dict_output_CP01.yml")[1]
 
-pytest
+
 # 22
 @pytest.mark.parametrize("dict_config", [DICT_CONFIG_CP01])
 @pytest.mark.parametrize("df, expected, ls_faults", [

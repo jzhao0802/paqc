@@ -3,11 +3,11 @@ general:
   input1: 'paqc/data/restricted_pos.csv'
   output_dir: ''
   
-  ICD_file: paqc/data/clinical_input_files/ICD.csv
-  NCD_file: paqc/data/clinical_input_files/NCD.csv
-  CPT_file: paqc/data/clinical_input_files/CPT.csv
-  HCPC_file: paqc/data/clinical_input_files/HCPC.csv
-  speciality_file: paqc/data/clinical_input_files/speciality.csv
+  ICD_file: paqc/tests/data/ICD.csv
+  NCD_file: paqc/tests/data/NCD.csv
+  CPT_file: paqc/tests/data/CPT.csv
+  HCPC_file: paqc/tests/data/HCPC.csv
+  speciality_file: paqc/tests/data/speciality.csv
 
   date_cols: _dt
   count_cols: _count
@@ -29,4 +29,15 @@ general:
     - _spec
   date_format: "%d/%m/%Y %H:%M"
 
-qcs:
+qc:
+  input_file: input1
+  input_file_path: paqc/data/training_data.csv
+  level: error
+  order: 1
+  qc_num: 'qc9'
+  qc_params:
+    keys_columns_a: 
+      - date_cols
+    comparison: '<='
+    key_column_b: lookback_date_col
+    axis: 0
