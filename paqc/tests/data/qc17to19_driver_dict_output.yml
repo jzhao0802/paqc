@@ -32,7 +32,6 @@ qc:
   input_file: input1
   input_file_path: paqc/data/training_data.csv
   level: error
-  order: 1
   qc_num: 'qc17'
   qc_params:
     date_limit: "01/02/2009 05:00"

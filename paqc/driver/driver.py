@@ -93,27 +93,25 @@ class Driver:
                  data_file and executes the required qc functions, then
                  generates the .csv and HTML report
         """
+        # the dictionary that has a key for each input and a list of
+        # non-compare qcs that uses that input
+        for input_n, ls_qcs in self.config['qcs_per_input'].items():
+            # check if input data has multiple file paths
+            if not isinstance(self.general[input_n], str):
+                for input_file_path in self.general[input_n]:
+                    self.printer("Starting QCs on %s, with file path: %s" %
+                                 (input_n, input_file_path), True)
+                    self.do_qc(input_n, input_file_path, ls_qcs)
+            else:
+                self.printer("Starting QCs on %s, file path: %s" %
+                             (input_n, self.general[input_n]), True)
+                self.do_qc(input_n, self.general[input_n], ls_qcs)
 
-        # loop through the config file
-        for k, v in self.config.items():
-            # if we find a data file, load it and execute all of its QCs
-            if bool(re.match(r"^input\d{1,2}$", k)):
-                # check if input data has multiple file paths
-                if not isinstance(self.general[k], str):
-                    for input_file_path in self.general[k]:
-                        self.printer("Starting QCs on %s, with file path: %s" %
-                                     (k, input_file_path), True)
-                        self.do_qc(k, input_file_path, v)
-                else:
-                    self.printer("Starting QCs on %s, file path: %s" %
-                                 (k, self.general[k]), True)
-                    self.do_qc(k, self.general[k], v)
-
-            # if qc, it has to be a comparison one that we  handle differently
-            elif bool(re.match(r"^qc\d{1,3}$", k)):
-                input1 = self.config[k]['input_file'][0]
-                input2 = self.config[k]['input_file'][1]
-                self.do_compare_qc(input1, input2, k)
+        # if compare qc, we handle it differently
+        for qc in self.config['compare_qcs']:
+            input1 = qc['input_file'][0]
+            input2 = qc['input_file'][1]
+            self.do_compare_qc(input1, input2, qc)
 
     def do_qc(self, input_file, input_file_path, qcs):
         """
@@ -130,17 +128,17 @@ class Driver:
         df_hash = utils.generate_hash(df)
         for qc in qcs:
             # generate mini config object for the QC function
-            qc_config = {'general': self.general, 'qc': qcs[qc]}
+            qc_config = {'general': self.general, 'qc': qc}
             qc_config['qc']['input_file_path'] = input_file_path
-            qc_config['qc']['qc_num'] = qc
             qc_config['qc']['data_hash'] = df_hash
+            qc_config['qc']['input_file'] = input_file
 
             # extract the specific QC object from the qc_functions module
-            qc_function = self.qc_functions[qc]
+            qc_function = self.qc_functions[qc['qc_num']]
 
             # execute and time it on the data file
             self.printer("Executing test %s on %s: %s" %
-                         (qc, input_file, input_file_path))
+                         (qc['qc_num'], input_file, input_file_path))
             ts = time.time()
 
             # check if we have params for this qc function
@@ -163,7 +161,7 @@ class Driver:
                 except FileNotFoundError as e:
                     text = str(e)
                     rpi = report.ReportItem(passed=False, level="error",
-                                            order=1, qc_num=qc,
+                                            qc_num=qc,
                                             input_file=input_file, text=text,
                                             input_file_path=input_file_path)
                 except:
@@ -171,7 +169,7 @@ class Driver:
                             "admins with this error:\n%s"
                             % traceback.format_exc())
                     rpi = report.ReportItem(passed=False, level="error",
-                                            order=1, qc_num=qc,
+                                            qc_num=qc,
                                             input_file=input_file, text=text,
                                             input_file_path=input_file_path)
             te = time.time()
@@ -212,9 +210,8 @@ class Driver:
         hash2 = self.compare_dfs_hash[input_file2]
 
         # generate mini config object for the QC function
-        qc_config = {'general': self.general, 'qc': self.config[qc]}
+        qc_config = {'general': self.general, 'qc': qc}
         qc_config['qc']['input_file_path'] = input_file_paths
-        qc_config['qc']['qc_num'] = qc
         qc_config['qc']['data_hash'] = ("%s: %d\n%s: %d" % (input_file1, hash1,
                                                             input_file2, hash2))
 
@@ -244,7 +241,7 @@ class Driver:
             except FileNotFoundError as e:
                 text = str(e)
                 rpi = report.ReportItem(passed=False, level="error",
-                                        order=1, qc_num=qc,
+                                        qc_num=qc,
                                         input_file=input_files, text=text,
                                         input_file_path=input_file_paths)
             except:
@@ -252,7 +249,7 @@ class Driver:
                         "admins with this error:\n%s"
                         % traceback.format_exc())
                 rpi = report.ReportItem(passed=False, level="error",
-                                        order=1, qc_num=qc,
+                                        qc_num=qc,
                                         input_file=input_files, text=text,
                                         input_file_path=input_file_paths)
         te = time.time()

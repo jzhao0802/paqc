@@ -192,6 +192,16 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
     return dict_grouped_cols
 
 
+def stringify_dict(a_dict):
+    """
+
+    :param a_dict:
+    :return:
+    """
+    str_dict = ''.join('{} = {}\n'.format(key, val) for key, val in
+                       a_dict.items())
+    return str_dict
+
 def clean_string(s):
     """
     Function that cleans up string, typically used for column names. Changes

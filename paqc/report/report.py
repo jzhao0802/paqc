@@ -17,12 +17,11 @@ class ReportItem:
     message.
     """
 
-    def __init__(self, passed, level, order, qc_num, input_file,
+    def __init__(self, passed, level, qc_num, input_file,
                  input_file_path, extra=None, text=None, exec_time=0,
                  qc_params=None, data_hash=None):
         self.level = level
         self.passed = passed
-        self.order = order
         self.qc_num = qc_num
         self.input_file = input_file
         self.input_file_path = input_file_path
@@ -79,29 +78,6 @@ class Report:
         :return: None.
         """
         self.items.append(report_item)
-
-    def order_items(self, most_severe_first=True):
-        """
-        This method will order the report items based on their severity,
-        where error > warning > info.
-
-        :param most_severe_first: If set to False, info items are the first
-        in the generated report.
-        :return: None. This simply reorders the internal state of the Report.
-        """
-        levels = []
-        for item in self.items:
-            if item.level == "error":
-                levels.append(1)
-            elif item.level == "warning":
-                levels.append(2)
-            else:
-                levels.append(3)
-        self.items = np.array(self.items)
-        ordering = np.argsort(levels)
-        if not most_severe_first:
-            ordering = ordering[::-1]
-        self.items = self.items[ordering]
 
     def print_items(self):
         """
@@ -190,13 +166,20 @@ class Report:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # order ReportItems, and get report table
-        self.order_items()
+        # get report table
         report_df = self.get_report_table()
+
+        # Add the parameters in the text fields when nothing else was added
+        ss_bool = report_df['text'].isnull() & ~report_df['qc_params'].isnull()
+        report_df.loc[ss_bool, 'text'] = report_df.loc[ss_bool, 'qc_params'].apply(
+            utils.stringify_dict)
+        # When there is also no qc_params, make empty string
+        report_df.loc[report_df['text'].isnull(), 'text'] = ''
+
 
         # reorder columns of report table
         col_order = ['qc_num', 'qc_desc', 'passed', 'level', 'level_int',
-                     'order', 'extra', 'input_file', 'input_file_path',
+                     'extra', 'input_file', 'input_file_path',
                      'data_hash', 'exec_time', 'text']
         report_df_filtered = report_df[col_order]
 
@@ -216,7 +199,7 @@ class Report:
             if extra is not None:
                 extra_name = 'extra_%d' % extra_counter
                 extra_counter += 1
-                extra_file = 'extra%d_%s.csv' % (i, self.datetime)
+                extra_file = 'extra%d_%s.csv' % (i+1, self.datetime)
                 out_file = os.path.join(output_dir, extra_file)
                 report_df_filtered.loc[i, 'extra'] = extra_name
 
@@ -261,8 +244,8 @@ class Report:
             else:
                 report_df_filtered.loc[i, 'extra'] = ''
             # delete None if text is empty
-            if report_df_filtered.loc[i, 'text'] is None:
-                report_df_filtered.loc[i, 'text'] = ''
+            # if report_df_filtered.loc[i, 'text'] is None:
+            #     report_df_filtered.loc[i, 'text'] = ''
 
         # save filtered report table as csv
         out_file = 'report_%s.csv' % self.datetime

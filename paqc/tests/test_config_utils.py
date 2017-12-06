@@ -32,7 +32,7 @@ def test_config_open(path_to_file, expected):
     ("paqc/tests/data/config_test_check8.yml", False),
     # no qcs section
     ("paqc/tests/data/config_test_check9.yml", False),
-    # not all of the mandatory qcs fields (input, level, order) are present
+    # not all of the mandatory qcs fields (input, level, qc_num) are present
     ("paqc/tests/data/config_test_check10.yml", False),
     # misformatted level field in qc
     ("paqc/tests/data/config_test_check11.yml", False),
@@ -40,10 +40,6 @@ def test_config_open(path_to_file, expected):
     ("paqc/tests/data/config_test_check12.yml", False),
     # bad input file referenced for qc
     ("paqc/tests/data/config_test_check13.yml", False),
-    # non-integer order specified for qc
-    ("paqc/tests/data/config_test_check14.yml", False),
-    # none unique order for test (each should have a different)
-    ("paqc/tests/data/config_test_check15.yml", False),
     # compare qc doesn't have two input files
     ("paqc/tests/data/config_test_check16.yml", False),
     # compare qc doesn't have two different input files

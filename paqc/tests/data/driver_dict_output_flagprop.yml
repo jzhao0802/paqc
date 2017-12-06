@@ -16,7 +16,6 @@ qc:
   input_file: input1
   input_file_path: paqc/data/training_data.csv
   level: error
-  order: 1
   qc_num: 'qc25'
   qc_params:
     ls_metrictypes: 

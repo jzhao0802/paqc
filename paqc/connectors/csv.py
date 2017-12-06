@@ -39,7 +39,6 @@ def read_csv(config, input_file_path):
     # it turns out we should read the dates first in as strings
     date_cols_types = {date_col: str for date_col in date_cols}
     df = pd.read_csv(input_file_path, dtype=date_cols_types)
-
     # convert string dates to dates using the date format
     # Large dataset, conversion done in parallel
     if len(date_cols) > 50 or (df.shape[0] > 20000 and len(date_cols) > 1):
