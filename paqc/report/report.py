@@ -286,8 +286,12 @@ class Report:
         out_file = os.path.join(output_dir, out_file)
         # the os.expanduser makes this it windows safe
         html_out = open(os.path.expanduser(out_file), 'w')
-        html1 = open("paqc/report/report_template1.txt")
-        html2 = open("paqc/report/report_template2.txt")
+        path_html1 = os.path.join(os.path.dirname(__file__),
+                                  '../report/report_template1.txt')
+        path_html2 = os.path.join(os.path.dirname(__file__),
+                                  '../report/report_template2.txt')
+        html1 = open(path_html1)
+        html2 = open(path_html2)
 
         # write first part of HTML template file
         for l in html1:
