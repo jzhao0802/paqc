@@ -317,8 +317,8 @@ def get_qcs_desc():
 
     :return: Dictionary of qc_num: qc description pairs.
     """
-    status_QC_path = os.path.join(os.path.dirname(__file__),
-                                  '../data/Status_QC.xlsx')
+    dirname = os.path.dirname(os.path.abspath(__file__))
+    status_QC_path = os.path.join(dirname, '../data/Status_QC.xlsx')
     df = pd.read_excel(status_QC_path)
     qc_dict = dict()
 
@@ -339,8 +339,8 @@ def get_qcs_compare():
 
     :return: Dictionary of qc_num: boolean, whether the QC is a compare.
     """
-    status_QC_path = os.path.join(os.path.dirname(__file__),
-                                  '../data/Status_QC.xlsx')
+    dirname = os.path.dirname(os.path.abspath(__file__))
+    status_QC_path = os.path.join(dirname, '../data/Status_QC.xlsx')
     df = pd.read_excel(status_QC_path)
     qc_dict = dict()
 
