@@ -225,7 +225,6 @@ def config_parser(yml):
             # add comparison qc to seperate list
             input_qc['compare_qcs'].append(qc)
         if not qcs_compare[qc['qc_num']]:
-            qc_subset = {k: qc[k] for k in qc if k != 'input_file'}
             if isinstance(qc['input_file'], str):
                 input_qc['qcs_per_input'][qc['input_file']].append(qc)
             else:

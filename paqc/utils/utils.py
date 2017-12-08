@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import re
 import operator
+import os
 
 
 def generate_hash(df):
@@ -316,7 +317,9 @@ def get_qcs_desc():
 
     :return: Dictionary of qc_num: qc description pairs.
     """
-    df = pd.read_excel("paqc/data/Status_QC.xlsx")
+    status_QC_path = os.path.join(os.path.dirname(__file__),
+                                  '../data/Status_QC.xlsx')
+    df = pd.read_excel(status_QC_path)
     qc_dict = dict()
 
     for i in df.index:
@@ -336,7 +339,9 @@ def get_qcs_compare():
 
     :return: Dictionary of qc_num: boolean, whether the QC is a compare.
     """
-    df = pd.read_excel("paqc/data/Status_QC.xlsx")
+    status_QC_path = os.path.join(os.path.dirname(__file__),
+                                  '../data/Status_QC.xlsx')
+    df = pd.read_excel(status_QC_path)
     qc_dict = dict()
 
     for i in df.index:
