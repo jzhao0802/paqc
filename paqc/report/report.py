@@ -285,25 +285,23 @@ class Report:
         out_file = 'report_%s.html' % self.datetime
         out_file = os.path.join(output_dir, out_file)
         # the os.expanduser makes this it windows safe
-        html_out = open(os.path.expanduser(out_file), 'w')
         dirname = os.path.dirname(os.path.abspath(__file__))
         path_html1 = os.path.join(dirname, 'report_template1.txt')
         path_html2 = os.path.join(dirname, 'report_template2.txt')
-        html1 = open(path_html1)
-        html2 = open(path_html2)
+        with open(os.path.expanduser(out_file), 'w') as html_out, \
+             open(path_html1)as html1,  open(path_html2) as html2:
+            # write first part of HTML template file
+            for l in html1:
+                html_out.write(l)
+            html1.close()
 
-        # write first part of HTML template file
-        for l in html1:
-            html_out.write(l)
-        html1.close()
+            # add in the report specific variables
+            html_out.write(summary_str_js)
+            html_out.write(report_df_js)
+            html_out.write(extra_js)
 
-        # add in the report specific variables
-        html_out.write(summary_str_js)
-        html_out.write(report_df_js)
-        html_out.write(extra_js)
-
-        # write the final part of the html template
-        for l in html2:
-            html_out.write(l)
-        html2.close()
-        html_out.close()
+            # write the final part of the html template
+            for l in html2:
+                html_out.write(l)
+            html2.close()
+            html_out.close()

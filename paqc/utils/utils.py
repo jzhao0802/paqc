@@ -199,9 +199,10 @@ def stringify_dict(a_dict):
     :param a_dict:
     :return:
     """
-    str_dict = ''.join('{} = {}\n'.format(key, val) for key, val in
+    str_dict = ''.join('{} = {}<br>'.format(key, val) for key, val in
                        a_dict.items())
     return str_dict
+
 
 def clean_string(s):
     """

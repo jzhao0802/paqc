@@ -27,7 +27,7 @@ qcs:
       - input1
       - input2
     level: error
-  - qc_num: qc5
+  - qc_num: qc7
     input_file:
       - input1
       - input2
