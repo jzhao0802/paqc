@@ -16,3 +16,9 @@ As a quick example, you can run paqc with the following line:
  ```python
  paqc.py -c "test_suite1.yml"
  ```
+
+# Reporting issues
+
+Reporting bugs or suggesting improvements can be done on Jira:
+
+http://rwes-jira01.internal.imsglobal.com/browse/PA-684
