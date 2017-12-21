@@ -21,17 +21,15 @@ general:
   date_format: "%Y-%m-%d %H:%M:%S"
 
 qcs:
-  qc25:
+  - qc_num: qc25
     input_file: input1
     level: error
-    order: 1
     qc_params:
       path_file_cp01: paqc/data/CP01.csv
       pat_id_col_cp01: patient_id
 
-  qc26:
+  - qc_num: qc26
     input_file: input1
     level: error
-    order: 2
     qc_params:
       diseasefirstexp_col: disease_frst_exp_dt

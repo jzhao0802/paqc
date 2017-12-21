@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import re
 import operator
+import os
 
 
 def generate_hash(df):
@@ -192,6 +193,17 @@ def generate_dict_grouped_columns(df, dict_config, list_keys):
     return dict_grouped_cols
 
 
+def stringify_dict(a_dict):
+    """
+
+    :param a_dict:
+    :return:
+    """
+    str_dict = ''.join('{} = {}<br>'.format(key, val) for key, val in
+                       a_dict.items())
+    return str_dict
+
+
 def clean_string(s):
     """
     Function that cleans up string, typically used for column names. Changes
@@ -306,7 +318,9 @@ def get_qcs_desc():
 
     :return: Dictionary of qc_num: qc description pairs.
     """
-    df = pd.read_excel("paqc/data/Status_QC.xlsx")
+    dirname = os.path.dirname(os.path.abspath(__file__))
+    status_QC_path = os.path.join(dirname, '../data/Status_QC.xlsx')
+    df = pd.read_excel(status_QC_path)
     qc_dict = dict()
 
     for i in df.index:
@@ -326,7 +340,9 @@ def get_qcs_compare():
 
     :return: Dictionary of qc_num: boolean, whether the QC is a compare.
     """
-    df = pd.read_excel("paqc/data/Status_QC.xlsx")
+    dirname = os.path.dirname(os.path.abspath(__file__))
+    status_QC_path = os.path.join(dirname, '../data/Status_QC.xlsx')
+    df = pd.read_excel(status_QC_path)
     qc_dict = dict()
 
     for i in df.index:

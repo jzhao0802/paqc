@@ -130,7 +130,7 @@ def qc19(df, dict_config, date_limit='2009-01-01 05:00:00'):
         return rp.ReportItem(passed=False, text=str(e), **dict_config['qc'])
 
     index_date_col = dict_config['general']['index_date_col']
-    ls_idx_faulty = df[~(df[index_date_col] > date_limit)].index.tolist()
+    ls_idx_faulty = df[~(df[index_date_col] >= date_limit)].index.tolist()
 
     return rp.ReportItem.init_conditional(ls_idx_faulty, dict_config['qc'])
 

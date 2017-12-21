@@ -3,14 +3,14 @@ general:
   input1: paqc/data/qc_data.csv
   input2: paqc/data/qc_data_multi*.csv
   output_dir: paqc/report/output
-  date_cols: _DATE
+  date_cols: _date
   count_cols: _CNT
   flag_cols: _FLAG
   freq_cols: _FREQ
-  first_exp_date_cols: _FIRST_EXP_DT
-  last_exp_date_cols: _LAST_EXP_DT
-  index_date_col: INDEX_DATE
-  lookback_date_col: LOOKBACK_DATE
+  first_exp_date_cols: _first_exp_dt
+  last_exp_date_cols: _last_exp_dt
+  index_date_col: index_date
+  lookback_date_col: lookback_date
   gender_col: GENDER
   age_col: AGE
   target_col: LABEL
@@ -21,11 +21,11 @@ general:
     - special2
   date_format: "%Y-%m-%d %H:%M:%S"
 qcs:
-  qc1:
+  - qc_num: qc1
     input_file: input1
     level: error
-    order: 1
-  qc5:
-    input_file: input1
+  - qc_num: qc3
+    input_file: 
+      - input1
+      - input2
     level: warning
-    order: 1

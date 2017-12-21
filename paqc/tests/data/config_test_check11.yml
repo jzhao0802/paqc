@@ -22,7 +22,7 @@ general:
   date_format: "%Y-%m-%d %H:%M:%S"
 
 qcs:
-  qc1:
+  - qc_num: qc1
     input_file: input1
     level: error_
     order: 1

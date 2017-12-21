@@ -25,7 +25,6 @@ qc:
   input_file: input1
   input_file_path: paqc/data/training_data.csv
   level: error
-  order: 1
   qc_num: qc1
   qc_params:
     max_fraction_diff: 0.3

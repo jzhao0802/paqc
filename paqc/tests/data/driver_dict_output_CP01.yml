@@ -32,7 +32,6 @@ qc:
   input_file: input1
   input_file_path: paqc/data/training_data.csv
   level: error
-  order: 1
   qc_num: 'qc21'
   qc_params:
     disease_first_exp_date: diseasefirstexp_dt

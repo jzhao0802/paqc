@@ -33,53 +33,46 @@ general:
 qcs:
 # Using 'general' date column check functions qc9 and qc10, the correct
 # tests for this cohort are constructed here:
-  qc10:
+  - qc_num: qc10
     input_file: input1
     level: error
-    order: 1
-    qc_num: 'qc10'
     qc_params:
       lvl1_desc: 1
       comparison: '>'
       key_column_b: index_date_col
-  qc10:
+
+  - qc_num: qc10
     input_file: input1
     level: error
-    order: 1
-    qc_num: 'qc10'
     qc_params:
       lvl1_desc: 3
       comparison: '<='
       key_column_b: index_date_col
-  qc9:
+
+  - qc_num: qc9
     input_file: input1
     level: error
-    order: 1
-    qc_num: 'qc9'
     qc_params:
       keys_columns_a: 
         - first_exp_date_cols
-	- last_exp_date_cols
+        - last_exp_date_cols
       comparison: '>='
       key_column_b: lookback_date_col
 
 
 # The other qcs specific to this cohort
-  qc22:
+  - qc_num: qc22
     input_file: input1
     level: error
-    order: 1
     qc_params:
 
-  qc23:
+  - qc_num: qc23
     input_file: input1
     level: error
-    order: 2
     qc_params:
       diseasefirstexp_col: diseasefirstexp_dt
 
-  qc24:
+  - qc_num: qc24
     input_file: input1
     level: info
-    order: 3
     qc_params:
