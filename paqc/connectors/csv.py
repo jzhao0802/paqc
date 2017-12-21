@@ -2,6 +2,7 @@ import pandas as pd
 from functools import partial
 from multiprocessing import cpu_count, Pool
 from paqc.utils import utils
+from paqc.connectors import parse_utils
 
 
 def read_csv_header(input_file_path):
@@ -29,6 +30,7 @@ def read_csv(config, input_file_path):
     successful, second is the pandas DataFrame if Bool=True.
     """
     header = read_csv_header(input_file_path)
+
     general = config['general']
     date_cols_types = ['date_cols',
                        'first_exp_date_cols',
@@ -42,9 +44,11 @@ def read_csv(config, input_file_path):
     # convert string dates to dates using the date format
     # Large dataset, conversion done in parallel
     if len(date_cols) > 50 or (df.shape[0] > 20000 and len(date_cols) > 1):
+        print('parallel!')
         # we have to do this in parallel otherwise it takes forever
-        df[date_cols] = apply_parallel(df[date_cols], parse_dates,
-                                            format=general['date_format'])
+        df[date_cols] = parse_utils.apply_parallel(df[date_cols],
+                                                   parse_utils.parse_dates,
+                                                   format=general['date_format'])
     # Small dataset, faster to convert in non-parallel fashion
     elif len(date_cols) > 0:
         df[date_cols] = df[date_cols].apply(pd.to_datetime,
@@ -55,34 +59,3 @@ def read_csv(config, input_file_path):
 
     return df
 
-
-def parse_dates(column, **kwargs):
-    """
-    Helper function we'll apply to each date column in parallel to parse dates.
-    Don't use this without apply_parallel.
-
-    :param column: DataFrame column, with type str.
-    :return: DataFrame column as datatime column with date_format applied.
-    """
-    return pd.to_datetime(column, **kwargs)
-
-
-def apply_parallel(df, func, **kwargs):
-    """
-    Parallelizes the apply function of pandas. Works for columns only.
-
-    :param df: DataFrame to use. Note, all columns are used.
-    :param func: Function to apply to each column of df.
-    :return: Transformed df.
-    """
-
-    # split DataFrame into columns
-    df_cols = [df[col] for col in df]
-
-    # use all cores and do parallel magic
-    pool = Pool(cpu_count())
-    df = pd.concat(pool.map(partial(func, **kwargs), df_cols), axis=1)
-    pool.close()
-    pool.join()
-
-    return df

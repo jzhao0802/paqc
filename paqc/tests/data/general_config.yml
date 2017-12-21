@@ -43,7 +43,6 @@ qcs:
       comparison: '<'
       key_column_b: index_date_col
 
-# The other qcs
   - qc_num: qc1
     input_file: input1
     level: error
@@ -89,3 +88,44 @@ qcs:
   - qc_num: qc15
     input_file: input1
     level: error
+
+# A bunch of qc16s to get a feel for the distribution of bias between pos and neg
+  - qc_num: qc16
+    input_file: input1
+    level: error
+    qc_params:
+      max_fraction_diff: 0.5
+
+  - qc_num: qc16
+    input_file: input1
+    level: error
+    qc_params:
+      max_fraction_diff: 0.3
+
+  - qc_num: qc16
+    input_file: input1
+    level: error
+    qc_params:
+      max_fraction_diff: 0.1
+
+  - qc_num: qc16
+    input_file: input1
+    level: error
+    qc_params:
+      max_fraction_diff: 0.05
+
+  - qc_num: qc16
+    input_file: input1
+    level: error
+    qc_params:
+      max_fraction_diff: 0.02
+
+  - qc_num: qc18
+    input_file: input1
+    level: error
+
+  - qc_num: qc19
+    input_file: input1
+    level: error
+    qc_params:
+      date_limit: 01/01/2014

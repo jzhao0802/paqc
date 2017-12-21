@@ -5,9 +5,11 @@ report.
 """
 
 import time
-import re
 import traceback
+import pandas as pd
+
 from paqc.connectors import csv
+from paqc.connectors import dataframe
 from paqc.utils import config_utils
 from paqc.utils import utils
 from paqc.report import report
@@ -21,13 +23,14 @@ class Driver:
     one, while collecting their output and generating a report from it.
     """
 
-    def __init__(self, config_path, verbose=True, debug=True):
+    def __init__(self, config_path, verbose=True, debug=True, df_input=None):
         self.config_path = config_path
         self.config = None
         self.general = None
         self.report = None
         self.verbose = verbose
         self.debug = debug
+        self.df_input = df_input
         # load the QC functions into a single dict
         self.qc_functions = qcs_main.import_submodules(qcs_main)
         # load list of comparison qc functions
@@ -124,7 +127,7 @@ class Driver:
         :return: Nothing, updates Driver's internal report object.
         """
 
-        df = self.data_loader(input_file_path)
+        df = self.data_loader(input_file_path, self.df_input)
         df_hash = utils.generate_hash(df)
         for qc in qcs:
             # generate mini config object for the QC function
@@ -256,20 +259,34 @@ class Driver:
         rpi.exec_time = te - ts
         self.report.add_item(rpi)
 
-    def data_loader(self, input_file_path):
+    def data_loader(self, input_file_path, df_input):
         """
         Loads an input data file using its path and the source argument of
         the config file.
 
         :param input_file_path: path to the data.
+        :param dataframe: pandas dataframe containing the data.
         :return: pandas DataFrame object of the fully loaded datafile.
         """
 
         source = self.config['general']['source']
-        if source != 'csv':
-            raise ValueError("We only support .csv input files currently.")
 
-        if source == 'csv':
+        if source == 'dataframe':
+            if isinstance(df_input, pd.core.frame.DataFrame):
+                try:
+                    return dataframe.parse_dataframe(self.config, df_input)
+                except:
+                    self.printer("We couldn't transform the dataframe."
+                                 "It's most likely, that your dates are formatted "
+                                 "inconsistently. Make sure to visit "
+                                 "http://strftime.org/ for the correct date format"
+                                 " specs.\n\nTRACEBACK:\n\n%s"
+                                 % (traceback.format_exc()))
+            else:
+                self.printer("Source in the config file is chosen as "
+                             "dataframe, you have to provde a pandas' "
+                             "DataFrame object as df_input of the driver.")
+        elif source == 'csv':
             try:
                 return csv.read_csv(self.config, input_file_path)
             except:
@@ -279,6 +296,9 @@ class Driver:
                              "http://strftime.org/ for the correct date format"
                              " specs.\n\nTRACEBACK:\n\n%s"
                              % (input_file_path, traceback.format_exc()))
+        else:
+            raise ValueError("We only support .csv input files or "
+                             "pandas' DataFrame objects currently.")
 
     def printer(self, to_print, hline_before=False, hline_after=False):
         """

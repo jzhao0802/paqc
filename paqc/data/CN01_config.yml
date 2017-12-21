@@ -30,35 +30,31 @@ general:
   date_format: "%d/%m/%Y %H:%M"
 
 qcs:
-  qc27:
+  - qc_num: qc27
     input_file: input1
     level: error
-    order: 1
     qc_params:
       n01_match: 2
       path_file_cp02: paqc/data/CP02.csv
       pat_id_col_cp02: patient_id
       
-  qc28:
+  - qc_num: qc28
     input_file: input1
     level: error
-    order: 2
     qc_params:
       path_file_cp02: paqc/data/CP02.csv
       lookback_col_cn01: lookback_dys_cn
       lookback_col_cp02: lookback_dys
 
-  qc29:
+  - qc_num: qc29
     input_file: input1
     level: info
-    order: 3
     qc_params:
       path_file_cp02: paqc/data/CP02.csv
       lookback_col_cn01: lookback_dys_cn
       lookback_col_cp02: lookback_dys
       pat_id_col_cp02: patient_id
 
-  qc30:
+  - qc_num: qc30
     input_file: input1
     level: info
-    order: 4
