@@ -6,15 +6,17 @@ report.
 
 import time
 import traceback
+
 import pandas as pd
+
+import paqc.qc_functions as qcs_main
 from paqc.connectors import csv
-from paqc.connectors import rds
-from paqc.connectors import feather
 from paqc.connectors import dataframe
+from paqc.connectors import feather
+from paqc.connectors import rds
+from paqc.report import report
 from paqc.utils import config_utils
 from paqc.utils import utils
-from paqc.report import report
-import paqc.qc_functions as qcs_main
 
 
 class Driver:

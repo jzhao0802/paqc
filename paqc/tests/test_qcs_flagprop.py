@@ -1,7 +1,6 @@
 import pytest
 
 from paqc.connectors import csv
-from paqc.qc_functions.qcs_flagprop import *
 from paqc.utils.config_utils import config_open
 
 DICT_CONFIG_FLAGPROP = config_open(

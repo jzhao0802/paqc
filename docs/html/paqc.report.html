@@ -1,0 +1,238 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>paqc.report package &#8212; paqc 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="paqc-report-package">
+<h1>paqc.report package<a class="headerlink" href="#paqc-report-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-paqc.report.report">
+<span id="paqc-report-report-module"></span><h2>paqc.report.report module<a class="headerlink" href="#module-paqc.report.report" title="Permalink to this headline">¶</a></h2>
+<p>This submodule contains classes that build up, store and handle the report that
+is generated during the run of the series of tests.</p>
+<dl class="class">
+<dt id="paqc.report.report.Report">
+<em class="property">class </em><code class="descclassname">paqc.report.report.</code><code class="descname">Report</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for building up, storing, ordering and managing the report items of
+individual tests.</p>
+<dl class="method">
+<dt id="paqc.report.report.Report.add_item">
+<code class="descname">add_item</code><span class="sig-paren">(</span><em>report_item</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.add_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new ReportItem to the Report.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>report_item</strong> – <code class="xref py py-obj docutils literal"><span class="pre">ReportItem</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.Report.generate_report">
+<code class="descname">generate_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.generate_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function simply generates the final report HTML and the JSON
+that feeds the JavaScript tables. It also saves the tables as csv</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.Report.get_report_table">
+<code class="descname">get_report_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.get_report_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns the internal list of ReportItem obj representation of the
+Report object into a pandas DataFrame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame where each row is a ReportItem.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.Report.get_summary_stats">
+<code class="descname">get_summary_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.get_summary_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>This gathers a few simple summary stats about the Report object. The
+keys of the returned dict are self-explanatory, so see those.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict, with the following keys: qc_sum, data_file_sum,
+passed_sum, failed_sum, total_exec_time.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.Report.print_items">
+<code class="descname">print_items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.Report.print_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simply prints the Report object’s ReportItems to the terminal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing, prints to terminal.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="paqc.report.report.ReportItem">
+<em class="property">class </em><code class="descclassname">paqc.report.report.</code><code class="descname">ReportItem</code><span class="sig-paren">(</span><em>passed</em>, <em>level</em>, <em>qc_num</em>, <em>input_file</em>, <em>input_file_path</em>, <em>extra=None</em>, <em>text=None</em>, <em>exec_time=0</em>, <em>qc_params=None</em>, <em>data_hash=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Simple lass for the output of an individual test. Each item has to have a
+level, and input file, and a text the holds the info, warning or error
+message.</p>
+<dl class="classmethod">
+<dt id="paqc.report.report.ReportItem.init_conditional">
+<em class="property">classmethod </em><code class="descname">init_conditional</code><span class="sig-paren">(</span><em>list_failures</em>, <em>dict_config</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.init_conditional" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.ReportItem.print_report_item">
+<code class="descname">print_report_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.print_report_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.ReportItem.summarise_report_item">
+<code class="descname">summarise_report_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.summarise_report_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.ReportItem.update_exec_time">
+<code class="descname">update_exec_time</code><span class="sig-paren">(</span><em>exec_time</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.update_exec_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.ReportItem.update_level">
+<code class="descname">update_level</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.update_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="paqc.report.report.ReportItem.update_text">
+<code class="descname">update_text</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.report.report.ReportItem.update_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.report">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-paqc.report" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">paqc.report package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-paqc.report.report">paqc.report.report module</a></li>
+<li><a class="reference internal" href="#module-paqc.report">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/paqc.report.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, IQVIA.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

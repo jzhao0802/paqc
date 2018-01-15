@@ -1,7 +1,6 @@
 import pytest
 
 from paqc.connectors import csv
-from paqc.qc_functions.qcs_all_data_1to13 import *
 from paqc.utils.config_utils import config_open
 
 DICT_CONFIG_1TO8 = config_open("paqc/tests/data/driver_dict_output.yml")[1]

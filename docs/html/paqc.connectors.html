@@ -1,0 +1,308 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>paqc.connectors package &#8212; paqc 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="paqc-connectors-package">
+<h1>paqc.connectors package<a class="headerlink" href="#paqc-connectors-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-paqc.connectors.csv">
+<span id="paqc-connectors-csv-module"></span><h2>paqc.connectors.csv module<a class="headerlink" href="#module-paqc.connectors.csv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.connectors.csv.read_csv">
+<code class="descclassname">paqc.connectors.csv.</code><code class="descname">read_csv</code><span class="sig-paren">(</span><em>config</em>, <em>input_file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.csv.read_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a csv file, and attempts to use the date format that is specified
+in the config file. The date columns it uses are the ones that are specified
+by the date_cols, first_exp_date_cols, last_exp_date_cols, index_date_col
+and lookback_date_col params in the general section of the YAML config.
+Depending on the size of the dataset, and the number of date columns, we
+might use parallelisation to speed things up.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> – Parsed YAML config file.</li>
+<li><strong>input_file_path</strong> – Absolute path to the csv file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Tuple: first is a Boolean whether loading and parsing was
+successful, second is the pandas DataFrame if Bool=True.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.connectors.csv.read_csv_header">
+<code class="descclassname">paqc.connectors.csv.</code><code class="descname">read_csv_header</code><span class="sig-paren">(</span><em>input_file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.csv.read_csv_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in the header of a csv file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_file_path</strong> – Absolute path to the csv file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame without rows, but with columns.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.connectors.dataframe">
+<span id="paqc-connectors-dataframe-module"></span><h2>paqc.connectors.dataframe module<a class="headerlink" href="#module-paqc.connectors.dataframe" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.connectors.dataframe.parse_dataframe">
+<code class="descclassname">paqc.connectors.dataframe.</code><code class="descname">parse_dataframe</code><span class="sig-paren">(</span><em>config</em>, <em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.dataframe.parse_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts an already loaded pandas DataFrame. This is useful if you want to
+paqc in an interactive session, or for development. For this, you need to
+pass the pandas DataFrame to the constructor of the Driver class, set the
+source param in the general section of the config to dataframe. The input
+param of the config file can be anything as it will be ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> – Parsed YAML config file.</li>
+<li><strong>df</strong> – Input pandas DataFrame.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Tuple: first is a Boolean whether loading and parsing was
+successful, second is the pandas DataFrame if Bool=True.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.connectors.feather">
+<span id="paqc-connectors-feather-module"></span><h2>paqc.connectors.feather module<a class="headerlink" href="#module-paqc.connectors.feather" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.connectors.feather.read_feather">
+<code class="descclassname">paqc.connectors.feather.</code><code class="descname">read_feather</code><span class="sig-paren">(</span><em>config</em>, <em>input_file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.feather.read_feather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in .feather files directly into pandas. You need to have
+feather-format installed in python.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> – Parsed YAML config file.</li>
+<li><strong>input_file_path</strong> – Absolute path to the csv file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Tuple: first is a Boolean whether loading and parsing was
+successful, second is the pandas DataFrame if Bool=True.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.connectors.parse_utils">
+<span id="paqc-connectors-parse-utils-module"></span><h2>paqc.connectors.parse_utils module<a class="headerlink" href="#module-paqc.connectors.parse_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.connectors.parse_utils.apply_parallel">
+<code class="descclassname">paqc.connectors.parse_utils.</code><code class="descname">apply_parallel</code><span class="sig-paren">(</span><em>df</em>, <em>func</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.parse_utils.apply_parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parallelizes the apply function of pandas. Works for columns only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> – DataFrame to use. Note, all columns are used.</li>
+<li><strong>func</strong> – Function to apply to each column of df.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Transformed df.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.connectors.parse_utils.check_dates">
+<code class="descclassname">paqc.connectors.parse_utils.</code><code class="descname">check_dates</code><span class="sig-paren">(</span><em>config</em>, <em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.parse_utils.check_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Util function for certain connectors. It takes in a pandas DataFrame and
+the config file to check if there are any date columns that do not conform
+with the date_format field of the config file. If there are, it converts
+these two to the required date format either doing this in parallel or in
+series, depending on the size of the DataFrame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> – Parsed YAML config file.</li>
+<li><strong>df</strong> – Input pandas DataFrame.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">pandas DataFrame with all dates conforming the requested
+date_format of the config file.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.connectors.parse_utils.parse_dates">
+<code class="descclassname">paqc.connectors.parse_utils.</code><code class="descname">parse_dates</code><span class="sig-paren">(</span><em>column</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.parse_utils.parse_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function we’ll apply to each date column in parallel to parse dates.
+Don’t use this without apply_parallel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>column</strong> – DataFrame column, with type str.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">DataFrame column as datatime column with date_format applied.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.connectors.rds">
+<span id="paqc-connectors-rds-module"></span><h2>paqc.connectors.rds module<a class="headerlink" href="#module-paqc.connectors.rds" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="paqc.connectors.rds.read_rds">
+<code class="descclassname">paqc.connectors.rds.</code><code class="descname">read_rds</code><span class="sig-paren">(</span><em>config</em>, <em>input_file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.connectors.rds.read_rds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in .rds files directly into pandas. You need to have rpy2 installed
+in python.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> – Parsed YAML config file.</li>
+<li><strong>input_file_path</strong> – Absolute path to the csv file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Tuple: first is a Boolean whether loading and parsing was
+successful, second is the pandas DataFrame if Bool=True.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.connectors">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-paqc.connectors" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">paqc.connectors package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-paqc.connectors.csv">paqc.connectors.csv module</a></li>
+<li><a class="reference internal" href="#module-paqc.connectors.dataframe">paqc.connectors.dataframe module</a></li>
+<li><a class="reference internal" href="#module-paqc.connectors.feather">paqc.connectors.feather module</a></li>
+<li><a class="reference internal" href="#module-paqc.connectors.parse_utils">paqc.connectors.parse_utils module</a></li>
+<li><a class="reference internal" href="#module-paqc.connectors.rds">paqc.connectors.rds module</a></li>
+<li><a class="reference internal" href="#module-paqc.connectors">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/paqc.connectors.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, IQVIA.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

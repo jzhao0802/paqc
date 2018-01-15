@@ -1,0 +1,265 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>paqc.driver package &#8212; paqc 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="paqc-driver-package">
+<h1>paqc.driver package<a class="headerlink" href="#paqc-driver-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-paqc.driver.driver">
+<span id="paqc-driver-driver-module"></span><h2>paqc.driver.driver module<a class="headerlink" href="#module-paqc.driver.driver" title="Permalink to this headline">¶</a></h2>
+<p>This submodule contains the main class that takes in the config file and
+executes the QC scripts in the requested order and collates their findings in a
+report.</p>
+<dl class="class">
+<dt id="paqc.driver.driver.Driver">
+<em class="property">class </em><code class="descclassname">paqc.driver.driver.</code><code class="descname">Driver</code><span class="sig-paren">(</span><em>config_path</em>, <em>verbose=True</em>, <em>debug=False</em>, <em>to_hash=False</em>, <em>df_input=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Main executor class of the the QC pipeline. It reads in a YAML config
+file, checks it, then executes the tests on the specified input files one by
+one, while collecting their output and generating a report from it.</p>
+<dl class="method">
+<dt id="paqc.driver.driver.Driver.config_loader">
+<code class="descname">config_loader</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver.config_loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will load, check and parse the config file for the driver.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing. Updates the internal config object of the driver.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.driver.driver.Driver.data_loader">
+<code class="descname">data_loader</code><span class="sig-paren">(</span><em>input_file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver.data_loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads an input data file using its path and the source argument of
+the config file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_file_path</strong> – path to the data.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas DataFrame object of the fully loaded datafile.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.driver.driver.Driver.do_compare_qc">
+<code class="descname">do_compare_qc</code><span class="sig-paren">(</span><em>input_file1</em>, <em>input_file2</em>, <em>qc</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver.do_compare_qc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for executing QCs on two input dataframes at once. If the
+dataframes are already loaded, we use them, otherwise we load them too.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_file1</strong> – input1,…,input_n in general part of config</li>
+<li><strong>input_file2</strong> – input1,…,input_n in general part of config</li>
+<li><strong>qc</strong> – string, name of qc to execute on the two dataframes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing, updates Driver’s internal report object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.driver.driver.Driver.do_qc">
+<code class="descname">do_qc</code><span class="sig-paren">(</span><em>input_file</em>, <em>input_file_path</em>, <em>qcs</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver.do_qc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the function that actually takes an input data file with a
+path, loads it, then calls all required qc functions on it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_file</strong> – input1,…,input_n in general part of config</li>
+<li><strong>input_file_path</strong> – actual file path to the data</li>
+<li><strong>qcs</strong> – dictionary of qcs to execute on a given data file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing, updates Driver’s internal report object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.driver.driver.Driver.main">
+<code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main function or the ‘brain’ of the Driver class, which
+will execute the qc functions one by one of the desired input files
+even if those have multiple chunked data files within them.
+If we encounter QCs that are comparing two dataframes, we load both
+required files and perform the qc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nothing, calls the <code class="xref py py-func docutils literal"><span class="pre">do_qc()</span></code> on each
+data_file and executes the required qc functions, then
+generates the .csv and HTML report</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.driver.driver.Driver.printer">
+<code class="descname">printer</code><span class="sig-paren">(</span><em>to_print</em>, <em>hline_before=False</em>, <em>hline_after=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver.printer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple wrapper function, that prints messages to users if the driver
+object was instantiated with verbose=True.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>to_print</strong> – Message to print.</li>
+<li><strong>hline_before</strong> – Boolean, should a horizontal like be printed
+before the to_print string?</li>
+<li><strong>hline_after</strong> – Boolean, should a horizontal like be printed
+after the to_print string?</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing, prints to standard out.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="paqc.driver.driver.Driver.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>generate_report=True</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.driver.driver.Driver.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the QC pipeline by executing the various methods of the Driver
+class in succession.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>generate_report</strong> – Boolean, if set to False Driver will not
+generate report, but simply run the QCs.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.driver">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-paqc.driver" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">paqc.driver package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-paqc.driver.driver">paqc.driver.driver module</a></li>
+<li><a class="reference internal" href="#module-paqc.driver">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/paqc.driver.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, IQVIA.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

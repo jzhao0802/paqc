@@ -1,0 +1,523 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>paqc.utils package &#8212; paqc 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="paqc-utils-package">
+<h1>paqc.utils package<a class="headerlink" href="#paqc-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-paqc.utils.config_utils">
+<span id="paqc-utils-config-utils-module"></span><h2>paqc.utils.config_utils module<a class="headerlink" href="#module-paqc.utils.config_utils" title="Permalink to this headline">¶</a></h2>
+<p>Functions for reading, parsing and sanity checking the YAML config files of the
+QC pipelines.</p>
+<dl class="function">
+<dt id="paqc.utils.config_utils.config_checker">
+<code class="descclassname">paqc.utils.config_utils.</code><code class="descname">config_checker</code><span class="sig-paren">(</span><em>yml</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.config_utils.config_checker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the YAML config file and checks that the minimum required fields for
+the general setup of the QC suite and for each QC are present. If the
+config checking fails at any point, the user is informed about it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>yml</strong> – Output of <code class="xref py py-func docutils literal"><span class="pre">config_open()</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.config_utils.config_open">
+<code class="descclassname">paqc.utils.config_utils.</code><code class="descname">config_open</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.config_utils.config_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in the YAML config file and  displays any parsing or formatting
+errors. If the parsing fails the user is presented with the line that
+failed. Usually the formatting error is right above this line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – absolute path to the YAML formatted config file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Tuple of Boolean and parsed YAML file. The boolean is indicating
+whether the opening and parsing of the YAML file was successful,
+and the YAML config object is a dict of dicts and lists.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.config_utils.config_parser">
+<code class="descclassname">paqc.utils.config_utils.</code><code class="descname">config_parser</code><span class="sig-paren">(</span><em>yml</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.config_utils.config_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Once the <code class="xref py py-func docutils literal"><span class="pre">config_checker()</span></code> checked the config file
+this function extracts some important bits from it for the driver and also
+reformats the structure of the QCs dict part to make it indexed by the
+input_files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>yml</strong> – Output of <code class="xref py py-func docutils literal"><span class="pre">config_open()</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Reformatted YAML config object (dict of dicts), where the files
+with multiple inputs (* in their name) are converted to lists and
+the qcs section is replaced and reformatted to be indexed by input
+files.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.utils.utils">
+<span id="paqc-utils-utils-module"></span><h2>paqc.utils.utils module<a class="headerlink" href="#module-paqc.utils.utils" title="Permalink to this headline">¶</a></h2>
+<p>Various general helper functions for the QC package.</p>
+<dl class="function">
+<dt id="paqc.utils.utils.clean_string">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">clean_string</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.clean_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that cleans up string, typically used for column names. Changes
+the incoming string s so that:</p>
+<blockquote>
+<div><ul class="simple">
+<li>only lowercase</li>
+<li>white spaces replaced by underscores</li>
+<li>brackets replaced by underscores</li>
+<li>multiple underscores in a row replaced by one
+underscore (e.g. ‘ (‘ -&gt; ‘__’ -&gt; ‘_’</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> – string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.compare_date_columns">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">compare_date_columns</code><span class="sig-paren">(</span><em>df</em>, <em>ls_colnames_a</em>, <em>comparison</em>, <em>colname_b</em>, <em>axis</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.compare_date_columns" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Searches for cells in date columns where:</dt>
+<dd><dl class="first last docutils">
+<dt>df[ls_colnames_a]   comparison  df[colname_b]</dt>
+<dd>&gt;, &gt;=, &lt;=, &lt;</dd>
+</dl>
+</dd>
+</dl>
+<p>Is not followed.</p>
+<p>e.g. If you expect all lookback dates to be strictly smaller than the
+index dates, then compare_date_columns(df, [‘lookback_dt’], &lt;, ‘index_dt’,
+axis =0) will return an empty list if all lookback dates are strictly
+smaller than their index date, while it will return [‘lookback_dt’] if
+at least one loockback date is greater or equal than the index date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> – </li>
+<li><strong>ls_colnames_a</strong> – The list of columns that needed to be checked.</li>
+<li><strong>comparison</strong> – The comparison operator the columns should follow.</li>
+<li><strong>colname_b</strong> – The name (a string!) of the column that the columns in
+ls_colnames_a need to be checked against to.</li>
+<li><strong>axis</strong> – When 0, function returns faulty columns, when 1, faulty rows</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ls_faulty, a list with the row indices or column names
+containing values that do not follow the expected date order.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.fraction_zeroes_or_null">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">fraction_zeroes_or_null</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.fraction_zeroes_or_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the fraction of values of a pandas series that gave True in
+function is_zero_or_null.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss</strong> – Pandas series (column of dataframe)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Float, fraction of values in column being zero or null.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_dict_grouped_columns">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_dict_grouped_columns</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em>, <em>list_keys</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_dict_grouped_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Groups the columns of the dataframe df based on the feature, i.e. the
+prefix of the column names. This is done by creating a dictionary of
+dictionaries.</p>
+<p>Each key in the upper level is a general feature, the value is a
+dictionary in which all column names of the wanted columns of that
+feature are grouped,
+e.g:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{‘A’: {‘count’: ‘A_count’, ‘first_exp_date’: ‘A_first_exp_dt’},</dt>
+<dd>‘B’: {‘count’: ‘B_count’, ‘first_exp_date’: ‘B_first_exp_dt’}}</dd>
+</dl>
+</div></blockquote>
+<p>Features that do not have all the wanted columns just end up with
+shorter dictionaries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> – </li>
+<li><strong>dict_config</strong> – </li>
+<li><strong>list_keys</strong> – The list of keys in the YAML config file that select
+the wanted column types, so that point to the right column name
+suffixes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dictionary of dictionaries</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_hash">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_hash</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a pandas DataFrame, this function will generate a unique hash value
+of it. This enables us to precisely identify which version of a data file
+the test was carried out on.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> – Pandas DataFrame object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Hash integer that uniquely maps to a certain DataFrame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_list_cc0x_columns">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_list_cc0x_columns</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em>, <em>lvl1_desc</em>, <em>list_keys=('first_exp_date_cols'</em>, <em>'last_exp_date_cols')</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_list_cc0x_columns" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> – </li>
+<li><strong>dict_config</strong> – </li>
+<li><strong>lvl1_desc</strong> – </li>
+<li><strong>list_keys</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_list_cc0x_feats">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_list_cc0x_feats</code><span class="sig-paren">(</span><em>dict_config</em>, <em>lvl1_desc</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_list_cc0x_feats" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dict_config</strong> – </li>
+<li><strong>lvl1_desc</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.generate_list_columns">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">generate_list_columns</code><span class="sig-paren">(</span><em>df</em>, <em>dict_config</em>, <em>list_keys</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.generate_list_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates list of all column names needed, based on the list of keys for
+the dict_config.</p>
+<p>If none of the keys exists in the dict_config, or none of the
+suffixes/column names is found in the list of column names, an empty
+list is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> – </li>
+<li><strong>dict_config</strong> – </li>
+<li><strong>list_keys</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of all column names that match the values of the key-value</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>pairs from list_keys.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.get_qcs_compare">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">get_qcs_compare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.get_qcs_compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the qc list file from data, which has to be exported and downloaded
+from the online tracker manually every time it’s updated. For each QC it
+checks if it’s a comparison type, i.e. it requires two dataframes as input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary of qc_num: boolean, whether the QC is a compare.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.get_qcs_desc">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">get_qcs_desc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.get_qcs_desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the qc list file from data, which has to be exported and downloaded
+from the online tracker manually every time it’s updated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary of qc_num: qc description pairs.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.is_zero_or_null">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">is_zero_or_null</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.is_zero_or_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>pd.datetime or object throws error when compared to 0. This function
+avoids this problem by comparing values of series to 0 if values are
+numeric, otherwise only calls isnull()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss</strong> – Pandas series (column of dataframe)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Series of boolean values</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.mean_all_types">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">mean_all_types</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.mean_all_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the correct mean function, based on the input type.
+:param ss: pandas series
+:return: Mean value of the series</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.mean_datetime">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">mean_datetime</code><span class="sig-paren">(</span><em>ss_datetime</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.mean_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss_datetime</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.median_all_types">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">median_all_types</code><span class="sig-paren">(</span><em>ss</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.median_all_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the correct median function, based on the input type.
+:param ss: pandas series
+:return: Median value of the series</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.median_datetime">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">median_datetime</code><span class="sig-paren">(</span><em>ss_datetime</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.median_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ss_datetime</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.stringify_dict">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">stringify_dict</code><span class="sig-paren">(</span><em>a_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.stringify_dict" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a_dict</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.transform_int_to_dt">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">transform_int_to_dt</code><span class="sig-paren">(</span><em>date_int</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.transform_int_to_dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="paqc.utils.utils.write_list_to_csv">
+<code class="descclassname">paqc.utils.utils.</code><code class="descname">write_list_to_csv</code><span class="sig-paren">(</span><em>ls_items</em>, <em>path_csv</em><span class="sig-paren">)</span><a class="headerlink" href="#paqc.utils.utils.write_list_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a csv file with the list items in a single column</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ls_items</strong> – input list</li>
+<li><strong>path_csv</strong> – path of the csv file to be written to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-paqc.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-paqc.utils" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">paqc.utils package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-paqc.utils.config_utils">paqc.utils.config_utils module</a></li>
+<li><a class="reference internal" href="#module-paqc.utils.utils">paqc.utils.utils module</a></li>
+<li><a class="reference internal" href="#module-paqc.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/paqc.utils.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">paqc 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, IQVIA.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>
