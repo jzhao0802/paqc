@@ -1,6 +1,4 @@
 import pandas as pd
-from functools import partial
-from multiprocessing import cpu_count, Pool
 from paqc.utils import utils
 from paqc.connectors import parse_utils
 
@@ -27,7 +25,7 @@ def read_csv(config, input_file_path):
     :param config: Parsed YAML config file.
     :param input_file_path: Absolute path to the csv file.
     :return: Tuple: first is a Boolean whether loading and parsing was
-    successful, second is the pandas DataFrame if Bool=True.
+             successful, second is the pandas DataFrame if Bool=True.
     """
     header = read_csv_header(input_file_path)
 
@@ -53,9 +51,5 @@ def read_csv(config, input_file_path):
     elif len(date_cols) > 0:
         df[date_cols] = df[date_cols].apply(pd.to_datetime,
                                             format=general['date_format'])
-    # No date columns to convert
-    else:
-        pass
-
     return df
 

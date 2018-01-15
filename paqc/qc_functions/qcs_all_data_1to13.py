@@ -25,13 +25,14 @@ def qc1(df, dict_config):
     return rp.ReportItem.init_conditional(ls_colnames_faulty, dict_config['qc'])
 
 
-def qc3(df, dict_config):
+def qc3(df, dict_config, missing_is_ok=False):
     """
     All columns ending in FLAG, COUNT or FREQ should be 0 or positive, and
     never missing.
 
     :param df:
     :param dict_config:
+    :param missing_is_ok: sometimes missing should be accepted, set this to True
     :return: ReportItem:
                 - self.extra=ls_cols_faulty, the list of column names of all
                 FLAG/COUNT/FREQ columns that have missing or negative elements.
@@ -42,10 +43,16 @@ def qc3(df, dict_config):
     ls_cols_faulty = []
     for colname in ls_colnames:
         if pd.api.types.is_numeric_dtype(df[colname]):
-            if (~(df[colname] >= 0)).any():
-                ls_cols_faulty.append(colname)
+            if missing_is_ok:
+                if (df[colname] < 0).any():
+                    ls_cols_faulty.append(colname)
+                else:
+                    pass
             else:
-                pass
+                if (~(df[colname] >= 0)).any():
+                    ls_cols_faulty.append(colname)
+                else:
+                    pass
         else:
             ls_cols_faulty.append(colname)
 

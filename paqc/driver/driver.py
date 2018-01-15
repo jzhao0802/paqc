@@ -7,8 +7,9 @@ report.
 import time
 import traceback
 import pandas as pd
-
 from paqc.connectors import csv
+from paqc.connectors import rds
+from paqc.connectors import feather
 from paqc.connectors import dataframe
 from paqc.utils import config_utils
 from paqc.utils import utils
@@ -23,13 +24,15 @@ class Driver:
     one, while collecting their output and generating a report from it.
     """
 
-    def __init__(self, config_path, verbose=True, debug=True, df_input=None):
+    def __init__(self, config_path, verbose=True, debug=False, to_hash=False,
+                 df_input=None):
         self.config_path = config_path
         self.config = None
         self.general = None
         self.report = None
         self.verbose = verbose
         self.debug = debug
+        self.to_hash = to_hash
         self.df_input = df_input
         # load the QC functions into a single dict
         self.qc_functions = qcs_main.import_submodules(qcs_main)
@@ -127,8 +130,11 @@ class Driver:
         :return: Nothing, updates Driver's internal report object.
         """
 
-        df = self.data_loader(input_file_path, self.df_input)
-        df_hash = utils.generate_hash(df)
+        df = self.data_loader(input_file_path)
+        if self.to_hash:
+            df_hash = utils.generate_hash(df)
+        else:
+            df_hash = 'None'
         for qc in qcs:
             # generate mini config object for the QC function
             qc_config = {'general': self.general, 'qc': qc}
@@ -259,46 +265,60 @@ class Driver:
         rpi.exec_time = te - ts
         self.report.add_item(rpi)
 
-    def data_loader(self, input_file_path, df_input):
+    def data_loader(self, input_file_path):
         """
         Loads an input data file using its path and the source argument of
         the config file.
 
         :param input_file_path: path to the data.
-        :param dataframe: pandas dataframe containing the data.
         :return: pandas DataFrame object of the fully loaded datafile.
         """
 
         source = self.config['general']['source']
+        format_error_str = ("It's most likely, that your dates are formatted "
+                            "inconsistently. Make sure to visit "
+                            "http://strftime.org/ for the correct date format "
+                            "specs.")
 
         if source == 'dataframe':
-            if isinstance(df_input, pd.core.frame.DataFrame):
+            if isinstance(self.df_input, pd.core.frame.DataFrame):
                 try:
-                    return dataframe.parse_dataframe(self.config, df_input)
+                    return dataframe.parse_dataframe(self.config, self.df_input)
                 except:
-                    self.printer("We couldn't transform the dataframe."
-                                 "It's most likely, that your dates are formatted "
-                                 "inconsistently. Make sure to visit "
-                                 "http://strftime.org/ for the correct date format"
-                                 " specs.\n\nTRACEBACK:\n\n%s"
-                                 % (traceback.format_exc()))
+                    self.printer("We couldn't transform the dataframe. %s"
+                                 "\n\nTRACEBACK:\n\n%s"
+                                 % (format_error_str, traceback.format_exc()))
             else:
                 self.printer("Source in the config file is chosen as "
-                             "dataframe, you have to provde a pandas' "
+                             "dataframe, you have to provide a pandas' "
                              "DataFrame object as df_input of the driver.")
         elif source == 'csv':
             try:
                 return csv.read_csv(self.config, input_file_path)
             except:
-                self.printer("We couldn't load the following file: %s. It's "
-                             "most likely, that your dates are formatted "
-                             "inconsistently. Make sure to visit "
-                             "http://strftime.org/ for the correct date format"
-                             " specs.\n\nTRACEBACK:\n\n%s"
-                             % (input_file_path, traceback.format_exc()))
+                self.printer("We couldn't load the following file: %s. %s"
+                             "\n\nTRACEBACK:\n\n%s"
+                             % (input_file_path, format_error_str,
+                                traceback.format_exc()))
+        elif source == 'rds':
+            try:
+                return rds.read_rds(self.config, input_file_path)
+            except:
+                self.printer("We couldn't load the following file: %s. %s"
+                             "\n\nTRACEBACK:\n\n%s"
+                             % (input_file_path, format_error_str,
+                                traceback.format_exc()))
+        elif source == 'feather':
+            try:
+                return feather.read_feather(self.config, input_file_path)
+            except:
+                self.printer("We couldn't load the following file: %s. %s"
+                             "\n\nTRACEBACK:\n\n%s"
+                             % (input_file_path, format_error_str,
+                                traceback.format_exc()))
         else:
-            raise ValueError("We only support .csv input files or "
-                             "pandas' DataFrame objects currently.")
+            raise ValueError("We only support .csv, .rds, .feather input files "
+                             "or pandas DataFrame objects currently.")
 
     def printer(self, to_print, hline_before=False, hline_after=False):
         """

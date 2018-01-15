@@ -86,7 +86,8 @@ def config_checker(yml):
                   "Possible values: csv, bdf, sql.")
             return False
         else:
-            if general['source'] not in ['csv', 'sql', 'bdf', 'dataframe']:
+            if general['source'] not in ['csv', 'sql', 'bdf', 'dataframe',
+                                         'rds', 'feather']:
                 print("ConfigError: Source must be one of: csv, bdf, sql.")
                 return False
 
